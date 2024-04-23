@@ -1,0 +1,6 @@
+*.pdf
+*.stl
+*.eps
+*.png
+*.bmp
+*.tiff
