@@ -1,0 +1,8 @@
+getwd()
+data<-read.csv(file = "honours_hindlimbs.csv")
+summary(df)
+plot(df$fM.L, df$tbM.L)
+reg1 <- lsfit(df$fM.L,df$tbM.L)
+abline(reg1)
+lsfit (df$fM.L,df$tbM.L)
+ls.print(reg1)
