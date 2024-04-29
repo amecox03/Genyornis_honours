@@ -1,0 +1,63 @@
+---
+title: "Genyornis_regressions"
+author: "Amelia Cox, Vera Weisbecker"
+date: "2024-04-29"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo=FALSE, message=FALSE, results='hide' )
+```
+
+```{r setup of libraries}
+#this sets the directory to the source directory without having to manually click your way there
+library(rstudioapi) # Safely Access the RStudio API
+setwd(dirname(getActiveDocumentContext()$path))
+
+#make sure you delete all empty columns/rows by hitting "delete" in excel
+data<-read.csv(file = "../Data/Raw/honours_hindlimbs.csv")
+
+```
+
+#Titles also often go here - up to you :-)
+#Read up on Reduced Major Axis (RMA) regression which allows for both variable being responses (rather than y being response, x being predictor - but don't get too hung up about this now :-))
+```{r Amelias first analyses}
+#just a summary of the data
+summary(data)
+
+
+#run a linear model: y is on left, x is on right
+reg1 <- lm(log(data$fM.L) ~ log(data$tbM.L))
+
+#here's how to get a summary output
+summary(reg1)
+
+#plotting like this NOW HAS x on left, y on right
+plot(log(data$fM.L) ~ log(data$tbM.L))
+abline(reg1)
+
+
+```
+
+```{r make dataset w/o Genyornis}
+
+data_noG <- data[-c(77:82),]
+
+#run a linear model: y is on left, x is on right
+NoG <- lm(log(data_noG$fM.L) ~ log(data_noG$tbM.L))
+
+#here's how to get a summary output
+summary(NoG)
+
+
+```
+
+
+```{r plotting}
+#plotting like this NOW HAS x on left, y on right
+plot(log(data$fM.L) ~ log(data$tbM.L), xlim=c(1.6,4.5), ylim=c(1.7,4.5), pch=19, col="hotpink"); abline(NoG, col="purple")
+#add row names to your plot
+text(log(data$fM.L) ~ log(data$tbM.L), labels=data$species )
+
+
+```
