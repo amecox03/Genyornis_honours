@@ -55,9 +55,26 @@ summary(NoG)
 
 ```{r plotting}
 #plotting like this NOW HAS x on left, y on right
-plot(log(data$fM.L) ~ log(data$tbM.L), xlim=c(1.6,4.5), ylim=c(1.7,4.5), pch=19, col="hotpink"); abline(NoG, col="purple")
+plot(log(data$fM.L) ~ log(data$tbM.L), xlim=c(1.6,4.5), ylim=c(1.7,4.5), pch=19, col="#008000"); abline(NoG, col="black")
+
 #add row names to your plot
 text(log(data$fM.L) ~ log(data$tbM.L), labels=data$species )
 
+
+```
+
+```{r length vs width f}
+
+#linear model of the length vs width of the femur excluding Genyornis
+noGFLW <- lm(log(data_noG$fL) ~ log(data_noG$fM.L))
+
+#summary of the linear model of the length vs width of the femur excluding Genyornis
+summary(noGFLW)
+
+#plot of the length vs width of the femur
+plot(log(data$fL) ~ log(data$fM.L), pch=19, col="#008000"); abline(noGFLW, col="black")
+
+#text to data points
+text(log(data$fL) ~ log(data$fM.L), label=data$species)
 
 ```
