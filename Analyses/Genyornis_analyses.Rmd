@@ -3,6 +3,8 @@ title: "Genyornis_regressions"
 author: "Amelia Cox, Vera Weisbecker"
 date: "2024-04-29"
 output: html_document
+editor_options:
+  chunk_output_type: console
 ---
 
 ```{r setup, include=FALSE}
@@ -52,16 +54,110 @@ summary(NoG)
 
 ```
 
-
+#Here is the fixed Prediction interval code. You need to run this on the dataset without Genyornis - use the above. I jsut ran out of time but I think YOU CAN DO IT :-)
 ```{r plotting}
-#plotting like this NOW HAS x on left, y on right
-plot(log(data$fM.L) ~ log(data$tbM.L), xlim=c(1.6,4.5), ylim=c(1.7,4.5), pch=19, col="#008000"); abline(NoG, col="black")
+#Here we're log transforming first, because otherwise things don't work. 
+data_plot<- log (data[,3:15])
+#getting a model for predicting CIs
+model <- lm(fM.L ~ tbM.L, data=data_plot)
+summary(model)
+
+#For the interval estimate to work, we need to find the smallest and largest values of x. All this is in https://stackoverflow.com/questions/46459620/plotting-a-95-confidence-interval-for-a-lm-object
+
+#But X in this case has NAs so we're here finding the lowest non-NA value by sorting from smallest to largest and taking the first value
+min_x <- sort(data_plot$tbM.L)[1]
+max_x <- sort(data_plot$tbM.L, decreasing = TRUE)[1]
+
+#make dummy sequence of x for intervals. 
+newx <- seq(min_x-1,max_x+1,by = 0.05 )
+
+#plot confidence intervals
+
+#This only works if the data are already logged. Not my preference but hey.
+conf_interval <- predict(model, newdata=data.frame(tbM.L = newx), interval="prediction",    level = 0.95)
+
+
+
+plot(data_plot$fM.L ~ data_plot$tbM.L, 
+     xlim=c(1.6,4.5), 
+     ylim=c(1.7,4.5), 
+     pch=19, col="#008000"); abline(model, col="black" )
+
+lines(newx, conf_interval[,2], col="blue", lty=2)
+lines(newx, conf_interval[,3], col="blue", lty=2)
+
+#fill in area between regression line and confidence interval - very pretty but then you have to re-plot the points
+polygon(c(rev(newx), newx), c(rev(conf_interval[ ,3]), conf_interval[ ,2]), col = 'grey', border = NA)
+
+
+
+points(data_plot$fM.L ~ data_plot$tbM.L, 
+     
+     pch=19, col="#008000"); abline(model, col="black" )
+
+
+
+
+
 
 #add row names to your plot
-text(log(data$fM.L) ~ log(data$tbM.L), labels=data$species )
+#text(log(data$fM.L) ~ log(data$tbM.L), labels=data$species )
 
 
 ```
+
+#The default is 9%% confidence interval. These intervals seem very narrow! But the below runs an example that shows the same. But we are interested in the prediction intervals, anyway.
+
+```{r}
+
+#make this example reproducible
+set.seed(0)
+
+#create dataset
+x <- rnorm(100)
+y <- x*2 + rnorm(100)
+df <- data.frame(x = x, y = y)
+
+#fit linear regression model
+model <- lm(y ~ x, data = df) 
+
+#get predicted y values using regression equation
+newx <- seq(min(df$x), max(df$x), length.out=100)
+preds <- predict(model, newdata = data.frame(x=newx), interval = 'confidence')
+
+#create plot of x vs. y
+plot(y ~ x, data = df)
+
+#fill in area between regression line and confidence interval
+polygon(c(rev(newx), newx), c(rev(preds[ ,3]), preds[ ,2]), col = 'grey', border = NA)
+
+#add fitted regression line
+abline(model)
+
+#add dashed lines for confidence bands
+lines(newx, preds[ ,3], lty = 'dashed', col = 'blue')
+lines(newx, preds[ ,2], lty = 'dashed', col = 'blue')
+
+
+p
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+```
+
+
 
 ```{r length vs width f}
 
