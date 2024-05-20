@@ -60,6 +60,12 @@ summary(NoG)
 
 data_plot <- cbind (data[,1:2], log (data[,3:15]))
 
+#Also here setting up a vector of colours you can use to highlight _Genyornis_
+#make a vector of just pink
+colours <- rep("hotpink", nrow(data_plot))
+#make a vector where any species name that has Genyornis is assigned purple
+colours[which(data_plot$species == "Genyornis newtoni")] <- "purple"
+
 #getting a model for predicting CIs
 model <- lm(fM.L ~ tbM.L, data=data_plot)
 summary(model)
@@ -83,7 +89,7 @@ conf_interval <- predict(model, newdata=data.frame(tbM.L = newx), interval="pred
 plot(data_plot$fM.L ~ data_plot$tbM.L, 
      xlim=c(1.6,4.5), 
      ylim=c(1.7,4.5), 
-     pch=19, col="#008000"); abline(model, col="black" )
+     pch=19, col=colours); abline(model, col="black" )
 
 lines(newx, conf_interval[,2], col="blue", lty=2)
 lines(newx, conf_interval[,3], col="blue", lty=2)
@@ -95,7 +101,7 @@ polygon(c(rev(newx), newx), c(rev(conf_interval[ ,3]), conf_interval[ ,2]), col 
 
 points(data_plot$fM.L ~ data_plot$tbM.L, 
      
-     pch=19, col="#008000"); abline(model, col="black" )
+     pch=19, col=colours); abline(model, col="black" )
 lines(newx, conf_interval[,2], col="blue", lty=2)
 lines(newx, conf_interval[,3], col="blue", lty=2)
 
@@ -142,22 +148,6 @@ lines(newx, preds[ ,3], lty = 'dashed', col = 'blue')
 lines(newx, preds[ ,2], lty = 'dashed', col = 'blue')
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 ```
 
 
@@ -171,7 +161,7 @@ noGFLW <- lm(log(data_noG$fL) ~ log(data_noG$fM.L))
 summary(noGFLW)
 
 #plot of the length vs width of the femur
-plot(log(data$fL) ~ log(data$fM.L), pch=19, col="#008000"); abline(noGFLW, col="black")
+plot(log(data$fL) ~ log(data$fM.L), pch=19, col=colours); abline(noGFLW, col="black")
 
 
 
@@ -199,7 +189,7 @@ conf_intervalW <- predict(modelFLW, newdata=data.frame(fM.L = newxW), interval="
 
 
 plot(data_plot$fL ~ data_plot$fM.L, 
-     pch=19, col="#008000"); abline(modelFLW, col="black" )
+     pch=19, col=colours); abline(modelFLW, col="black" )
 
 lines(newxW, conf_intervalW [,2], col="blue", lty=2)
 lines(newxW, conf_intervalW [,3], col="blue", lty=2)
@@ -211,7 +201,7 @@ polygon(c(rev(newxW), newxW), c(rev(conf_intervalW [ ,3]), conf_intervalW[ ,2]),
 
 points(data_plot$fL ~ data_plot$fM.L, 
      
-     pch=19, col="#008000"); abline(modelFLW, col="black" )
+     pch=19, col=colours); abline(modelFLW, col="black" )
 lines(newxW, conf_intervalW [,2], col="blue", lty=2)
 lines(newxW, conf_intervalW [,3], col="blue", lty=2)
 
@@ -239,7 +229,7 @@ noGFTL <- lm(log(data_noG$fL) ~ log(data_noG$tbL))
 summary(noGFTL)
 
 #plot of the length vs width of the femur
-plot(log(data$fL) ~ log(data$tbL), pch=19, col="#008000")
+plot(log(data$fL) ~ log(data$tbL), pch=19, col=colours)
      abline(noGFTL, col="black")
 
 
@@ -266,7 +256,7 @@ conf_intervalL <- predict(modelFTL, newdata=data.frame(tbL = newxL), interval="p
 
 
 plot(data_plot$fL ~ data_plot$tbL, 
-     pch=19, col="#008000"); abline(modelFTL, col="black" )
+     pch=19, col=colours); abline(modelFTL, col="black" )
 
 lines(newxL, conf_intervalL [,2], col="blue", lty=2)
 lines(newxL, conf_intervalL [,3], col="blue", lty=2)
@@ -281,7 +271,7 @@ polygon(c(rev(newxL), newxL), c(rev(conf_intervalL [ ,3]), conf_intervalL[ ,2]),
 
 points(data_plot$fL ~ data_plot$tbL, 
      
-     pch=19, col="#008000"); abline(modelFTL, col="black" )
+     pch=19, col=colours); abline(modelFTL, col="black" )
 lines(newxL, conf_intervalL [,2], col="blue", lty=2)
 lines(newxL, conf_intervalL [,3], col="blue", lty=2)
 
