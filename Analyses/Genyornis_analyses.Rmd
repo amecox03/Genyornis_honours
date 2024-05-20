@@ -57,7 +57,9 @@ summary(NoG)
 #Here is the fixed Prediction interval code. You need to run this on the dataset without Genyornis - use the above. I jsut ran out of time but I think YOU CAN DO IT :-)
 ```{r plotting}
 #Here we're log transforming first, because otherwise things don't work. 
-data_plot<- log (data[,3:15])
+
+data_plot <- cbind (data[,1:2], log (data[,3:15]))
+
 #getting a model for predicting CIs
 model <- lm(fM.L ~ tbM.L, data=data_plot)
 summary(model)
