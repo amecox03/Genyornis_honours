@@ -117,7 +117,7 @@ lines(newx, conf_interval[,3], col="blue", lty=2)
 
 #The default is 9%% confidence interval. These intervals seem very narrow! But the below runs an example that shows the same. But we are interested in the prediction intervals, anyway.
 
-```{r}
+```{r 95% confidence interval basic script}
 
 #make this example reproducible
 set.seed(0)
@@ -301,15 +301,58 @@ lines(newxL, conf_intervalL [,3], col="blue", lty=2)
 
 ```{r aepyornithid hindlimb data from Hansford & Turvey 2018}
 
-data_aepyorn <-read.csv(file = "../Data/Raw/Aepyornithid_hindlimb_measurement.csv")
+data_aepyorn <-read.csv(file = "../Data/Raw/Aepyronithid_hindlimb_measurements.csv", header = TRUE, sep = ",", colClasses = c("character","character","character","character","character","numeric","numeric","numeric","numeric","numeric","numeric","numeric","numeric","numeric","numeric","numeric","numeric","numeric"))
 
 
 
+data_aepyorn <- read.csv(file = "../Data/Raw/Aepyronithid_hindlimb_measurements.csv", header = TRUE, sep = ",", colClasses = c("character","character","character","character","character","numeric","numeric","numeric","numeric","numeric","numeric","numeric","numeric","numeric","numeric","numeric","numeric"), stringsAsFactors = FALSE)
+
+
+data_aepyorn <- read.csv(file = "../Data/Raw/Aepyronithid_hindlimb_measurements.csv", header = TRUE, sep = ",", colClasses = "numeric")
+
+
+# Example data frame
+data <- data.frame(
+  Name = c("John", "Jane", "John", "Alice", "Bob"),
+  Score1 = c(80, 75, 85, 90, 95),
+  Score2 = c(70, 65, 75, 80, 85)
+)
+
+aep.hil <- c("hildebrandti")
+
+as.numeric()
+
+# Names for which you want to calculate means
+target_names <- c("John", "Bob")
+
+# Step 1: Subset rows with target names
+subset_data <- data[data$Name %in% target_names, ]
+
+subset_data <- data_aepyorn[data_aepyorn$genus %in% aep.hil,]
+
+# Step 2: Calculate mean for each column in the subset
+means <- colMeans(subset_data[, c("Score1", "Score2")])
+
+aep.hilm <- colMeans(subset_date[, c("fL", "fPW", "fDW", "fCr.Ca","fM.L","tbL","tbPW", "tbDW","tbCr.Ca","tbM.L","tmtL","tmtD.P","tmtM.L")])
+
+# Step 3: Print or use the means as needed
+print(means)
 
 
 
+# Assuming subset_data is correctly defined
+subset_data <- data[data$Name %in% target_names, ]
 
+# Columns for which you want to calculate means
+columns_of_interest <- c("fL", "fPW", "fDW", "fCr.Ca", "fM.L", "tbL", 
+                         "tbPW", "tbDW", "tbCr.Ca", "tbM.L", "tmtL", 
+                         "tmtD.P", "tmtM.L")
 
+# Calculate mean for each column
+aep.hilm <- colMeans(subset_data[, columns_of_interest])
+
+# Print or use the means as needed
+print(aep.hilm)
 
 ```
 
