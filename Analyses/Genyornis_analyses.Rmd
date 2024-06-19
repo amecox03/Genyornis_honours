@@ -19,6 +19,10 @@ setwd(dirname(getActiveDocumentContext()$path))
 #make sure you delete all empty columns/rows by hitting "delete" in excel
 data<-read.csv(file = "../Data/Raw/honours_hindlimbs.csv")
 
+
+#data that includes Dinornithiformes, Dromornis stirtoni, & Illbandornis sp.
+data2 <- read.csv (file = "../Data/Raw/honours_hindlimb_updated.csv")
+
 ```
 
 #Titles also often go here - up to you :-)
@@ -27,7 +31,6 @@ data<-read.csv(file = "../Data/Raw/honours_hindlimbs.csv")
 #just a summary of the data
 summary(data)
 
-
 #run a linear model: y is on left, x is on right
 reg1 <- lm(log(data$fM.L) ~ log(data$tbM.L))
 
@@ -35,8 +38,7 @@ reg1 <- lm(log(data$fM.L) ~ log(data$tbM.L))
 summary(reg1)
 
 #plotting like this NOW HAS x on left, y on right
-plot(log(data$fM.L) ~ log(data$tbM.L))
-abline(reg1)
+plot(log(data$fM.L) ~ log(data$tbM.L)); abline(reg1)
 
 
 ```
@@ -115,7 +117,7 @@ lines(newx, conf_interval[,3], col="blue", lty=2)
 
 ```
 
-#The default is 9%% confidence interval. These intervals seem very narrow! But the below runs an example that shows the same. But we are interested in the prediction intervals, anyway.
+#The default is 95% confidence interval. These intervals seem very narrow! But the below runs an example that shows the same. But we are interested in the prediction intervals, anyway.
 
 ```{r 95% confidence interval basic script}
 
@@ -296,21 +298,7 @@ lines(newxL, conf_intervalL [,3], col="blue", lty=2)
 ```
 
 
-
-
-
-```{r aepyornithid hindlimb data from Hansford & Turvey 2018}
-
-data_aepyorn <-read.csv(file = "../Data/Raw/Aepyronithid_hindlimb_measurements.csv", header = TRUE, sep = ",", colClasses = c("character","character","character","character","character","numeric","numeric","numeric","numeric","numeric","numeric","numeric","numeric","numeric","numeric","numeric","numeric","numeric"))
-
-
-
-data_aepyorn <- read.csv(file = "../Data/Raw/Aepyronithid_hindlimb_measurements.csv", header = TRUE, sep = ",", colClasses = c("character","character","character","character","character","numeric","numeric","numeric","numeric","numeric","numeric","numeric","numeric","numeric","numeric","numeric","numeric"), stringsAsFactors = FALSE)
-
-
-data_aepyorn <- read.csv(file = "../Data/Raw/Aepyronithid_hindlimb_measurements.csv", header = TRUE, sep = ",", colClasses = "numeric")
-
-
+```{r making a subset dataframe and calculating means base script}
 # Example data frame
 data <- data.frame(
   Name = c("John", "Jane", "John", "Alice", "Bob"),
@@ -318,41 +306,83 @@ data <- data.frame(
   Score2 = c(70, 65, 75, 80, 85)
 )
 
-aep.hil <- c("hildebrandti")
-
-as.numeric()
-
 # Names for which you want to calculate means
 target_names <- c("John", "Bob")
 
 # Step 1: Subset rows with target names
 subset_data <- data[data$Name %in% target_names, ]
 
-subset_data <- data_aepyorn[data_aepyorn$genus %in% aep.hil,]
-
 # Step 2: Calculate mean for each column in the subset
 means <- colMeans(subset_data[, c("Score1", "Score2")])
-
-aep.hilm <- colMeans(subset_date[, c("fL", "fPW", "fDW", "fCr.Ca","fM.L","tbL","tbPW", "tbDW","tbCr.Ca","tbM.L","tmtL","tmtD.P","tmtM.L")])
 
 # Step 3: Print or use the means as needed
 print(means)
 
+```
 
 
-# Assuming subset_data is correctly defined
-subset_data <- data[data$Name %in% target_names, ]
 
-# Columns for which you want to calculate means
-columns_of_interest <- c("fL", "fPW", "fDW", "fCr.Ca", "fM.L", "tbL", 
-                         "tbPW", "tbDW", "tbCr.Ca", "tbM.L", "tmtL", 
-                         "tmtD.P", "tmtM.L")
+```{r aepyornithid hindlimb data from Hansford & Turvey 2018; calculating means}
 
-# Calculate mean for each column
-aep.hilm <- colMeans(subset_data[, columns_of_interest])
+data_aepyorn <- read.csv(file = "../Data/Raw/Aepyronithid_hindlimb_measurements.csv")
 
-# Print or use the means as needed
+
+#some numeric columns import as non-numeric, as.numeric changes these columns into numeric columns
+data_aepyorn[, 5] <- as.numeric(data_aepyorn [,5])
+data_aepyorn[,10] <- as.numeric (data_aepyorn[,10])
+data_aepyorn[,12] <- as.numeric (data_aepyorn[,12])
+data_aepyorn[,15] <- as.numeric (data_aepyorn[,15])
+
+
+#species name for which mean is to be calculated for A. hildebrandti
+aep.hil <- c("hildebrandti")
+
+
+#a subset data frame for the rows that i want to target for A. hildebrandti
+subset_data <- data_aepyorn[data_aepyorn$genus %in% aep.hil,]
+
+
+#calculate the means of Aepyornis hildebrandti
+aep.hilm <- colMeans(subset_data[, c("fL", "fPW", "fDW", "fCr.Ca","fM.L","tbL","tbPW", "tbDW","tbCr.Ca","tbM.L","tmtL","tmtD.P","tmtM.L")], na.rm = TRUE)
+
+
+#printing the means for Aepyornis hildebrandti
 print(aep.hilm)
+
+
+
+#species name for which mean is to be calculated for A. maximus
+aep.max <- c("maximus")
+
+
+#a subset data frame for the rows that i want to target for A. maximus
+subset_datam <- data_aepyorn[data_aepyorn$genus %in% aep.max,]
+
+
+#calculate the means of Aepyornis maximus
+aep.maxi <- colMeans(subset_datam[, c("fL", "fPW", "fDW", "fCr.Ca","fM.L","tbL","tbPW", "tbDW","tbCr.Ca","tbM.L","tmtL","tmtD.P","tmtM.L")], na.rm = TRUE)
+
+
+#printing the means for Aepyornis maximus
+print(aep.maxi)
+
+
+
+#species name for which mean is to be calculated for M. modestus
+mul.mod <- c("modestus")
+
+
+#a subset data frame for the rows that i want to target for M. modestus
+subset_datamm <- data_aepyorn[data_aepyorn$genus %in% mul.mod,]
+
+
+#calculate the means of M. modestus
+mul.mode <- colMeans(subset_datamm[, c("fL", "fPW", "fDW", "fCr.Ca","fM.L","tbL","tbPW", "tbDW","tbCr.Ca","tbM.L","tmtL","tmtD.P","tmtM.L")], na.rm = TRUE)
+
+
+#printing the means for M. modestus
+print(mul.mode)
+
 
 ```
 
