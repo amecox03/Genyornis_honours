@@ -1,4 +1,4 @@
-﻿order,species,genus,specimen no.,fL,fPW,fDW,fCr-Ca,fM-L,tbL,tbPW,tbDW,tbCr-Ca,tbM-L,tmtL,tmtD-P,tmtM-L
+﻿order,genus,species,specimen no.,fL,fPW,fDW,fCr-Ca,fM-L,tbL,tbPW,tbDW,tbCr-Ca,tbM-L,tmtL,tmtD-P,tmtM-L
 Galliformes,Alectura,lathami,B46568 ,89.7,21,17.7,9.4,9.3,134.7,15.8,12.3,6,7.4,92.1,4.4,6.8
 Anseriformes,Cereopsis,novaehollandiae,B39638,82.4,22,20.2,8.5,9.1,145.2,16.2,15,7.6,9.5,98.2,7.3,7.6
 Galliformes,Leipoa,ocellata,B55458,81.2,20,17.2,8.4,8.1,112,15.8,11.5,5.9,7,70.2,4.5,2.2
@@ -119,6 +119,9 @@ Dinornithiformes,Pachyornis,elephantopus,Av15029,315,127,145,,48,568,165,96,,58,
 Dinornithiformes,Pachyornis,elephantopus,Av8383,298,114,145,,48,530,173,101,,53,224,,60
 Dinornithiformes,Pachyornis,elephantopus,Av8716,307,109,138,,49,547,159,96,,50,220,,61
 Dinornithiformes,Pachyornis,elephantopus,Av8348,294,113,144,,52,547,156,97,,57,225,,55
+Aepyornithiformes,Aepyornis,hildebrandti,Hansford & Turvey 2018,258.4,135.04,127.04,54.05,63.71,,,,,,310.24,25.4,54.71
+Aepyornithiformes,Aepyornis,maximus,Hansford & Turvey 2018,338.89,183.22,185.78,67.91,89.5,614.2,152.7,117.99,46.63,46.4,399.75,32.51,74.08
+Aepyornithiformes,Mullerornis,modestus,Hansford & Turvey 2018,205,93.25,95.71,33.23,41.35,475.2,95.23,76.18,22.99,29.99,306.85,17.84,26.75
 Dromornithidae,Illbandornis,lawsoni,Worthy & Yates 2015,266.5,105.5,114,,44.5,505,108,70.8,,38.2,421.8,,28.4
 Dromornithidae,Illbandornis,woodburnei,Worthy & Yates 2015,299.2,114.2,120,,53,508.6,106,78.2,,39.4,349.9,,34.1
 Dromornithidae,Dromornis,stirtoni,Handley et al. 2016,365,163,198,,,736,224,153,,,412,,

@@ -25,6 +25,94 @@ data2 <- read.csv (file = "../Data/Raw/honours_hindlimb_updated.csv")
 
 ```
 
+
+```{r making a subset dataframe and calculating means base script}
+# Example data frame
+data <- data.frame(
+  Name = c("John", "Jane", "John", "Alice", "Bob"),
+  Score1 = c(80, 75, 85, 90, 95),
+  Score2 = c(70, 65, 75, 80, 85)
+)
+
+# Names for which you want to calculate means
+target_names <- c("John", "Bob")
+
+# Step 1: Subset rows with target names
+subset_data <- data[data$Name %in% target_names, ]
+
+# Step 2: Calculate mean for each column in the subset
+means <- colMeans(subset_data[, c("Score1", "Score2")])
+
+# Step 3: Print or use the means as needed
+print(means)
+
+```
+
+```{r aepyornithid hindlimb data from Hansford & Turvey 2018; calculating means}
+
+data_aepyorn <- read.csv(file = "../Data/Raw/Aepyronithid_hindlimb_measurements.csv")
+
+
+#some numeric columns import as non-numeric, as.numeric changes these columns into numeric columns
+data_aepyorn[, 5] <- as.numeric(data_aepyorn [,5])
+data_aepyorn[,10] <- as.numeric (data_aepyorn[,10])
+data_aepyorn[,12] <- as.numeric (data_aepyorn[,12])
+data_aepyorn[,15] <- as.numeric (data_aepyorn[,15])
+
+
+#species name for which mean is to be calculated for A. hildebrandti
+aep.hil <- c("hildebrandti")
+
+
+#a subset data frame for the rows that i want to target for A. hildebrandti
+subset_data <- data_aepyorn[data_aepyorn$genus %in% aep.hil,]
+
+
+#calculate the means of Aepyornis hildebrandti
+aep.hilm <- colMeans(subset_data[, c("fL", "fPW", "fDW", "fCr.Ca","fM.L","tbL","tbPW", "tbDW","tbCr.Ca","tbM.L","tmtL","tmtD.P","tmtM.L")], na.rm = TRUE)
+
+
+#printing the means for Aepyornis hildebrandti
+print(aep.hilm)
+
+
+
+#species name for which mean is to be calculated for A. maximus
+aep.max <- c("maximus")
+
+
+#a subset data frame for the rows that i want to target for A. maximus
+subset_datam <- data_aepyorn[data_aepyorn$genus %in% aep.max,]
+
+
+#calculate the means of Aepyornis maximus
+aep.maxi <- colMeans(subset_datam[, c("fL", "fPW", "fDW", "fCr.Ca","fM.L","tbL","tbPW", "tbDW","tbCr.Ca","tbM.L","tmtL","tmtD.P","tmtM.L")], na.rm = TRUE)
+
+
+#printing the means for Aepyornis maximus
+print(aep.maxi)
+
+
+
+#species name for which mean is to be calculated for M. modestus
+mul.mod <- c("modestus")
+
+
+#a subset data frame for the rows that i want to target for M. modestus
+subset_datamm <- data_aepyorn[data_aepyorn$genus %in% mul.mod,]
+
+
+#calculate the means of M. modestus
+mul.mode <- colMeans(subset_datamm[, c("fL", "fPW", "fDW", "fCr.Ca","fM.L","tbL","tbPW", "tbDW","tbCr.Ca","tbM.L","tmtL","tmtD.P","tmtM.L")], na.rm = TRUE)
+
+
+#printing the means for M. modestus
+print(mul.mode)
+
+
+```
+
+
 #Titles also often go here - up to you :-)
 #Read up on Reduced Major Axis (RMA) regression which allows for both variable being responses (rather than y being response, x being predictor - but don't get too hung up about this now :-))
 ```{r Amelias first analyses}
@@ -56,17 +144,56 @@ summary(NoG)
 
 ```
 
+
+```{r dataset w/o dromornithids}
+
+data_noD <- data2[-c(124:132),]
+
+#linear model of the femur medial lateral width against tibia medial lateral width, w/o dromornithids
+noD_widths <- lm(log(data_noD$fM.L)~log(data_noD$tbM.L))
+
+#linear model of the femur medial lateral width against tibia medial lateral width w/ dromorntiids
+wD_widths <- lm(log(data2$fM.L)~log(data2$tbM.L))
+
+
+#summary of the two linear models
+summary(noD_widths)
+
+summary(wD_widths)
+
+
+```
+
+```{r shaft circumferences}
+
+
+
+
+```
+
+
+
+
 #Here is the fixed Prediction interval code. You need to run this on the dataset without Genyornis - use the above. I jsut ran out of time but I think YOU CAN DO IT :-)
 ```{r plotting}
 #Here we're log transforming first, because otherwise things don't work. 
 
-data_plot <- cbind (data[,1:2], log (data[,3:15]))
+data_plot <- cbind (data2[,1:4], log (data2[,5:17]))
 
 #Also here setting up a vector of colours you can use to highlight _Genyornis_
 #make a vector of just pink
 colours <- rep("hotpink", nrow(data_plot))
 #make a vector where any species name that has Genyornis is assigned purple
-colours[which(data_plot$species == "Genyornis newtoni")] <- "purple"
+colours[which(data_plot$species == "newtoni")] <- "purple"
+colours[which(data_plot$species == "lawsoni")] <- "green"
+colours[which(data_plot$species == "woodburnei")] <- "black"
+colours[which(data_plot$species == "maximus")] <- "red"
+colours[which(data_plot$species == "modestus")] <- "blue"
+colours[which(data_plot$genus == "Dinornis")] <- "orange"
+colours[which(data_plot$genus == "Struthio")] <- "lightblue"
+colours[which(data_plot$genus == "Pachyornis")] <- "brown"
+
+
 
 #getting a model for predicting CIs
 model <- lm(fM.L ~ tbM.L, data=data_plot)
@@ -91,7 +218,7 @@ conf_interval <- predict(model, newdata=data.frame(tbM.L = newx), interval="pred
 plot(data_plot$fM.L ~ data_plot$tbM.L, 
      xlim=c(1.6,4.5), 
      ylim=c(1.7,4.5), 
-     pch=19, col=colours); abline(model, col="black" )
+     pch=19, col=colours); abline(noD_widths, col="black" )
 
 lines(newx, conf_interval[,2], col="blue", lty=2)
 lines(newx, conf_interval[,3], col="blue", lty=2)
@@ -154,6 +281,152 @@ lines(newx, preds[ ,2], lty = 'dashed', col = 'blue')
 
 
 
+```{r femur width vs tibiotarsus width without droms}
+
+
+#Here we're log transforming first, because otherwise things don't work. 
+data_plot <- cbind (data2[,1:4], log (data2[,5:17]))
+
+datanoD_plot <- cbind (data_noD[,1:4], log (data_noD[,5:17]))
+
+#Also here setting up a vector of colours you can use to highlight _Genyornis_
+#make a vector of just pink
+colours <- rep("hotpink", nrow(data_plot))
+#make a vector where any species name that has Genyornis is assigned purple
+colours[which(data_plot$species == "newtoni")] <- "purple"
+colours[which(data_plot$species == "lawsoni")] <- "green"
+colours[which(data_plot$species == "woodburnei")] <- "black"
+colours[which(data_plot$species == "maximus")] <- "red"
+colours[which(data_plot$species == "modestus")] <- "blue"
+colours[which(data_plot$genus == "Dinornis")] <- "orange"
+colours[which(data_plot$genus == "Struthio")] <- "lightblue"
+colours[which(data_plot$genus == "Pachyornis")] <- "brown"
+
+
+
+#getting a model for predicting CIs
+model_noD <- lm(fM.L ~ tbM.L, data=datanoD_plot)
+summary(model)
+
+#For the interval estimate to work, we need to find the smallest and largest values of x. All this is in https://stackoverflow.com/questions/46459620/plotting-a-95-confidence-interval-for-a-lm-object
+
+#But X in this case has NAs so we're here finding the lowest non-NA value by sorting from smallest to largest and taking the first value
+min_x <- sort(data_plot$tbM.L)[1]
+max_x <- sort(data_plot$tbM.L, decreasing = TRUE)[1]
+
+#make dummy sequence of x for intervals. 
+newx <- seq(min_x-1,max_x+1,by = 0.05 )
+
+#plot confidence intervals
+
+#This only works if the data are already logged. Not my preference but hey.
+conf_interval <- predict(model, newdata=data.frame(tbM.L = newx), interval="prediction",    level = 0.95)
+
+
+plot(data_plot$fM.L ~ data_plot$tbM.L, 
+     xlim=c(1.6,4.5), 
+     ylim=c(1.7,4.5), 
+     pch=19, col=colours); abline(noD_widths, col="black" )
+
+lines(newx, conf_interval[,2], col="blue", lty=2)
+lines(newx, conf_interval[,3], col="blue", lty=2)
+
+#fill in area between regression line and confidence interval - very pretty but then you have to re-plot the points
+polygon(c(rev(newx), newx), c(rev(conf_interval[ ,3]), conf_interval[ ,2]), col = 'grey', border = NA)
+
+
+
+points(data_plot$fM.L ~ data_plot$tbM.L, 
+     
+     pch=19, col=colours); abline(model, col="black" )
+lines(newx, conf_interval[,2], col="blue", lty=2)
+lines(newx, conf_interval[,3], col="blue", lty=2)
+
+
+#add row names to your plot
+#text(log(data$fM.L) ~ log(data$tbM.L), labels=data$species )
+
+
+```
+
+
+
+```{r just a large bird regression}
+
+#make a data set with extant ratites
+ratite <- data2[c(5:25),]
+
+#make a data set with extinct large birds (ratites + dromorntithids)
+extinct <- data2[c(77:132),]
+
+#combine the 2 datasets
+largebirds_data <- rbind(ratite, extinct)
+
+largebirds_plot <- cbind (largebirds_data[,1:4], log (largebirds_data[,5:17]))
+
+
+#Also here setting up a vector of colours you can use to highlight _Genyornis_
+#make a vector of just pink
+colours <- rep("hotpink", nrow(largebirds_plot))
+#make a vector where any species name that has Genyornis is assigned purple
+colours[which(largebirds_plot$species == "newtoni")] <- "purple"
+colours[which(largebirds_plot$species == "lawsoni")] <- "green"
+colours[which(largebirds_plot$species == "woodburnei")] <- "black"
+colours[which(largebirds_plot$species == "maximus")] <- "red"
+colours[which(largebirds_plot$species == "modestus")] <- "blue"
+colours[which(largebirds_plot$genus == "Dinornis")] <- "orange"
+colours[which(largebirds_plot$genus == "Struthio")] <- "lightblue"
+colours[which(largebirds_plot$genus == "Pachyornis")] <- "brown"
+
+
+
+#linear model of the femur width vs tibia width in large flightless birds
+lb_widths <- lm(log(largebirds_data$fM.L)~log(largebirds_data$tbM.L))
+
+na.omit (lb_widths)
+#summary output of the linear model
+summary (lb_widths)
+
+
+min_xB <- sort(largebirds_plot$tbM.L)[1]
+max_xB <- sort(largebirds_plot$tbM.L, decreasing = TRUE)[1]
+
+
+
+#make dummy sequence of x for intervals. 
+#REDUCING THE DATA SET TO 66
+newxB <- seq(min_xB-1,max_xB+1,by = 0.05)
+
+#plot confidence intervals
+
+#This only works if the data are already logged. Not my preference but hey.
+#THIS IS NOT WORKING BECAUSE THE newxB DATA SET ONLY HAS 66 VALUES, WHILE THE CI SET HAS 77
+conf_intervalB <- predict(lb_widths, newdata=data.frame(tbM.L = newxB), interval="prediction", level = 0.95)
+
+
+plot (largebirds_plot$fM.L ~ largebirds_plot$tbM.L, 
+     pch=19, col=colours); abline(lb_widths, col="black" )
+
+
+lines(newxB, conf_interval[,2], col="blue", lty=2)
+lines(newxB, conf_interval[,3], col="blue", lty=2)
+
+#fill in area between regression line and confidence interval - very pretty but then you have to re-plot the points
+polygon(c(rev(newx), newx), c(rev(conf_interval[ ,3]), conf_interval[ ,2]), col = 'grey', border = NA)
+
+
+
+points(data_plot$fM.L ~ data_plot$tbM.L, 
+     
+     pch=19, col=colours); abline(model, col="black" )
+lines(newx, conf_interval[,2], col="blue", lty=2)
+lines(newx, conf_interval[,3], col="blue", lty=2)
+
+
+  
+```
+
+
 ```{r length vs width f}
 
 #linear model of the length vs width of the femur excluding Genyornis
@@ -164,10 +437,6 @@ summary(noGFLW)
 
 #plot of the length vs width of the femur
 plot(log(data$fL) ~ log(data$fM.L), pch=19, col=colours); abline(noGFLW, col="black")
-
-
-
-
 
 
 #getting a model for predicting CIs
@@ -298,93 +567,11 @@ lines(newxL, conf_intervalL [,3], col="blue", lty=2)
 ```
 
 
-```{r making a subset dataframe and calculating means base script}
-# Example data frame
-data <- data.frame(
-  Name = c("John", "Jane", "John", "Alice", "Bob"),
-  Score1 = c(80, 75, 85, 90, 95),
-  Score2 = c(70, 65, 75, 80, 85)
-)
-
-# Names for which you want to calculate means
-target_names <- c("John", "Bob")
-
-# Step 1: Subset rows with target names
-subset_data <- data[data$Name %in% target_names, ]
-
-# Step 2: Calculate mean for each column in the subset
-means <- colMeans(subset_data[, c("Score1", "Score2")])
-
-# Step 3: Print or use the means as needed
-print(means)
-
-```
 
 
 
-```{r aepyornithid hindlimb data from Hansford & Turvey 2018; calculating means}
-
-data_aepyorn <- read.csv(file = "../Data/Raw/Aepyronithid_hindlimb_measurements.csv")
 
 
-#some numeric columns import as non-numeric, as.numeric changes these columns into numeric columns
-data_aepyorn[, 5] <- as.numeric(data_aepyorn [,5])
-data_aepyorn[,10] <- as.numeric (data_aepyorn[,10])
-data_aepyorn[,12] <- as.numeric (data_aepyorn[,12])
-data_aepyorn[,15] <- as.numeric (data_aepyorn[,15])
-
-
-#species name for which mean is to be calculated for A. hildebrandti
-aep.hil <- c("hildebrandti")
-
-
-#a subset data frame for the rows that i want to target for A. hildebrandti
-subset_data <- data_aepyorn[data_aepyorn$genus %in% aep.hil,]
-
-
-#calculate the means of Aepyornis hildebrandti
-aep.hilm <- colMeans(subset_data[, c("fL", "fPW", "fDW", "fCr.Ca","fM.L","tbL","tbPW", "tbDW","tbCr.Ca","tbM.L","tmtL","tmtD.P","tmtM.L")], na.rm = TRUE)
-
-
-#printing the means for Aepyornis hildebrandti
-print(aep.hilm)
-
-
-
-#species name for which mean is to be calculated for A. maximus
-aep.max <- c("maximus")
-
-
-#a subset data frame for the rows that i want to target for A. maximus
-subset_datam <- data_aepyorn[data_aepyorn$genus %in% aep.max,]
-
-
-#calculate the means of Aepyornis maximus
-aep.maxi <- colMeans(subset_datam[, c("fL", "fPW", "fDW", "fCr.Ca","fM.L","tbL","tbPW", "tbDW","tbCr.Ca","tbM.L","tmtL","tmtD.P","tmtM.L")], na.rm = TRUE)
-
-
-#printing the means for Aepyornis maximus
-print(aep.maxi)
-
-
-
-#species name for which mean is to be calculated for M. modestus
-mul.mod <- c("modestus")
-
-
-#a subset data frame for the rows that i want to target for M. modestus
-subset_datamm <- data_aepyorn[data_aepyorn$genus %in% mul.mod,]
-
-
-#calculate the means of M. modestus
-mul.mode <- colMeans(subset_datamm[, c("fL", "fPW", "fDW", "fCr.Ca","fM.L","tbL","tbPW", "tbDW","tbCr.Ca","tbM.L","tmtL","tmtD.P","tmtM.L")], na.rm = TRUE)
-
-
-#printing the means for M. modestus
-print(mul.mode)
-
-
-```
 
 
 
