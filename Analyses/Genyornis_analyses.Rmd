@@ -184,14 +184,22 @@ data_plot <- cbind (data2[,1:4], log (data2[,5:17]))
 #make a vector of just pink
 colours <- rep("hotpink", nrow(data_plot))
 #make a vector where any species name that has Genyornis is assigned purple
-colours[which(data_plot$species == "newtoni")] <- "purple"
-colours[which(data_plot$species == "lawsoni")] <- "green"
-colours[which(data_plot$species == "woodburnei")] <- "black"
-colours[which(data_plot$species == "maximus")] <- "red"
-colours[which(data_plot$species == "modestus")] <- "blue"
-colours[which(data_plot$genus == "Dinornis")] <- "orange"
-colours[which(data_plot$genus == "Struthio")] <- "lightblue"
-colours[which(data_plot$genus == "Pachyornis")] <- "brown"
+colours[which(data_plot$species == "newtoni")] <- "#33cc33"
+colours[which(data_plot$genus == "Illbandornis")] <- "#196619"
+colours[which(data_plot$species == "maximus")] <- "#ff0000"
+colours[which(data_plot$species == "modestus")] <- "#990000"
+colours[which(data_plot$species == "robustus")] <- "#ff6600"
+colours[which(data_plot$species == "novaezealandiae")] <- "#b34700"
+colours[which(data_plot$genus == "Pachyornis")] <- "#ffc299"
+colours[which(data_plot$genus == "Struthio")] <- "#191966"
+colours[which(data_plot$genus == "Dromaius")] <- "#3366ff"
+colours[which(data_plot$genus == "Casuarius")] <- "#3333cc"
+colours[which(data_plot$genus == "Leipoa")] <- "#9900cc"
+colours[which(data_plot$genus == "Alectura")] <- "#800080"
+colours[which(data_plot$genus == "Cereopsis")] <- "#ff00ff"
+colours[which(data_plot$genus == "Anseranas")] <- "#ff0055"
+
+
 
 
 
@@ -224,14 +232,15 @@ lines(newx, conf_interval[,2], col="blue", lty=2)
 lines(newx, conf_interval[,3], col="blue", lty=2)
 
 #fill in area between regression line and confidence interval - very pretty but then you have to re-plot the points
-polygon(c(rev(newx), newx), c(rev(conf_interval[ ,3]), conf_interval[ ,2]), col = 'grey', border = NA)
+polygon(c(rev(newx), newx), c(rev(conf_interval[ ,3]), conf_interval[ ,2]), density = 25,col = 'grey', border = NA)
 
 
 
 points(data_plot$fM.L ~ data_plot$tbM.L, 
      
-     pch=19, col=colours); abline(model, col="black" )
+     pch=19, col=colours); abline(noD_widths, col="black" )
 lines(newx, conf_interval[,2], col="blue", lty=2)
+
 lines(newx, conf_interval[,3], col="blue", lty=2)
 
 
@@ -239,7 +248,7 @@ lines(newx, conf_interval[,3], col="blue", lty=2)
 
 
 #add row names to your plot
-#text(log(data$fM.L) ~ log(data$tbM.L), labels=data$species )
+#text(data_plot$fM.L ~ data_plot$tbM.L, labels=data_plot$species )
 
 
 ```
@@ -285,28 +294,29 @@ lines(newx, preds[ ,2], lty = 'dashed', col = 'blue')
 
 
 #Here we're log transforming first, because otherwise things don't work. 
-data_plot <- cbind (data2[,1:4], log (data2[,5:17]))
+data_plot2 <- cbind (data2[,1:4], log (data2[,5:17]))
 
 datanoD_plot <- cbind (data_noD[,1:4], log (data_noD[,5:17]))
 
 #Also here setting up a vector of colours you can use to highlight _Genyornis_
 #make a vector of just pink
-colours <- rep("hotpink", nrow(data_plot))
+colours <- rep("hotpink",nrow(data_plot))
 #make a vector where any species name that has Genyornis is assigned purple
-colours[which(data_plot$species == "newtoni")] <- "purple"
-colours[which(data_plot$species == "lawsoni")] <- "green"
-colours[which(data_plot$species == "woodburnei")] <- "black"
-colours[which(data_plot$species == "maximus")] <- "red"
-colours[which(data_plot$species == "modestus")] <- "blue"
-colours[which(data_plot$genus == "Dinornis")] <- "orange"
-colours[which(data_plot$genus == "Struthio")] <- "lightblue"
-colours[which(data_plot$genus == "Pachyornis")] <- "brown"
-
+colours[which(data_plot$species == "newtoni")] <- "#33cc33"
+colours[which(data_plot$genus == "Illbandornis")] <- "#196619"
+colours[which(data_plot$species == "maximus")] <- "#ff0000"
+colours[which(data_plot$species == "modestus")] <- "#990000"
+colours[which(data_plot$species == "robustus")] <- "#ff6600"
+colours[which(data_plot$species == "novaezealandiae")] <- "#b34700"
+colours[which(data_plot$genus == "Pachyornis")] <- "#ffc299"
+colours[which(data_plot$genus == "Struthio")] <- "#191966"
+colours[which(data_plot$genus == "Dromaius")] <- "#3366ff"
+colours[which(data_plot$genus == "Casuarius")] <- "#3333cc"
 
 
 #getting a model for predicting CIs
-model_noD <- lm(fM.L ~ tbM.L, data=datanoD_plot)
-summary(model)
+model2 <- lm(fM.L ~ tbM.L, data=data_plot2)
+summary(model2)
 
 #For the interval estimate to work, we need to find the smallest and largest values of x. All this is in https://stackoverflow.com/questions/46459620/plotting-a-95-confidence-interval-for-a-lm-object
 
@@ -320,7 +330,7 @@ newx <- seq(min_x-1,max_x+1,by = 0.05 )
 #plot confidence intervals
 
 #This only works if the data are already logged. Not my preference but hey.
-conf_interval <- predict(model, newdata=data.frame(tbM.L = newx), interval="prediction",    level = 0.95)
+conf_interval <- predict(model2, newdata=data.frame(tbM.L = newx), interval="prediction",    level = 0.95)
 
 
 plot(data_plot$fM.L ~ data_plot$tbM.L, 
@@ -338,7 +348,7 @@ polygon(c(rev(newx), newx), c(rev(conf_interval[ ,3]), conf_interval[ ,2]), col 
 
 points(data_plot$fM.L ~ data_plot$tbM.L, 
      
-     pch=19, col=colours); abline(model, col="black" )
+     pch=19, col=colours); abline(noD_widths, col="black" )
 lines(newx, conf_interval[,2], col="blue", lty=2)
 lines(newx, conf_interval[,3], col="blue", lty=2)
 
@@ -369,23 +379,24 @@ largebirds_plot <- cbind (largebirds_data[,1:4], log (largebirds_data[,5:17]))
 #make a vector of just pink
 colours <- rep("hotpink", nrow(largebirds_plot))
 #make a vector where any species name that has Genyornis is assigned purple
-colours[which(largebirds_plot$species == "newtoni")] <- "purple"
-colours[which(largebirds_plot$species == "lawsoni")] <- "green"
-colours[which(largebirds_plot$species == "woodburnei")] <- "black"
-colours[which(largebirds_plot$species == "maximus")] <- "red"
-colours[which(largebirds_plot$species == "modestus")] <- "blue"
-colours[which(largebirds_plot$genus == "Dinornis")] <- "orange"
-colours[which(largebirds_plot$genus == "Struthio")] <- "lightblue"
-colours[which(largebirds_plot$genus == "Pachyornis")] <- "brown"
+colours[which(largebirds_plot$species == "newtoni")] <- "#33cc33"
+colours[which(largebirds_plot$genus == "Illbandornis")] <- "#196619"
+colours[which(largebirds_plot$species == "maximus")] <- "#ff0000"
+colours[which(largebirds_plot$species == "modestus")] <- "#990000"
+colours[which(largebirds_plot$species == "robustus")] <- "#ff6600"
+colours[which(largebirds_plot$species == "novaezealandiae")] <- "#b34700"
+colours[which(largebirds_plot$genus == "Pachyornis")] <- "#ffc299"
+colours[which(largebirds_plot$genus == "Struthio")] <- "#191966"
+colours[which(largebirds_plot$genus == "Dromaius")] <- "#3366ff"
+colours[which(largebirds_plot$genus == "Casuarius")] <- "#3333cc"
 
 
 
 #linear model of the femur width vs tibia width in large flightless birds
-lb_widths <- lm(log(largebirds_data$fM.L)~log(largebirds_data$tbM.L))
+model3 <- lm(fM.L ~ tbM.L, data=largebirds_plot)
 
-na.omit (lb_widths)
 #summary output of the linear model
-summary (lb_widths)
+summary (model3)
 
 
 min_xB <- sort(largebirds_plot$tbM.L)[1]
@@ -394,34 +405,31 @@ max_xB <- sort(largebirds_plot$tbM.L, decreasing = TRUE)[1]
 
 
 #make dummy sequence of x for intervals. 
-#REDUCING THE DATA SET TO 66
 newxB <- seq(min_xB-1,max_xB+1,by = 0.05)
 
 #plot confidence intervals
 
 #This only works if the data are already logged. Not my preference but hey.
-#THIS IS NOT WORKING BECAUSE THE newxB DATA SET ONLY HAS 66 VALUES, WHILE THE CI SET HAS 77
-conf_intervalB <- predict(lb_widths, newdata=data.frame(tbM.L = newxB), interval="prediction", level = 0.95)
+conf_intervalB <- predict(model3, newdata=data.frame(tbM.L = newxB), interval="prediction", level = 0.95)
 
 
 plot (largebirds_plot$fM.L ~ largebirds_plot$tbM.L, 
-     pch=19, col=colours); abline(lb_widths, col="black" )
+     pch=19, col=colours); abline(model3, col="black" )
 
 
-lines(newxB, conf_interval[,2], col="blue", lty=2)
-lines(newxB, conf_interval[,3], col="blue", lty=2)
+lines(newxB, conf_intervalB[,2], col="blue", lty=2)
+lines(newxB, conf_intervalB[,3], col="blue", lty=2)
 
 #fill in area between regression line and confidence interval - very pretty but then you have to re-plot the points
-polygon(c(rev(newx), newx), c(rev(conf_interval[ ,3]), conf_interval[ ,2]), col = 'grey', border = NA)
+polygon(c(rev(newxB), newxB), c(rev(conf_intervalB[ ,3]), conf_intervalB[ ,2]), density = 25, col = 'grey', border = NA)
 
 
 
-points(data_plot$fM.L ~ data_plot$tbM.L, 
-     
-     pch=19, col=colours); abline(model, col="black" )
-lines(newx, conf_interval[,2], col="blue", lty=2)
-lines(newx, conf_interval[,3], col="blue", lty=2)
+points(largebirds_plot$fM.L ~ largebirds_plot$tbM.L, 
+     pch=19, col=colours); abline(model3, col="black" )
 
+lines(newxB, conf_intervalB[,2], col="blue", lty=2)
+lines(newxB, conf_intervalB[,3], col="blue", lty=2)
 
   
 ```
