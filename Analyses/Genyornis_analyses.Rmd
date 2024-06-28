@@ -11,6 +11,7 @@ editor_options:
 knitr::opts_chunk$set(echo=FALSE, message=FALSE, results='hide' )
 ```
 
+
 ```{r setup of libraries}
 #this sets the directory to the source directory without having to manually click your way there
 library(rstudioapi) # Safely Access the RStudio API
@@ -47,6 +48,7 @@ means <- colMeans(subset_data[, c("Score1", "Score2")])
 print(means)
 
 ```
+
 
 ```{r aepyornithid hindlimb data from Hansford & Turvey 2018; calculating means}
 
@@ -131,6 +133,7 @@ plot(log(data$fM.L) ~ log(data$tbM.L)); abline(reg1)
 
 ```
 
+
 ```{r make dataset w/o Genyornis}
 
 data_noG <- data[-c(77:82),]
@@ -164,6 +167,7 @@ summary(wD_widths)
 
 ```
 
+
 ```{r shaft circumferences}
 
 mean_widths <- data2 %>%
@@ -179,26 +183,27 @@ mean_widths <- data2 %>%
 ```{r plotting}
 #Here we're log transforming first, because otherwise things don't work. 
 
-data_plot <- cbind (data2[,1:4], log (data2[,5:17]))
+data_plot <- cbind (data2[,1:3], log (data2[,4:16]))
 
 #Also here setting up a vector of colours you can use to highlight _Genyornis_
 #make a vector of just pink
 colours <- rep("hotpink", nrow(data_plot))
 #make a vector where any species name that has Genyornis is assigned purple
-colours[which(data_plot$species == "newtoni")] <- "#33cc33"
-colours[which(data_plot$genus == "Illbandornis")] <- "#196619"
-colours[which(data_plot$species == "maximus")] <- "#ff0000"
-colours[which(data_plot$species == "modestus")] <- "#cc0000"
-colours[which(data_plot$species == "robustus")] <- "#ff6600"
-colours[which(data_plot$species == "novaezealandiae")] <- "#b34700"
-colours[which(data_plot$genus == "Pachyornis")] <- "#ffc299"
-colours[which(data_plot$genus == "Struthio")] <- "#191966"
-colours[which(data_plot$genus == "Dromaius")] <- "#3366ff"
-colours[which(data_plot$genus == "Casuarius")] <- "#3333cc"
-colours[which(data_plot$genus == "Leipoa")] <- "#9900cc"
-colours[which(data_plot$genus == "Alectura")] <- "#800080"
-colours[which(data_plot$genus == "Cereopsis")] <- "#ff00ff"
-colours[which(data_plot$genus == "Anseranas")] <- "#ff0055"
+colours[which(data_plot$species == "Genyornis newtoni")] <- "#33cc33"
+colours[which(data_plot$species == "Illbandornis lawsoni")] <- "#196619"
+colours[which(data_plot$species == "Illbandornis woodburnei")] <- "green"
+colours[which(data_plot$species == "Aepyornis maximus")] <- "#ff0000"
+colours[which(data_plot$species == "Mullerornis modestus")] <- "#cc0000"
+colours[which(data_plot$species == "Dinornis robustus")] <- "#ff6600"
+colours[which(data_plot$species == "Dinornis novaezealandiae")] <- "#b34700"
+colours[which(data_plot$species == "Pachyornis elephantopus")] <- "#ffc299"
+colours[which(data_plot$species == "Struthio camelus")] <- "#191966"
+colours[which(data_plot$species == "Dromaius novaehollandiae")] <- "#3366ff"
+colours[which(data_plot$species == "Casuarius casuarius")] <- "#3333cc"
+colours[which(data_plot$species == "Leipoa ocellata")] <- "#9900cc"
+colours[which(data_plot$species == "Alectura lathami")] <- "#800080"
+colours[which(data_plot$species == "Cereopsis novaehollandiae")] <- "#ff00ff"
+colours[which(data_plot$species == "Anseranas semipalmata")] <- "#ff0055"
 
 
 #getting a model for predicting CIs
@@ -372,9 +377,8 @@ extinct <- data2[c(77:132),]
 #combine the 2 datasets
 largebirds_data <- rbind(ratite, extinct)
 
-largebirds_plot <- cbind (largebirds_data[,1:4], log (largebirds_data[,5:17]))
+largebirds_plot <- cbind (largebirds_data[,1:3], log (largebirds_data[,4:16]))
 ```
-
 
 
 ```{r large bird regression for femur width and tibiotarsus width}
@@ -383,17 +387,17 @@ largebirds_plot <- cbind (largebirds_data[,1:4], log (largebirds_data[,5:17]))
 #make a vector of just pink
 colours <- rep("hotpink", nrow(largebirds_plot))
 #make a vector where any species name that has Genyornis is assigned purple
-colours[which(largebirds_plot$species == "newtoni")] <- "#33cc33"
-colours[which(largebirds_plot$genus == "Illbandornis")] <- "#196619"
-colours[which(largebirds_plot$species == "maximus")] <- "#ff0000"
-colours[which(largebirds_plot$species == "modestus")] <- "#cc0000"
-colours[which(largebirds_plot$species == "robustus")] <- "#ff6600"
-colours[which(largebirds_plot$species == "novaezealandiae")] <- "#b34700"
-colours[which(largebirds_plot$genus == "Pachyornis")] <- "#ffc299"
-colours[which(largebirds_plot$genus == "Struthio")] <- "#191966"
-colours[which(largebirds_plot$genus == "Dromaius")] <- "#3366ff"
-colours[which(largebirds_plot$genus == "Casuarius")] <- "#3333cc"
-
+colours[which(largebirds_plot$species == "Genyornis newtoni")] <- "#33cc33"
+colours[which(largebirds_plot$species == "Illbandornis lawsoni")] <- "#196619"
+colours[which(largebirds_plot$species == "Illbandornis woodburnei")] <- "green"
+colours[which(largebirds_plot$species == "Aepyornis maximus")] <- "#ff0000"
+colours[which(largebirds_plot$species == "Mullerornis modestus")] <- "#cc0000"
+colours[which(largebirds_plot$species == "Dinornis robustus")] <- "#ff6600"
+colours[which(largebirds_plot$species == "Dinornis novaezealandiae")] <- "#b34700"
+colours[which(largebirds_plot$species == "Pachyornis elephantopus")] <- "#ffc299"
+colours[which(largebirds_plot$species == "Struthio camelus")] <- "#191966"
+colours[which(largebirds_plot$species == "Dromaius novaehollandiae")] <- "#3366ff"
+colours[which(largebirds_plot$species == "Casuarius casuarius")] <- "#3333cc"
 
 #linear model of the femur width vs tibia width in large flightless birds
 model3 <- lm(fM.L ~ tbM.L, data=largebirds_plot)
@@ -435,6 +439,7 @@ lines(newxB, conf_intervalB[,3], col="blue", lty=2)
   
 ```
 
+
 ```{r length vs width f}
 
 #linear model of the length vs width of the femur excluding Genyornis
@@ -446,6 +451,26 @@ summary(noGFLW)
 #plot of the length vs width of the femur
 plot(log(data$fL) ~ log(data$fM.L), pch=19, col=colours); abline(noGFLW, col="black")
 
+
+#make a vector of just pink
+colours <- rep("hotpink", nrow(data_plot))
+#make a vector where any species name that has Genyornis is assigned purple
+colours[which(data_plot$species == "Genyornis newtoni")] <- "#33cc33"
+colours[which(data_plot$species == "Illbandornis lawsoni")] <- "#196619"
+colours[which(data_plot$species == "Illbandornis woodburnei")] <- "green"
+colours[which(data_plot$species == "Aepyornis maximus")] <- "#ff0000"
+colours[which(data_plot$species == "Aepyornis hildebrandti")] <- "red"
+colours[which(data_plot$species == "Mullerornis modestus")] <- "#cc0000"
+colours[which(data_plot$species == "Dinornis robustus")] <- "#ff6600"
+colours[which(data_plot$species == "Dinornis novaezealandiae")] <- "#b34700"
+colours[which(data_plot$species == "Pachyornis elephantopus")] <- "#ffc299"
+colours[which(data_plot$species == "Struthio camelus")] <- "#191966"
+colours[which(data_plot$species == "Dromaius novaehollandiae")] <- "#3366ff"
+colours[which(data_plot$species == "Casuarius casuarius")] <- "#3333cc"
+colours[which(data_plot$species == "Leipoa ocellata")] <- "#9900cc"
+colours[which(data_plot$species == "Alectura lathami")] <- "#800080"
+colours[which(data_plot$species == "Cereopsis novaehollandiae")] <- "#ff00ff"
+colours[which(data_plot$species == "Anseranas semipalmata")] <- "#ff0055"
 
 #getting a model for predicting CIs
 modelFLW <- lm(fL ~ fM.L, data=data_plot)
@@ -463,7 +488,7 @@ newxW <- seq(min_xW-1,max_xW+1,by = 0.05 )
 #plot confidence intervals
 
 #This only works if the data are already logged. Not my preference but hey.
-conf_intervalW <- predict(modelFLW, newdata=data.frame(fM.L = newxW), interval="prediction",    level = 0.95)
+conf_intervalW <- predict(modelFLW, newdata=data.frame(fM.L = newxW), interval="prediction", level = 0.95)
 
 
 
@@ -474,7 +499,7 @@ lines(newxW, conf_intervalW [,2], col="blue", lty=2)
 lines(newxW, conf_intervalW [,3], col="blue", lty=2)
 
 #fill in area between regression line and confidence interval - very pretty but then you have to re-plot the points
-polygon(c(rev(newxW), newxW), c(rev(conf_intervalW [ ,3]), conf_intervalW[ ,2]), col = 'grey', border = NA)
+polygon(c(rev(newxW), newxW), c(rev(conf_intervalW [ ,3]), conf_intervalW[ ,2]),density = 25, col = 'grey', border = NA)
 
 
 
@@ -490,6 +515,7 @@ lines(newxW, conf_intervalW [,3], col="blue", lty=2)
 #text(log(data$fL) ~ log(data$fM.L), label=data$species)
 
 ```
+
 
 ```{r plotting the femur and tibia length}
 
@@ -535,7 +561,7 @@ lines(newxL, conf_intervalL [,3], col="blue", lty=2)
 
 
 #fill in area between regression line and confidence interval - very pretty but then you have to re-plot the points
-polygon(c(rev(newxL), newxL), c(rev(conf_intervalL [ ,3]), conf_intervalL[ ,2]), col = 'grey', border = NA)
+polygon(c(rev(newxL), newxL), c(rev(conf_intervalL [ ,3]), conf_intervalL[ ,2]), density = 25, col = 'grey', border = NA)
 
 
 
@@ -547,6 +573,7 @@ lines(newxL, conf_intervalL [,3], col="blue", lty=2)
 
 
 ```
+
 
 ```{r raw code for bar plot}
 
