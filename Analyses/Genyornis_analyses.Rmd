@@ -24,6 +24,8 @@ data<-read.csv(file = "../Data/Raw/honours_hindlimbs.csv")
 #data that includes Dinornithiformes, Dromornis stirtoni, & Illbandornis sp.
 data2 <- read.csv (file = "../Data/Raw/honours_hindlimb_updated.csv")
 
+library(tidyverse)
+
 ```
 
 
@@ -297,24 +299,30 @@ lines(newx, preds[ ,2], lty = 'dashed', col = 'blue')
 
 
 #Here we're log transforming first, because otherwise things don't work. 
-data_plot2 <- cbind (data2[,1:4], log (data2[,5:17]))
+data_plot2 <- cbind (data2[,1:3], log (data2[,4:16]))
 
-datanoD_plot <- cbind (data2_noD[,1:4], log (data2_noD[,5:17]))
+datanoD_plot <- cbind (data2_noD[,1:3], log (data2_noD[,4:16]))
 
 #Also here setting up a vector of colours you can use to highlight _Genyornis_
 #make a vector of just pink
 colours <- rep("hotpink",nrow(data_plot2))
 #make a vector where any species name that has Genyornis is assigned purple
-colours[which(data_plot2$species == "newtoni")] <- "#33cc33"
-colours[which(data_plot2$genus == "Illbandornis")] <- "#196619"
-colours[which(data_plot2$species == "maximus")] <- "#ff0000"
-colours[which(data_plot2$species == "modestus")] <- "#990000"
-colours[which(data_plot2$species == "robustus")] <- "#ff6600"
-colours[which(data_plot2$species == "novaezealandiae")] <- "#b34700"
-colours[which(data_plot2$genus == "Pachyornis")] <- "#ffc299"
-colours[which(data_plot2$genus == "Struthio")] <- "#191966"
-colours[which(data_plot2$genus == "Dromaius")] <- "#3366ff"
-colours[which(data_plot2$genus == "Casuarius")] <- "#3333cc"
+colours[which(data_plot2$species == "Genyornis newtoni")] <- "#33cc33"
+colours[which(data_plot2$species == "Illbandornis lawsoni")] <- "#196619"
+colours[which(data_plot2$species == "Illbandornis woodburnei")] <- "green"
+colours[which(data_plot2$species == "Aepyornis maximus")] <- "#ff0000"
+colours[which(data_plot2$species == "Mullerornis modestus")] <- "#cc0000"
+colours[which(data_plot2$species == "Dinornis robustus")] <- "#ff6600"
+colours[which(data_plot2$species == "Dinornis novaezealandiae")] <- "#b34700"
+colours[which(data_plot2$species == "Pachyornis elephantopus")] <- "#ffc299"
+colours[which(data_plot2$species == "Struthio camelus")] <- "#191966"
+colours[which(data_plot2$species == "Dromaius novaehollandiae")] <- "#3366ff"
+colours[which(data_plot2$species == "Casuarius casuarius")] <- "#3333cc"
+colours[which(data_plot2$species == "Leipoa ocellata")] <- "#9900cc"
+colours[which(data_plot2$species == "Alectura lathami")] <- "#800080"
+colours[which(data_plot2$species == "Cereopsis novaehollandiae")] <- "#ff00ff"
+colours[which(data_plot2$species == "Anseranas semipalmata")] <- "#ff0055"
+
 
 
 #getting a model for predicting CIs
@@ -346,7 +354,7 @@ lines(newx, conf_interval[,2], col="blue", lty=2)
 lines(newx, conf_interval[,3], col="blue", lty=2)
 
 #fill in area between regression line and confidence interval - very pretty but then you have to re-plot the points
-polygon(c(rev(newx), newx), c(rev(conf_interval[ ,3]), conf_interval[ ,2]), col = 'grey', border = NA)
+polygon(c(rev(newx), newx), c(rev(conf_interval[ ,3]), conf_interval[ ,2]), density = 25, col = 'grey', border = NA)
 
 
 
@@ -442,16 +450,6 @@ lines(newxB, conf_intervalB[,3], col="blue", lty=2)
 
 ```{r length vs width f}
 
-#linear model of the length vs width of the femur excluding Genyornis
-noGFLW <- lm(log(data_noG$fL) ~ log(data_noG$fM.L))
-
-#summary of the linear model of the length vs width of the femur excluding Genyornis
-summary(noGFLW)
-
-#plot of the length vs width of the femur
-plot(log(data$fL) ~ log(data$fM.L), pch=19, col=colours); abline(noGFLW, col="black")
-
-
 #make a vector of just pink
 colours <- rep("hotpink", nrow(data_plot))
 #make a vector where any species name that has Genyornis is assigned purple
@@ -518,17 +516,6 @@ lines(newxW, conf_intervalW [,3], col="blue", lty=2)
 
 
 ```{r plotting the femur and tibia length}
-
-#linear model of the length of the femur vs the tibiotarsus excluding Genyornis
-noGFTL <- lm(log(data_noG$fL) ~ log(data_noG$tbL))
-
-
-#summary of the linear model of the length vs width of the femur excluding Genyornis
-summary(noGFTL)
-
-#plot of the length vs width of the femur
-plot(log(data$fL) ~ log(data$tbL), pch=19, col=colours)
-     abline(noGFTL, col="black")
 
 
 #getting a model for predicting CIs
@@ -649,6 +636,9 @@ ggplot(
     color = "Species", shape = "Species"
   )
 
+#here is the link that I was using https://r4ds.hadley.nz/data-visualize
+#geom_point removes rows containing missing values or values outside the scale range
+
 #might see what it looks like log() transformed, but currently (26/06/2024) am happy not to
 
 
@@ -688,10 +678,6 @@ ggplot(
 
 #if I add the colours to the species, the legend than assigns the species as hex values
 #geom_point removes rows containing missing values or values outside the scale range
-
-#here is the link that I was using https://r4ds.hadley.nz/data-visualize
-
-#will likely be able to use the raw Hansford & Turvey (2018) measurements for Aepyornithiformes, as this method does not require individuals
 
 
 ```
