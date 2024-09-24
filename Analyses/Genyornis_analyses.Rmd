@@ -116,9 +116,10 @@ print(mul.mode)
 
 ```
 
-
+#LEAST SQUARE REGRESSIONS
 #Titles also often go here - up to you :-)
 #Read up on Reduced Major Axis (RMA) regression which allows for both variable being responses (rather than y being response, x being predictor - but don't get too hung up about this now :-))
+
 ```{r Amelias first analyses}
 #just a summary of the data
 summary(data)
@@ -553,6 +554,74 @@ lines(newxL, conf_intervalL [,3], col="blue", lty=2)
 ```
 
 
+```{r plotting femur widths against each other}
+
+#getting a model for predicting CIs
+modelFW <- lm(fM.L ~ fCr.Ca, data=data_plot)
+summary(modelFW)
+
+#For the interval estimate to work, we need to find the smallest and largest values of x. All this is in https://stackoverflow.com/questions/46459620/plotting-a-95-confidence-interval-for-a-lm-object
+
+#But X in this case has NAs so we're here finding the lowest non-NA value by sorting from smallest to largest and taking the first value
+min_xFW <- sort(data_plot$fCr.Ca)[1]
+max_xFW <- sort(data_plot$fCr.Ca, decreasing = TRUE)[1]
+
+#make dummy sequence of x for intervals. 
+newxFW <- seq(min_xFW-1,max_xFW+1,by = 0.05 )
+
+#plot confidence intervals
+
+#This only works if the data are already logged. Not my preference but hey.
+conf_intervalFW <- predict(modelFW, newdata=data.frame(fCr.Ca = newxW), interval="prediction", level = 0.95)
+
+
+
+plot(data=data_plot, fM.L ~ fCr.Ca,
+     pch=19, col=colours); abline(modelFW, col="black" )
+
+lines(newxFW, conf_intervalFW [,2], col="blue", lty=2)
+lines(newxFW, conf_intervalFW [,3], col="blue", lty=2)
+
+#fill in area between regression line and confidence interval - very pretty but then you have to re-plot the points
+polygon(c(rev(newxFW), newxFW), c(rev(conf_intervalFW [ ,3]), conf_intervalFW[ ,2]),density = 25, col = 'grey', border = NA)
+
+
+
+points(data=data_plot, fM.L ~ fCr.Ca,
+     
+     pch=19, col=colours); abline(modelFLW, col="black" )
+lines(newxFW, conf_intervalFW [,2], col="blue", lty=2)
+lines(newxFW, conf_intervalFW [,3], col="blue", lty=2)
+
+
+
+
+```
+
+
+
+#REDUCED MAJOR AXIS REGRESSIONS
+
+```{r rma femur mediolateral vs tibia mediolateral}
+
+#make sure that lmodel2 is installed
+library(lmodel2)
+
+#trying to run a reduced major axis regression
+#this creates the model that will hopefully work when creating CIs
+data2_rma <- lmodel2(fM.L~tbM.L, data=data_plot2, "relative", "relative", nperm=99)
+summary(data2_rma)
+
+#very unpretty plots but a starting point
+plot(data2_rma, "SMA")
+plot(data2_rma, "RMA")
+
+
+```
+
+
+#LIMB PROPORTIONS
+
 ```{r raw code for bar plot}
 
 # create a dataset
@@ -601,6 +670,36 @@ ggplot(mean_lengths, aes(fill = bone, y = mean_length, x = species)) +
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1))
   
 
+```
+
+```{r graph of proportion of hindlimbs in birds excl. moas}
+
+#making a seperate dataset w/o moas
+meanL_noM <- mean_lengths [-c(10:18),]
+
+
+#making sure that the bone is a factor so that it stacks correctly in the plot
+meanL_noM$bone <- factor(meanL_noM$bone, levels = c("Femur", "Tibiotarsus", "Tarsometatarsus"))
+
+#this makes the species labels along the x axis run in this order
+meanL_noM$species <- factor (meanL_noM$species, levels = c("Struthio camelus", "Casuarius casuarius",	"Dromaius novaehollandiae",	"Mullerornis modestus",	"Aepyornis maximus",	"Alectura lathami",	"Leipoa ocellata",	"Anseranas semipalmata",	"Cereopsis novaehollandiae",	"Dinornis stirtoni", "Illbandornis woodburnei",	"Illbandornis lawsoni",	"Genyornis newtoni"))
+
+#code for the bar plot
+ggplot(meanL_noM, aes(fill = bone, y = mean_length, x = species)) + 
+    geom_bar(position="fill", stat="identity") +
+  #labels for the x, y axis, plot title, and legend
+  labs(title = "Mean Lengths of Bones by Species",
+       x = "Species",
+       y = "Total pecentage of hindlimb legnth ",
+       fill = "Hindlimb bone") +
+ #colours for the hindlimb bones and order that they should plot as
+   scale_fill_manual(values = c("Femur" = "#e31a1c", "Tibiotarsus" = "#1f78b4", "Tarsometatarsus" = "#33a02c")) +
+  #y axis should be in 10% increments instead of the standaard 25%
+  scale_y_continuous(breaks = seq(0, 1, by = 0.1),
+                       labels = function(x) paste0(x * 100, "%")) +
+  #tilts the x axis labels vertical
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1))
+  
 ```
 
 
