@@ -185,18 +185,12 @@ colours <- rep("hotpink", nrow(data_plot))
 colours[which(data_plot$species == "Genyornis newtoni")] <- "#33cc33"
 colours[which(data_plot$species == "Illbandornis lawsoni")] <- "#196619"
 colours[which(data_plot$species == "Illbandornis woodburnei")] <- "green"
-colours[which(data_plot$species == "Aepyornis maximus")] <- "#ff0000"
-colours[which(data_plot$species == "Mullerornis modestus")] <- "#cc0000"
-colours[which(data_plot$species == "Dinornis robustus")] <- "#ff6600"
-colours[which(data_plot$species == "Dinornis novaezealandiae")] <- "#b34700"
-colours[which(data_plot$species == "Pachyornis elephantopus")] <- "#ffc299"
-colours[which(data_plot$species == "Struthio camelus")] <- "#191966"
-colours[which(data_plot$species == "Dromaius novaehollandiae")] <- "#3366ff"
-colours[which(data_plot$species == "Casuarius casuarius")] <- "#3333cc"
-colours[which(data_plot$species == "Leipoa ocellata")] <- "#9900cc"
-colours[which(data_plot$species == "Alectura lathami")] <- "#800080"
-colours[which(data_plot$species == "Cereopsis novaehollandiae")] <- "#ff00ff"
-colours[which(data_plot$species == "Anseranas semipalmata")] <- "#ff0055"
+colours[which(data_plot$order == "Anseriformes")] <- "#ff0055"
+colours[which(data_plot$order == "Galliformes")] <- "#800080"
+colours[which(data_plot$order == "Casuariiformes")] <- "#3333cc"
+colours[which(data_plot$order == "Struthioniformes")] <- "#3333cc"
+colours[which(data_plot$order == "Dinornithiformes")] <- "#b34700"
+colours[which(data_plot$order == "Aepyornithiformes")] <- "#cc0000"
 
 
 #getting a model for predicting CIs
@@ -301,19 +295,12 @@ colours <- rep("hotpink",nrow(data_plot2))
 colours[which(data_plot2$species == "Genyornis newtoni")] <- "#33cc33"
 colours[which(data_plot2$species == "Illbandornis lawsoni")] <- "#196619"
 colours[which(data_plot2$species == "Illbandornis woodburnei")] <- "green"
-colours[which(data_plot2$species == "Aepyornis maximus")] <- "#ff0000"
-colours[which(data_plot2$species == "Mullerornis modestus")] <- "#cc0000"
-colours[which(data_plot2$species == "Dinornis robustus")] <- "#ff6600"
-colours[which(data_plot2$species == "Dinornis novaezealandiae")] <- "#b34700"
-colours[which(data_plot2$species == "Pachyornis elephantopus")] <- "#ffc299"
-colours[which(data_plot2$species == "Struthio camelus")] <- "#191966"
-colours[which(data_plot2$species == "Dromaius novaehollandiae")] <- "#3366ff"
-colours[which(data_plot2$species == "Casuarius casuarius")] <- "#3333cc"
-colours[which(data_plot2$species == "Leipoa ocellata")] <- "#9900cc"
-colours[which(data_plot2$species == "Alectura lathami")] <- "#800080"
-colours[which(data_plot2$species == "Cereopsis novaehollandiae")] <- "#ff00ff"
-colours[which(data_plot2$species == "Anseranas semipalmata")] <- "#ff0055"
-
+colours[which(data_plot2$order == "Anseriformes")] <- "#ff0055"
+colours[which(data_plot2$order == "Galliformes")] <- "#800080"
+colours[which(data_plot2$order == "Casuariiformes")] <- "#3333cc"
+colours[which(data_plot2$order == "Struthioniformes")] <- "#3333cc"
+colours[which(data_plot2$order == "Dinornithiformes")] <- "#b34700"
+colours[which(data_plot2$order == "Aepyornithiformes")] <- "#cc0000"
 
 
 #getting a model for predicting CIs
@@ -389,14 +376,10 @@ colours <- rep("hotpink", nrow(largebirds_plot))
 colours[which(largebirds_plot$species == "Genyornis newtoni")] <- "#33cc33"
 colours[which(largebirds_plot$species == "Illbandornis lawsoni")] <- "#196619"
 colours[which(largebirds_plot$species == "Illbandornis woodburnei")] <- "green"
-colours[which(largebirds_plot$species == "Aepyornis maximus")] <- "#ff0000"
-colours[which(largebirds_plot$species == "Mullerornis modestus")] <- "#cc0000"
-colours[which(largebirds_plot$species == "Dinornis robustus")] <- "#ff6600"
-colours[which(largebirds_plot$species == "Dinornis novaezealandiae")] <- "#b34700"
-colours[which(largebirds_plot$species == "Pachyornis elephantopus")] <- "#ffc299"
-colours[which(largebirds_plot$species == "Struthio camelus")] <- "#191966"
-colours[which(largebirds_plot$species == "Dromaius novaehollandiae")] <- "#3366ff"
-colours[which(largebirds_plot$species == "Casuarius casuarius")] <- "#3333cc"
+colours[which(largebirds_plot$order == "Casuariiformes")] <- "#3333cc"
+colours[which(largebirds_plot$order == "Struthioniformes")] <- "#3333cc"
+colours[which(largebirds_plot$order == "Dinornithiformes")] <- "#b34700"
+colours[which(largebirds_plot$order == "Aepyornithiformes")] <- "#cc0000"
 
 #linear model of the femur width vs tibia width in large flightless birds
 model3 <- lm(fM.L ~ tbM.L, data=largebirds_plot)
@@ -441,25 +424,20 @@ lines(newxB, conf_intervalB[,3], col="blue", lty=2)
 
 ```{r length vs width f}
 
+#Also here setting up a vector of colours you can use to highlight _Genyornis_
 #make a vector of just pink
-colours <- rep("hotpink", nrow(data_plot))
+colours <- rep("hotpink",nrow(data_plot2))
 #make a vector where any species name that has Genyornis is assigned purple
-colours[which(data_plot$species == "Genyornis newtoni")] <- "#33cc33"
-colours[which(data_plot$species == "Illbandornis lawsoni")] <- "#196619"
-colours[which(data_plot$species == "Illbandornis woodburnei")] <- "green"
-colours[which(data_plot$species == "Aepyornis maximus")] <- "#ff0000"
-colours[which(data_plot$species == "Aepyornis hildebrandti")] <- "red"
-colours[which(data_plot$species == "Mullerornis modestus")] <- "#cc0000"
-colours[which(data_plot$species == "Dinornis robustus")] <- "#ff6600"
-colours[which(data_plot$species == "Dinornis novaezealandiae")] <- "#b34700"
-colours[which(data_plot$species == "Pachyornis elephantopus")] <- "#ffc299"
-colours[which(data_plot$species == "Struthio camelus")] <- "#191966"
-colours[which(data_plot$species == "Dromaius novaehollandiae")] <- "#3366ff"
-colours[which(data_plot$species == "Casuarius casuarius")] <- "#3333cc"
-colours[which(data_plot$species == "Leipoa ocellata")] <- "#9900cc"
-colours[which(data_plot$species == "Alectura lathami")] <- "#800080"
-colours[which(data_plot$species == "Cereopsis novaehollandiae")] <- "#ff00ff"
-colours[which(data_plot$species == "Anseranas semipalmata")] <- "#ff0055"
+colours[which(data_plot2$species == "Genyornis newtoni")] <- "#33cc33"
+colours[which(data_plot2$species == "Illbandornis lawsoni")] <- "#196619"
+colours[which(data_plot2$species == "Illbandornis woodburnei")] <- "green"
+colours[which(data_plot2$order == "Anseriformes")] <- "#ff0055"
+colours[which(data_plot2$order == "Galliformes")] <- "#800080"
+colours[which(data_plot2$order == "Casuariiformes")] <- "#3333cc"
+colours[which(data_plot2$order == "Struthioniformes")] <- "#3333cc"
+colours[which(data_plot2$order == "Dinornithiformes")] <- "#b34700"
+colours[which(data_plot2$order == "Aepyornithiformes")] <- "#cc0000"
+
 
 
 #getting a model for predicting CIs
@@ -508,6 +486,19 @@ lines(newxW, conf_intervalW [,3], col="blue", lty=2)
 
 
 ```{r plotting the femur and tibia length}
+#Also here setting up a vector of colours you can use to highlight _Genyornis_
+#make a vector of just pink
+colours <- rep("hotpink",nrow(data_plot2))
+#make a vector where any species name that has Genyornis is assigned purple
+colours[which(data_plot2$species == "Genyornis newtoni")] <- "#33cc33"
+colours[which(data_plot2$species == "Illbandornis lawsoni")] <- "#196619"
+colours[which(data_plot2$species == "Illbandornis woodburnei")] <- "green"
+colours[which(data_plot2$order == "Anseriformes")] <- "#ff0055"
+colours[which(data_plot2$order == "Galliformes")] <- "#800080"
+colours[which(data_plot2$order == "Casuariiformes")] <- "#3333cc"
+colours[which(data_plot2$order == "Struthioniformes")] <- "#3333cc"
+colours[which(data_plot2$order == "Dinornithiformes")] <- "#b34700"
+colours[which(data_plot2$order == "Aepyornithiformes")] <- "#cc0000"
 
 
 #getting a model for predicting CIs
@@ -555,6 +546,21 @@ lines(newxL, conf_intervalL [,3], col="blue", lty=2)
 
 
 ```{r plotting femur widths against each other}
+#Also here setting up a vector of colours you can use to highlight _Genyornis_
+#make a vector of just pink
+colours <- rep("hotpink",nrow(data_plot2))
+#make a vector where any species name that has Genyornis is assigned purple
+colours[which(data_plot2$species == "Genyornis newtoni")] <- "#33cc33"
+colours[which(data_plot2$species == "Illbandornis lawsoni")] <- "#196619"
+colours[which(data_plot2$species == "Illbandornis woodburnei")] <- "green"
+colours[which(data_plot2$order == "Anseriformes")] <- "#ff0055"
+colours[which(data_plot2$order == "Galliformes")] <- "#800080"
+colours[which(data_plot2$order == "Casuariiformes")] <- "#3333cc"
+colours[which(data_plot2$order == "Struthioniformes")] <- "#3333cc"
+colours[which(data_plot2$order == "Dinornithiformes")] <- "#b34700"
+colours[which(data_plot2$order == "Aepyornithiformes")] <- "#cc0000"
+
+
 
 #getting a model for predicting CIs
 modelFW <- lm(fM.L ~ fCr.Ca, data=data_plot)
@@ -597,6 +603,65 @@ lines(newxFW, conf_intervalFW [,3], col="blue", lty=2)
 
 
 ```
+
+
+
+```{r plotting circumference}
+circ <- read.csv (file = "../Data/Raw/hindlimb_circumference.csv")
+
+cbind (data2[,1:3], log (data2[,4:16]))
+
+circ_plot <- cbind (circ[,1:3], log (circ[,4:9]))
+
+
+#make a vector of just pink
+colours <- rep("hotpink", nrow(circ_plot))
+#make a vector where any species name that has Genyornis is assigned purple
+colours[which(circ_plot$species == "Genyornis newtoni")] <- "#33cc33"
+colours[which(circ_plot$order == "Anseriformes")] <- "#ff0055"
+colours[which(circ_plot$order == "Galliformes")] <- "#800080"
+colours[which(circ_plot$order == "Casuariiformes")] <- "#3333cc"
+colours[which(circ_plot$order == "Struthioniformes")] <- "#3333cc"
+
+#getting a model for predicting CIs
+modelCirc<- lm(fCIRC ~ tbCIRC, data=circ_plot)
+summary(modelCirc)
+
+#For the interval estimate to work, we need to find the smallest and largest values of x. All this is in https://stackoverflow.com/questions/46459620/plotting-a-95-confidence-interval-for-a-lm-object
+
+#But X in this case has NAs so we're here finding the lowest non-NA value by sorting from smallest to largest and taking the first value
+min_xCIRC <- sort(circ_plot$tbCIRC)[1]
+max_xCIRC <- sort(circ_plot$tbCIRC, decreasing = TRUE)[1]
+
+#make dummy sequence of x for intervals. 
+newxCIRC <- seq(min_xCIRC-1,min_xCIRC+1,by = 0.05 )
+
+#plot confidence intervals
+
+#This only works if the data are already logged. Not my preference but hey.
+conf_intervalCIRC <- predict(modelCirc, newdata=data.frame(tbCIRC = newxCIRC), interval="prediction", level = 0.95)
+
+
+
+plot(circ_plot$fCIRC ~ circ_plot$tbCIRC, 
+     pch=19, col=colours); abline(modelCirc, col="black" )
+
+lines(newxCIRC, conf_intervalCIRC [,2], col="blue", lty=2)
+lines(newxCIRC, conf_intervalCIRC [,3], col="blue", lty=2)
+
+#fill in area between regression line and confidence interval - very pretty but then you have to re-plot the points
+polygon(c(rev(newxCIRC), newxCIRC), c(rev(conf_intervalCIRC [ ,3]), conf_intervalCIRC[ ,2]),density = 25, col = 'grey', border = NA)
+
+
+plot(circ_plot$fCIRC ~ circ_plot$tbCIRC, 
+     pch=19, col=colours); abline(modelCirc, col="black" )
+
+lines(newxCIRC, conf_intervalCIRC [,2], col="blue", lty=2)
+lines(newxCIRC, conf_intervalCIRC [,3], col="blue", lty=2)
+
+
+```
+
 
 
 
@@ -651,11 +716,12 @@ mean_lengths <- read.csv (file = "../Data/Raw/mean_lengths_2.csv")
 mean_lengths$bone <- factor(mean_lengths$bone, levels = c("Femur", "Tibiotarsus", "Tarsometatarsus"))
 
 #this makes the species labels along the x axis run in this order
-mean_lengths$species <- factor (mean_lengths$species, levels = c("Struthio camelus", "Casuarius casuarius",	"Dromaius novaehollandiae",	"Pachyornis elephantopus",	"Dinornis novaezealandiae",	"Dinornis robustus",	"Mullerornis modestus",	"Aepyornis maximus",	"Alectura lathami",	"Leipoa ocellata",	"Anseranas semipalmata",	"Cereopsis novaehollandiae",	"Dinornis stirtoni", "Illbandornis woodburnei",	"Illbandornis lawsoni",	"Genyornis newtoni"))
+mean_lengths$species <- factor (mean_lengths$species, levels = c("Struthio camelus", "Casuarius casuarius",	"Dromaius novaehollandiae",	"Pachyornis elephantopus",	"Dinornis novaezealandiae",	"Dinornis robustus",	"Mullerornis modestus",	"Aepyornis maximus",	"Alectura lathami",	"Leipoa ocellata",	"Anseranas semipalmata",	"Cereopsis novaehollandiae",	"Anhima cornuta", "Dinornis stirtoni", "Illbandornis woodburnei",	"Illbandornis lawsoni",	"Genyornis newtoni"))
 
 #code for the bar plot
 ggplot(mean_lengths, aes(fill = bone, y = mean_length, x = species)) + 
     geom_bar(position="fill", stat="identity") +
+  geom_abline(slope=0, intercept=0.30, col = "black", lty =2)
   #labels for the x, y axis, plot title, and legend
   labs(title = "Mean Lengths of Bones by Species",
        x = "Species",
@@ -682,7 +748,7 @@ meanL_noM <- mean_lengths [-c(10:18),]
 meanL_noM$bone <- factor(meanL_noM$bone, levels = c("Femur", "Tibiotarsus", "Tarsometatarsus"))
 
 #this makes the species labels along the x axis run in this order
-meanL_noM$species <- factor (meanL_noM$species, levels = c("Struthio camelus", "Casuarius casuarius",	"Dromaius novaehollandiae",	"Mullerornis modestus",	"Aepyornis maximus",	"Alectura lathami",	"Leipoa ocellata",	"Anseranas semipalmata",	"Cereopsis novaehollandiae",	"Dinornis stirtoni", "Illbandornis woodburnei",	"Illbandornis lawsoni",	"Genyornis newtoni"))
+meanL_noM$species <- factor (meanL_noM$species, levels = c("Struthio camelus", "Casuarius casuarius",	"Dromaius novaehollandiae",	"Mullerornis modestus",	"Aepyornis maximus",	"Alectura lathami",	"Leipoa ocellata",	"Anseranas semipalmata",	"Cereopsis novaehollandiae",	"Anhima cornuta", "Dinornis stirtoni", "Illbandornis woodburnei",	"Illbandornis lawsoni",	"Genyornis newtoni"))
 
 #code for the bar plot
 ggplot(meanL_noM, aes(fill = bone, y = mean_length, x = species)) + 
@@ -727,7 +793,7 @@ ggtern(data=longbone_length, aes (x = fL, y = tbL, z = tmtL)) +
 tmt_data <- read.csv (file = "../Data/Raw/tmt_data.csv")
 
 #this makes the species labels along the x axis run in this order
-tmt_data$species <- factor (tmt_data$species, levels = c("Struthio camelus", "Casuarius casuarius",	"Dromaius novaehollandiae",	"Pachyornis elephantopus",	"Dinornis novaezealandiae",	"Dinornis robustus",	"Mullerornis modestus",	"Aepyornis hildebrandti", "Aepyornis maximus",	"Alectura lathami",	"Leipoa ocellata",	"Anseranas semipalmata",	"Cereopsis novaehollandiae",	"Dromornis stirtoni", "Illbandornis woodburnei",	"Illbandornis lawsoni",	"Genyornis newtoni"))
+tmt_data$species <- factor (tmt_data$species, levels = c("Struthio camelus", "Casuarius casuarius",	"Dromaius novaehollandiae",	"Pachyornis elephantopus",	"Dinornis novaezealandiae",	"Dinornis robustus",	"Mullerornis modestus",	"Aepyornis hildebrandti", "Aepyornis maximus",	"Alectura lathami",	"Leipoa ocellata",	"Anseranas semipalmata",	"Cereopsis novaehollandiae", "Anhima cornuta", 	"Dromornis stirtoni", "Illbandornis woodburnei",	"Illbandornis lawsoni",	"Genyornis newtoni"))
 
 #code for plotting
 ggplot(

@@ -1,260 +1,134 @@
-﻿order,species,specimen no.,fL,tbL,tmtL,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-Galliformes,Alectura lathami,B46568 ,89.70,134.70,92.10,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-Anseriformes,Cereopsis novaehollandiae,B39638,82.40,145.20,98.20,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-Galliformes,Leipoa ocellata,B55458,81.20,112.00,70.20,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-Anseriformes,Anseranas semipalmata,B48035,84.40,141.60,102.00,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-Casuariiformes,Dromaius novaehollandiae,FUR291,,402.00,359.00,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-Casuariiformes,Dromaius novaehollandiae,FUR293,,434.00,419.00,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-Casuariiformes,Dromaius novaehollandiae,FUR294,238.00,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-Casuariiformes,Dromaius novaehollandiae,FUR163,226.00,392.00,364.00,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-Casuariiformes,Casuarius casuarius,FUR180,242.00,384.00,299.00,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-Struthioniformes,Struthio camelus,B13115,309.00,507.00,454.00,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-Struthioniformes,Struthio camelus,B14264,299.00,481.00,436.00,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-Struthioniformes,Struthio camelus,R2711,304.00,499.00,486.00,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-Struthioniformes,Struthio camelus,B34253,317.00,540.00,480.00,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-Struthioniformes,Struthio camelus,B747,295.00,488.00,465.00,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-Struthioniformes,Struthio camelus,R2385,310.00,513.00,464.00,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-Casuariiformes,Casuarius casuarius,B12907,231.00,365.00,289.00,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-Casuariiformes,Casuarius casuarius,B13452,236.00,368.00,309.00,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-Casuariiformes,Dromaius novaehollandiae,B31685,238.00,414.00,388.00,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-Casuariiformes,Dromaius novaehollandiae,R1815,225.00,419.00,391.00,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-Casuariiformes,Dromaius novaehollandiae,R4240,223.00,378.00,372.00,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-Casuariiformes,Dromaius novaehollandiae,B19058,234.00,425.00,381.00,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-Casuariiformes,Dromaius novaehollandiae,R6947,247.00,433.00,412.00,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-Casuariiformes,Dromaius novaehollandiae,B12822,218.00,397.00,376.00,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-Casuariiformes,Dromaius novaehollandiae,B12823,235.00,391.00,374.00,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-Casuariiformes,Dromaius novaehollandiae,B12543,230.00,413.00,389.00,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-Anseriformes,Anseranas semipalmata,B8864,80.50,140.40,96.00,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-Anseriformes,Anseranas semipalmata,B6361,82.40,136.00,87.30,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-Anseriformes,Anseranas semipalmata,B8865,88.30,146.00,99.60,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-Anseriformes,Anseranas semipalmata,B18360,88.10,140.80,94.70,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-Anseriformes,Anseranas semipalmata,B20343,84.20,143.30,94.00,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-Anseriformes,Anseranas semipalmata,B34094,89.10,152.00,102.80,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-Anseriformes,Anseranas semipalmata,B8863,88.10,154.00,104.10,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-Anseriformes,Anseranas semipalmata,B12464,79.40,130.70,86.20,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-Anseriformes,Anseranas semipalmata,B13074,75.30,125.80,87.00,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-Anseriformes,Anseranas semipalmata,B18366,88.20,148.70,102.80,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-Galliformes,Alectura lathami,B23648,91.90,140.80,100.30,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-Galliformes,Alectura lathami,B23648,85.40,127.40,86.50,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-Galliformes,Alectura lathami,B23650,86.70,128.40,88.90,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-Galliformes,Alectura lathami,B19290,92.00,137.60,95.10,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-Galliformes,Alectura lathami,R4288,93.70,144.30,101.30,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-Galliformes,Alectura lathami,B23649,84.80,130.70,88.70,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-Galliformes,Leipoa ocellata,B31805,82.60,120.70,71.70,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-Galliformes,Leipoa ocellata,B6721,76.30,120.50,73.30,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-Galliformes,Leipoa ocellata,B31806,85.60,126.80,79.80,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-Galliformes,Leipoa ocellata,B23580,81.00,,74.30,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-Galliformes,Leipoa ocellata,B34172,81.70,124.50,76.60,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-Galliformes,Leipoa ocellata,B34887.1,82.40,126.30,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-Galliformes,Leipoa ocellata,B9276,84.50,,75.30,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-Galliformes,Leipoa ocellata,B9057,81.20,124.50,75.90,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-Galliformes,Leipoa ocellata,B20194,83.90,125.70,77.80,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-Galliformes,Leipoa ocellata,B20161,84.00,124.30,78.60,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-Anseriformes,Cereopsis novaehollandiae,B20407,89.70,181.00,118.60,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-Anseriformes,Cereopsis novaehollandiae,B34095,95.80,169.00,114.20,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-Anseriformes,Cereopsis novaehollandiae,B13849,91.50,166.00,110.70,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-Anseriformes,Cereopsis novaehollandiae,B31962,95.80,178.00,115.40,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-Anseriformes,Cereopsis novaehollandiae,B24792,89.30,162.00,106.60,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-Anseriformes,Cereopsis novaehollandiae,B10905,88.60,161.00,107.40,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-Anseriformes,Cereopsis novaehollandiae,B8862,93.50,167.00,107.70,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-Anseriformes,Cereopsis novaehollandiae,B10727,91.30,174.00,113.20,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-Anseriformes,Cereopsis novaehollandiae,B8860,103.90,185.00,122.70,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-Anseriformes,Cereopsis novaehollandiae,B25675,91.20,170.00,110.50,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-Anseriformes,Cereopsis novaehollandiae,B20294,100.50,181.00,118.90,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-Anseriformes,Cereopsis novaehollandiae,B24946,92.40,168.00,109.00,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-Anseriformes,Cereopsis novaehollandiae,B11419,89.20,161.00,105.90,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-Anseriformes,Cereopsis novaehollandiae,40906,81.50,153.00,100.10,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-Anseriformes,Cereopsis novaehollandiae,B25672,88.30,157.00,104.20,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-Anseriformes,Cereopsis novaehollandiae,B8858,100.20,177.00,118.40,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-Anseriformes,Cereopsis novaehollandiae,B31605,97.90,176.00,116.00,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-Anseriformes,Cereopsis novaehollandiae,B11418,89.00,166.00,110.80,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-Anseriformes,Cereopsis novaehollandiae,B11392,86.80,164.00,106.30,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-Anseriformes,Cereopsis novaehollandiae,B5124,88.40,165.00,105.40,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-Anseriformes,Cereopsis novaehollandiae,B10904,96.60,178.00,120.10,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-Anseriformes,Cereopsis novaehollandiae,B25676,97.00,181.00,111.60,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-Anseriformes,Cereopsis novaehollandiae,B8859,82.60,155.00,103.10,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-Anseriformes,Cereopsis novaehollandiae,B22238,100.90,172.00,114.60,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-Anseriformes,Cereopsis novaehollandiae,B8861,89.80,166.00,11.20,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-Dinornithiformes,Dinornis robustus,OM A50.27,383.00,812.00,415.00,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-Dinornithiformes,Dinornis novaezealandiae,AU6393.18,385.00,810.00,421.00,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-Dinornithiformes,Dinornis novaezealandiae,AIM113,332.00,728.00,417.00,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-Dinornithiformes,Dinornis robustus,MNZ S28114,352.00,750.00,403.00,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-Dinornithiformes,Dinornis robustus,CM8436,402.00,915.00,494.00,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-Dinornithiformes,Dinornis robustus,CM12589,360.00,745.00,384.00,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-Dinornithiformes,Dinornis robustus,CM14549,412.00,916.00,531.00,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-Dinornithiformes,Dinornis robustus,CM14449,423.00,902.00,487.00,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-Dinornithiformes,Dinornis robustus,CM15025,395.00,885.00,503.00,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-Dinornithiformes,Dinornis robustus,CM15026,447.00,924.00,517.00,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-Dinornithiformes,Dinornis robustus,CM15028,333.00,675.00,347.00,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-Dinornithiformes,Dinornis robustus,CM29320,380.00,786.00,401.00,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-Dinornithiformes,Dinornis robustus,MNZ S27891,297.00,566.00,283.00,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-Dinornithiformes,Dinornis novaezealandiae,MNZ S240,261.00,471.00,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-Dinornithiformes,Dinornis novaezealandiae,B. Reeve,,477.00,247.00,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-Dinornithiformes,Dinornis robustus,MNZ S28075,280.00,567.00,290.00,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-Dinornithiformes,Dinornis robustus,MNZ S28225,265.00,522.00,258.00,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-Dinornithiformes,Dinornis robustus,MNZ S28381,286.00,553.00,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-Dinornithiformes,Dinornis robustus,MNZ S32715,274.00,516.00,265.00,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-Dinornithiformes,Dinornis robustus,MNZ S32716,305.00,609.00,315.00,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-Dinornithiformes,Dinornis robustus,Hodge Ck,307.00,600.00,319.00,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-Dinornithiformes,Dinornis robustus,OM Av7343,309.00,582.00,295.00,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-Dinornithiformes,Dinornis robustus,MNZ S32667,309.00,611.00,338.00,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-Dinornithiformes,Dinornis robustus,MNZ S23342,331.00,667.00,358.00,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-Dinornithiformes,Dinornis robustus,MNZ S211,296.00,605.00,304.00,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-Dinornithiformes,Dinornis robustus,MNZ S23654,303.00,631.00,322.00,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-Dinornithiformes,Dinornis robustus,AIM352,295.00,605.00,315.00,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-Dinornithiformes,Dinornis robustus,MNZ S25765,334.00,663.00,358.00,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-Dinornithiformes,Dinornis robustus,WO30.41,315.00,685.00,365.00,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-Dinornithiformes,Dinornis robustus,In situ,300.00,642.00,325.00,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-Dinornithiformes,Dinornis robustus,MNZ S32677,337.00,660.00,364.00,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-Dinornithiformes,Dinornis robustus," Hochstetter, Wien",335.00,680.00,365.00,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-Dinornithiformes,Dinornis robustus,York,356.00,684.00,383.00,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-Dinornithiformes,Pachyornis elephantopus,Av8382,300.00,535.00,222.00,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-Dinornithiformes,Pachyornis elephantopus,Av8381,308.00,564.00,221.00,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-Dinornithiformes,Pachyornis elephantopus,Av8389,315.00,532.00,216.00,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-Dinornithiformes,Pachyornis elephantopus,Av8387,320.00,592.00,240.00,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-Dinornithiformes,Pachyornis elephantopus,Av8385,298.00,506.00,206.00,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-Dinornithiformes,Pachyornis elephantopus,Av8388,310.00,553.00,217.00,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-Dinornithiformes,Pachyornis elephantopus,Av8386,292.00,537.00,212.00,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-Dinornithiformes,Pachyornis elephantopus,Av15029,315.00,568.00,232.00,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-Dinornithiformes,Pachyornis elephantopus,Av8383,298.00,530.00,224.00,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-Dinornithiformes,Pachyornis elephantopus,Av8716,307.00,547.00,220.00,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-Dinornithiformes,Pachyornis elephantopus,Av8348,294.00,547.00,225.00,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-Aepyornithiformes,Aepyornis hildebrandti,Hansford & Turvey 2018,258.40,,310.24,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-Aepyornithiformes,Aepyornis maximus,Hansford & Turvey 2018,338.89,614.20,399.75,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-Aepyornithiformes,Mullerornis modestus,Hansford & Turvey 2018,205.00,475.20,306.85,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-Dromornithidae,Illbandornis lawsoni,Worthy & Yates 2015,266.50,505.00,421.80,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-Dromornithidae,Illbandornis woodburnei,Worthy & Yates 2015,299.20,508.60,349.90,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-Dromornithidae,Dromornis stirtoni,Handley et al. 2016,365,736,412.00,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-Dromornithidae,Genyornis newtoni,SAMA P.53833,268.00,528.00,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-Dromornithidae,Genyornis newtoni,SAMA P.59517,345.00,534.00,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-Dromornithidae,Genyornis newtoni,SAMA P.59516,304.00,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-Dromornithidae,Genyornis newtoni,FU2763,324.00,,352.00,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-Dromornithidae,Genyornis newtoni,SAMA P.59518,,521.00,346.00,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-Dromornithidae,Genyornis newtoni,SAMA P.59519,312.00,547.00,353.00,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+﻿order,species,specimen no.,fL,tbL,tmtL
+Galliformes,Alectura lathami,B46568 ,89.7,134.7,92.1
+Anseriformes,Cereopsis novaehollandiae,B39638,82.4,145.2,98.2
+Galliformes,Leipoa ocellata,B55458,81.2,112,70.2
+Anseriformes,Anseranas semipalmata,B48035,84.4,141.6,102
+Casuariiformes,Dromaius novaehollandiae,FUR291,,402,359
+Casuariiformes,Dromaius novaehollandiae,FUR293,,434,419
+Casuariiformes,Dromaius novaehollandiae,FUR294,238,,
+Casuariiformes,Dromaius novaehollandiae,FUR163,226,392,364
+Casuariiformes,Casuarius casuarius,FUR180,242,384,299
+Struthioniformes,Struthio camelus,B13115,309,507,454
+Struthioniformes,Struthio camelus,B14264,299,481,436
+Struthioniformes,Struthio camelus,R2711,304,499,486
+Struthioniformes,Struthio camelus,B34253,317,540,480
+Struthioniformes,Struthio camelus,B747,295,488,465
+Struthioniformes,Struthio camelus,R2385,310,513,464
+Casuariiformes,Casuarius casuarius,B12907,231,365,289
+Casuariiformes,Casuarius casuarius,B13452,236,368,309
+Casuariiformes,Dromaius novaehollandiae,B31685,238,414,388
+Casuariiformes,Dromaius novaehollandiae,R1815,225,419,391
+Casuariiformes,Dromaius novaehollandiae,R4240,223,378,372
+Casuariiformes,Dromaius novaehollandiae,B19058,234,425,381
+Casuariiformes,Dromaius novaehollandiae,R6947,247,433,412
+Casuariiformes,Dromaius novaehollandiae,B12822,218,397,376
+Casuariiformes,Dromaius novaehollandiae,B12823,235,391,374
+Casuariiformes,Dromaius novaehollandiae,B12543,230,413,389
+Anseriformes,Anseranas semipalmata,B8864,80.5,140.4,96
+Anseriformes,Anseranas semipalmata,B6361,82.4,136,87.3
+Anseriformes,Anseranas semipalmata,B8865,88.3,146,99.6
+Anseriformes,Anseranas semipalmata,B18360,88.1,140.8,94.7
+Anseriformes,Anseranas semipalmata,B20343,84.2,143.3,94
+Anseriformes,Anseranas semipalmata,B34094,89.1,152,102.8
+Anseriformes,Anseranas semipalmata,B8863,88.1,154,104.1
+Anseriformes,Anseranas semipalmata,B12464,79.4,130.7,86.2
+Anseriformes,Anseranas semipalmata,B13074,75.3,125.8,87
+Anseriformes,Anseranas semipalmata,B18366,88.2,148.7,102.8
+Galliformes,Alectura lathami,B23648,91.9,140.8,100.3
+Galliformes,Alectura lathami,B23648,85.4,127.4,86.5
+Galliformes,Alectura lathami,B23650,86.7,128.4,88.9
+Galliformes,Alectura lathami,B19290,92,137.6,95.1
+Galliformes,Alectura lathami,R4288,93.7,144.3,101.3
+Galliformes,Alectura lathami,B23649,84.8,130.7,88.7
+Galliformes,Leipoa ocellata,B31805,82.6,120.7,71.7
+Galliformes,Leipoa ocellata,B6721,76.3,120.5,73.3
+Galliformes,Leipoa ocellata,B31806,85.6,126.8,79.8
+Galliformes,Leipoa ocellata,B23580,81,,74.3
+Galliformes,Leipoa ocellata,B34172,81.7,124.5,76.6
+Galliformes,Leipoa ocellata,B34887.1,82.4,126.3,
+Galliformes,Leipoa ocellata,B9276,84.5,,75.3
+Galliformes,Leipoa ocellata,B9057,81.2,124.5,75.9
+Galliformes,Leipoa ocellata,B20194,83.9,125.7,77.8
+Galliformes,Leipoa ocellata,B20161,84,124.3,78.6
+Anseriformes,Cereopsis novaehollandiae,B20407,89.7,181,118.6
+Anseriformes,Cereopsis novaehollandiae,B34095,95.8,169,114.2
+Anseriformes,Cereopsis novaehollandiae,B13849,91.5,166,110.7
+Anseriformes,Cereopsis novaehollandiae,B31962,95.8,178,115.4
+Anseriformes,Cereopsis novaehollandiae,B24792,89.3,162,106.6
+Anseriformes,Cereopsis novaehollandiae,B10905,88.6,161,107.4
+Anseriformes,Cereopsis novaehollandiae,B8862,93.5,167,107.7
+Anseriformes,Cereopsis novaehollandiae,B10727,91.3,174,113.2
+Anseriformes,Cereopsis novaehollandiae,B8860,103.9,185,122.7
+Anseriformes,Cereopsis novaehollandiae,B25675,91.2,170,110.5
+Anseriformes,Cereopsis novaehollandiae,B20294,100.5,181,118.9
+Anseriformes,Cereopsis novaehollandiae,B24946,92.4,168,109
+Anseriformes,Cereopsis novaehollandiae,B11419,89.2,161,105.9
+Anseriformes,Cereopsis novaehollandiae,40906,81.5,153,100.1
+Anseriformes,Cereopsis novaehollandiae,B25672,88.3,157,104.2
+Anseriformes,Cereopsis novaehollandiae,B8858,100.2,177,118.4
+Anseriformes,Cereopsis novaehollandiae,B31605,97.9,176,116
+Anseriformes,Cereopsis novaehollandiae,B11418,89,166,110.8
+Anseriformes,Cereopsis novaehollandiae,B11392,86.8,164,106.3
+Anseriformes,Cereopsis novaehollandiae,B5124,88.4,165,105.4
+Anseriformes,Cereopsis novaehollandiae,B10904,96.6,178,120.1
+Anseriformes,Cereopsis novaehollandiae,B25676,97,181,111.6
+Anseriformes,Cereopsis novaehollandiae,B8859,82.6,155,103.1
+Anseriformes,Cereopsis novaehollandiae,B22238,100.9,172,114.6
+Anseriformes,Cereopsis novaehollandiae,B8861,89.8,166,11.2
+Anseriformes,Anhima cornuta,,91.3,176,115.6
+Dinornithiformes,Dinornis robustus,OM A50.27,383,812,415
+Dinornithiformes,Dinornis novaezealandiae,AU6393.18,385,810,421
+Dinornithiformes,Dinornis novaezealandiae,AIM113,332,728,417
+Dinornithiformes,Dinornis robustus,MNZ S28114,352,750,403
+Dinornithiformes,Dinornis robustus,CM8436,402,915,494
+Dinornithiformes,Dinornis robustus,CM12589,360,745,384
+Dinornithiformes,Dinornis robustus,CM14549,412,916,531
+Dinornithiformes,Dinornis robustus,CM14449,423,902,487
+Dinornithiformes,Dinornis robustus,CM15025,395,885,503
+Dinornithiformes,Dinornis robustus,CM15026,447,924,517
+Dinornithiformes,Dinornis robustus,CM15028,333,675,347
+Dinornithiformes,Dinornis robustus,CM29320,380,786,401
+Dinornithiformes,Dinornis robustus,MNZ S27891,297,566,283
+Dinornithiformes,Dinornis novaezealandiae,MNZ S240,261,471,
+Dinornithiformes,Dinornis novaezealandiae,B. Reeve,,477,247
+Dinornithiformes,Dinornis robustus,MNZ S28075,280,567,290
+Dinornithiformes,Dinornis robustus,MNZ S28225,265,522,258
+Dinornithiformes,Dinornis robustus,MNZ S28381,286,553,
+Dinornithiformes,Dinornis robustus,MNZ S32715,274,516,265
+Dinornithiformes,Dinornis robustus,MNZ S32716,305,609,315
+Dinornithiformes,Dinornis robustus,Hodge Ck,307,600,319
+Dinornithiformes,Dinornis robustus,OM Av7343,309,582,295
+Dinornithiformes,Dinornis robustus,MNZ S32667,309,611,338
+Dinornithiformes,Dinornis robustus,MNZ S23342,331,667,358
+Dinornithiformes,Dinornis robustus,MNZ S211,296,605,304
+Dinornithiformes,Dinornis robustus,MNZ S23654,303,631,322
+Dinornithiformes,Dinornis robustus,AIM352,295,605,315
+Dinornithiformes,Dinornis robustus,MNZ S25765,334,663,358
+Dinornithiformes,Dinornis robustus,WO30.41,315,685,365
+Dinornithiformes,Dinornis robustus,In situ,300,642,325
+Dinornithiformes,Dinornis robustus,MNZ S32677,337,660,364
+Dinornithiformes,Dinornis robustus," Hochstetter, Wien",335,680,365
+Dinornithiformes,Dinornis robustus,York,356,684,383
+Dinornithiformes,Pachyornis elephantopus,Av8382,300,535,222
+Dinornithiformes,Pachyornis elephantopus,Av8381,308,564,221
+Dinornithiformes,Pachyornis elephantopus,Av8389,315,532,216
+Dinornithiformes,Pachyornis elephantopus,Av8387,320,592,240
+Dinornithiformes,Pachyornis elephantopus,Av8385,298,506,206
+Dinornithiformes,Pachyornis elephantopus,Av8388,310,553,217
+Dinornithiformes,Pachyornis elephantopus,Av8386,292,537,212
+Dinornithiformes,Pachyornis elephantopus,Av15029,315,568,232
+Dinornithiformes,Pachyornis elephantopus,Av8383,298,530,224
+Dinornithiformes,Pachyornis elephantopus,Av8716,307,547,220
+Dinornithiformes,Pachyornis elephantopus,Av8348,294,547,225
+Aepyornithiformes,Aepyornis hildebrandti,Hansford & Turvey 2018,258.4,,310.24
+Aepyornithiformes,Aepyornis maximus,Hansford & Turvey 2018,338.89,614.2,399.75
+Aepyornithiformes,Mullerornis modestus,Hansford & Turvey 2018,205,475.2,306.85
+Dromornithidae,Illbandornis lawsoni,Worthy & Yates 2015,266.5,505,421.8
+Dromornithidae,Illbandornis woodburnei,Worthy & Yates 2015,299.2,508.6,349.9
+Dromornithidae,Dromornis stirtoni,Handley et al. 2016,365,736,412
+Dromornithidae,Genyornis newtoni,SAMA P.53833,268,528,
+Dromornithidae,Genyornis newtoni,SAMA P.59517,345,534,
+Dromornithidae,Genyornis newtoni,SAMA P.59516,304,,
+Dromornithidae,Genyornis newtoni,FU2763,324,,352
+Dromornithidae,Genyornis newtoni,SAMA P.59518,,521,346
+Dromornithidae,Genyornis newtoni,SAMA P.59519,312,547,353
