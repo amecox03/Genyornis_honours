@@ -17,14 +17,23 @@ knitr::opts_chunk$set(echo=FALSE, message=FALSE, results='hide' )
 library(rstudioapi) # Safely Access the RStudio API
 setwd(dirname(getActiveDocumentContext()$path))
 
-#make sure you delete all empty columns/rows by hitting "delete" in excel
-data<-read.csv(file = "../Data/Raw/honours_hindlimbs.csv")
-
-
-#data that includes Dinornithiformes, Dromornis stirtoni, & Illbandornis sp.
-data2 <- read.csv (file = "../Data/Raw/honours_hindlimb_updated.csv")
-
+library(Ternary)
 library(tidyverse)
+
+
+```
+
+
+```{r data}
+#loading data
+data<- read.csv (file = "../Data/Raw/honours_data.csv")
+
+data_plot <- cbind (data[,1:3], log (data[,4:18]), data[,19:39])
+
+#making a dataset that excludes dromornithids
+data_noD <- data[-c(125:135),]
+
+datanoD_plot <- cbind (data_noD[,1:3], log (data_noD[,4:16]))
 
 ```
 
@@ -120,129 +129,7 @@ print(mul.mode)
 #Titles also often go here - up to you :-)
 #Read up on Reduced Major Axis (RMA) regression which allows for both variable being responses (rather than y being response, x being predictor - but don't get too hung up about this now :-))
 
-```{r Amelias first analyses}
-#just a summary of the data
-summary(data)
-
-#run a linear model: y is on left, x is on right
-reg1 <- lm(log(data$fM.L) ~ log(data$tbM.L))
-
-#here's how to get a summary output
-summary(reg1)
-
-#plotting like this NOW HAS x on left, y on right
-plot(log(data$fM.L) ~ log(data$tbM.L)); abline(reg1)
-
-
-```
-
-
-```{r make dataset w/o Genyornis}
-
-data_noG <- data[-c(77:82),]
-
-#run a linear model: y is on left, x is on right
-NoG <- lm(log(data_noG$fM.L) ~ log(data_noG$tbM.L))
-
-#here's how to get a summary output
-summary(NoG)
-
-
-```
-
-
-```{r dataset w/o dromornithids}
-
-data2_noD <- data2[-c(124:132),]
-
-#linear model of the femur medial lateral width against tibia medial lateral width, w/o dromornithids
-noD_widths <- lm(log(data2_noD$fM.L)~log(data2_noD$tbM.L))
-
-#linear model of the femur medial lateral width against tibia medial lateral width w/ dromorntiids
-wD_widths <- lm(log(data2$fM.L)~log(data2$tbM.L))
-
-
-#summary of the two linear models
-summary(noD_widths)
-
-summary(wD_widths)
-
-
-```
-
-
-
 #Here is the fixed Prediction interval code. You need to run this on the dataset without Genyornis - use the above. I jsut ran out of time but I think YOU CAN DO IT :-)
-```{r plotting}
-#Here we're log transforming first, because otherwise things don't work. 
-
-data_plot <- cbind (data2[,1:3], log (data2[,4:16]))
-
-#Also here setting up a vector of colours you can use to highlight _Genyornis_
-#make a vector of just pink
-colours <- rep("hotpink", nrow(data_plot))
-#make a vector where any species name that has Genyornis is assigned purple
-colours[which(data_plot$species == "Genyornis newtoni")] <- "#33cc33"
-colours[which(data_plot$species == "Illbandornis lawsoni")] <- "#196619"
-colours[which(data_plot$species == "Illbandornis woodburnei")] <- "green"
-colours[which(data_plot$order == "Anseriformes")] <- "#ff0055"
-colours[which(data_plot$order == "Galliformes")] <- "#800080"
-colours[which(data_plot$order == "Casuariiformes")] <- "#3333cc"
-colours[which(data_plot$order == "Struthioniformes")] <- "#3333cc"
-colours[which(data_plot$order == "Dinornithiformes")] <- "#b34700"
-colours[which(data_plot$order == "Aepyornithiformes")] <- "#cc0000"
-
-
-#getting a model for predicting CIs
-model1 <- lm(fM.L ~ tbM.L, data=data_plot)
-summary(model1)
-
-#For the interval estimate to work, we need to find the smallest and largest values of x. All this is in https://stackoverflow.com/questions/46459620/plotting-a-95-confidence-interval-for-a-lm-object
-
-#But X in this case has NAs so we're here finding the lowest non-NA value by sorting from smallest to largest and taking the first value
-min_x <- sort(data_plot$tbM.L)[1]
-max_x <- sort(data_plot$tbM.L, decreasing = TRUE)[1]
-
-#make dummy sequence of x for intervals. 
-newx <- seq(min_x-1,max_x+1,by = 0.05 )
-
-#plot confidence intervals
-
-#This only works if the data are already logged. Not my preference but hey.
-conf_interval <- predict(model1, newdata=data.frame(tbM.L = newx), interval="prediction", level = 0.95)
-
-
-
-plot(data_plot$fM.L ~ data_plot$tbM.L, 
-     xlim=c(1.6,4.5), 
-     ylim=c(1.7,4.5), 
-     pch=19, col=colours); abline(noD_widths, col="black" )
-
-lines(newx, conf_interval[,2], col="blue", lty=2)
-lines(newx, conf_interval[,3], col="blue", lty=2)
-
-#fill in area between regression line and confidence interval - very pretty but then you have to re-plot the points
-polygon(c(rev(newx), newx), c(rev(conf_interval[ ,3]), conf_interval[ ,2]), density = 25,col = 'grey', border = NA)
-
-
-
-points(data_plot$fM.L ~ data_plot$tbM.L, 
-     
-     pch=19, col=colours); abline(noD_widths, col="black" )
-lines(newx, conf_interval[,2], col="blue", lty=2)
-
-lines(newx, conf_interval[,3], col="blue", lty=2)
-
-
-
-
-
-#add row names to your plot
-#text(data_plot$fM.L ~ data_plot$tbM.L, labels=data_plot$species )
-
-
-```
-
 #The default is 95% confidence interval. These intervals seem very narrow! But the below runs an example that shows the same. But we are interested in the prediction intervals, anyway.
 
 ```{r 95% confidence interval basic script}
@@ -279,39 +166,41 @@ lines(newx, preds[ ,2], lty = 'dashed', col = 'blue')
 ```
 
 
-
-```{r femur width vs tibiotarsus width without droms}
-
-
-#Here we're log transforming first, because otherwise things don't work. 
-data_plot2 <- cbind (data2[,1:3], log (data2[,4:16]))
-
-datanoD_plot <- cbind (data2_noD[,1:3], log (data2_noD[,4:16]))
+```{r set colours and symbols}
 
 #Also here setting up a vector of colours you can use to highlight _Genyornis_
 #make a vector of just pink
-colours <- rep("hotpink",nrow(data_plot2))
+colours <- rep("#33cc33",nrow(data_plot))
 #make a vector where any species name that has Genyornis is assigned purple
-colours[which(data_plot2$species == "Genyornis newtoni")] <- "#33cc33"
-colours[which(data_plot2$species == "Illbandornis lawsoni")] <- "#196619"
-colours[which(data_plot2$species == "Illbandornis woodburnei")] <- "green"
-colours[which(data_plot2$order == "Anseriformes")] <- "#ff0055"
-colours[which(data_plot2$order == "Galliformes")] <- "#800080"
-colours[which(data_plot2$order == "Casuariiformes")] <- "#3333cc"
-colours[which(data_plot2$order == "Struthioniformes")] <- "#3333cc"
-colours[which(data_plot2$order == "Dinornithiformes")] <- "#b34700"
-colours[which(data_plot2$order == "Aepyornithiformes")] <- "#cc0000"
+colours[which(data_plot$species == "Genyornis newtoni")] <- "#33cc33"
+colours[which(data_plot$species == "Illbandornis lawsoni")] <- "#196619"
+colours[which(data_plot$species == "Illbandornis woodburnei")] <- "green"
+colours[which(data_plot$species == "Dromornis stirtoni")] <- "#454B1B"
+colours[which(data_plot$order == "Anseriformes")] <- "#ff0055"
+colours[which(data_plot$order == "Galliformes")] <- "#800080"
+colours[which(data_plot$order == "Casuariiformes")] <- "#3333cc"
+colours[which(data_plot$order == "Struthioniformes")] <- "#3333cc"
+colours[which(data_plot$order == "Dinornithiformes")] <- "#b34700"
+colours[which(data_plot$order == "Aepyornithiformes")] <- "#cc0000"
 
+#data_plot$species <- 19
+#data_plot$species[which (data_plot$species == "Genyornis newtoni")] <- 0
+
+
+```
+
+
+```{r femur width vs tibiotarsus width}
 
 #getting a model for predicting CIs
-model2 <- lm(fM.L ~ tbM.L, data=data_plot2)
+model1 <- lm(fM.L ~ tbM.L, data=datanoD_plot)
 summary(model2)
 
 #For the interval estimate to work, we need to find the smallest and largest values of x. All this is in https://stackoverflow.com/questions/46459620/plotting-a-95-confidence-interval-for-a-lm-object
 
 #But X in this case has NAs so we're here finding the lowest non-NA value by sorting from smallest to largest and taking the first value
-min_x <- sort(data_plot$tbM.L)[1]
-max_x <- sort(data_plot$tbM.L, decreasing = TRUE)[1]
+min_x <- sort(datanoD_plot$tbM.L)[1]
+max_x <- sort(datanoD_plot$tbM.L, decreasing = TRUE)[1]
 
 #make dummy sequence of x for intervals. 
 newx <- seq(min_x-1,max_x+1,by = 0.05 )
@@ -321,11 +210,10 @@ newx <- seq(min_x-1,max_x+1,by = 0.05 )
 #This only works if the data are already logged. Not my preference but hey.
 conf_interval <- predict(model2, newdata=data.frame(tbM.L = newx), interval="prediction",    level = 0.95)
 
-
-plot(data_plot$fM.L ~ data_plot$tbM.L, 
+plot(data = data_plot, fM.L ~ tbM.L, 
      xlim=c(1.6,4.5), 
      ylim=c(1.7,4.5), 
-     pch=19, col=colours); abline(noD_widths, col="black" )
+     pch=19, col=colours, ylab = "Mediolateral width of the femur", xlab = "Mediolateral width of the tibiotarsus",axes = TRUE, frame.plot = TRUE); abline(model1, col="black" )
 
 lines(newx, conf_interval[,2], col="blue", lty=2)
 
@@ -335,11 +223,9 @@ lines(newx, conf_interval[,3], col="blue", lty=2)
 polygon(c(rev(newx), newx), c(rev(conf_interval[ ,3]), conf_interval[ ,2]), density = 25, col = 'grey', border = NA)
 
 
-
-points(data_plot$fM.L ~ data_plot$tbM.L, 
-     
-     pch=19, col=colours); abline(noD_widths, col="black" )
-
+#replotting points and prediction intervals
+points(data = data_plot, fM.L ~ tbM.L, 
+     pch=19, col=colours); abline(model1, col="black" )
 lines(newx, conf_interval[,2], col="blue", lty=2)
 lines(newx, conf_interval[,3], col="blue", lty=2)
 
@@ -351,19 +237,212 @@ lines(newx, conf_interval[,3], col="blue", lty=2)
 ```
 
 
+```{r length vs width f}
+
+
+#getting a model for predicting CIs
+modelFLW <- lm(fM.L ~ fL, data=datanoD_plot)
+summary(modelFLW)
+
+#For the interval estimate to work, we need to find the smallest and largest values of x. All this is in https://stackoverflow.com/questions/46459620/plotting-a-95-confidence-interval-for-a-lm-object
+
+#But X in this case has NAs so we're here finding the lowest non-NA value by sorting from smallest to largest and taking the first value
+min_xW <- sort(datanoD_plot$fL)[1]
+max_xW <- sort(datanoD_plot$fL, decreasing = TRUE)[1]
+
+#make dummy sequence of x for intervals. 
+newxW <- seq(min_xW-1,max_xW+1,by = 0.05 )
+
+#plot confidence intervals
+
+#This only works if the data are already logged. Not my preference but hey.
+conf_intervalW <- predict(modelFLW, newdata=data.frame(fL = newxW), interval="prediction", level = 0.95)
+
+
+
+plot(data = data_plot, fM.L ~ fL, 
+     pch=19, col=colours, ylab = "Mediolateral width of the femur", xlab = "Femur length", axes = TRUE, frame.plot = TRUE); abline(modelFLW, col="black" )
+
+lines(newxW, conf_intervalW [,2], col="blue", lty=2)
+lines(newxW, conf_intervalW [,3], col="blue", lty=2)
+
+#fill in area between regression line and confidence interval - very pretty but then you have to re-plot the points
+polygon(c(rev(newxW), newxW), c(rev(conf_intervalW [ ,3]), conf_intervalW[ ,2]),density = 25, col = 'grey', border = NA)
+
+
+#replotting points and prediction intervals
+points(data = data_plot, fM.L ~ fL,
+     pch=19, col=colours); abline(modelFLW, col="black" )
+lines(newxW, conf_intervalW [,2], col="blue", lty=2)
+lines(newxW, conf_intervalW [,3], col="blue", lty=2)
+
+
+
+#text to data points
+#text(log(data$fL) ~ log(data$fM.L), label=data$species)
+
+```
+
+
+```{r plotting the femur and tibia length}
+
+#getting a model for predicting CIs
+modelFTL <- lm(fL ~ tbL, data=datanoD_plot)
+summary(modelFTL)
+
+#For the interval estimate to work, we need to find the smallest and largest values of x. All this is in https://stackoverflow.com/questions/46459620/plotting-a-95-confidence-interval-for-a-lm-object
+
+#But X in this case has NAs so we're here finding the lowest non-NA value by sorting from smallest to largest and taking the first value
+min_xL <- sort(datanoD_plot$tbL)[1]
+max_xL <- sort(datanoD_plot$tbL, decreasing = TRUE)[1]
+
+#make dummy sequence of x for intervals. 
+newxL <- seq(min_xL-1,max_xL+1,by = 0.05 )
+
+#plot confidence intervals
+
+#This only works if the data are already logged. Not my preference but hey.
+conf_intervalL <- predict(modelFTL, newdata=data.frame(tbL = newxL), interval="prediction",    level = 0.95)
+
+
+
+plot(data = data_plot, fL ~ tbL,
+     pch=19, col=colours, ylab = "Femur length", xlab = "Tibiotarsus", axes = TRUE, frame.plot = TRUE); abline(modelFTL, col="black" )
+
+lines(newxL, conf_intervalL [,2], col="blue", lty=2)
+lines(newxL, conf_intervalL [,3], col="blue", lty=2)
+
+#text((data_plot$fL ~ data_plot$tbL), label=data$species)
+
+
+#fill in area between regression line and confidence interval - very pretty but then you have to re-plot the points
+polygon(c(rev(newxL), newxL), c(rev(conf_intervalL [ ,3]), conf_intervalL[ ,2]), density = 25, col = 'grey', border = NA)
+
+
+#replotting points and prediction intervals
+points(dadata = data_plot, fM.L ~ fL, 
+     pch=19, col=colours); abline(modelFTL, col="black" )
+lines(newxL, conf_intervalL [,2], col="blue", lty=2)
+lines(newxL, conf_intervalL [,3], col="blue", lty=2)
+
+
+```
+
+
+```{r plotting femur widths against each other}
+
+#getting a model for predicting CIs
+modelFW <- lm(fM.L ~ fCr.Ca, data=datanoD_plot)
+summary(modelFW)
+
+#For the interval estimate to work, we need to find the smallest and largest values of x. All this is in https://stackoverflow.com/questions/46459620/plotting-a-95-confidence-interval-for-a-lm-object
+
+#But X in this case has NAs so we're here finding the lowest non-NA value by sorting from smallest to largest and taking the first value
+min_xFW <- sort(datanoD_plot$fCr.Ca)[1]
+max_xFW <- sort(datanoD_plot$fCr.Ca, decreasing = TRUE)[1]
+
+#make dummy sequence of x for intervals. 
+newxFW <- seq(min_xFW-1,max_xFW+1,by = 0.05 )
+
+#plot confidence intervals
+
+#This only works if the data are already logged. Not my preference but hey.
+conf_intervalFW <- predict(modelFW, newdata=data.frame(fCr.Ca = newxW), interval="prediction", level = 0.95)
+
+plot(data=data_plot, fM.L ~ fCr.Ca,
+     pch=19, col=colours, ylab = "Mediolateral width", xlab = "Craniocaudal width",axes = TRUE, frame.plot = TRUE); abline(modelFW, col="black" )
+
+#for some reason the newxFW has returned a large value than confidence interval
+lines(newxFW, conf_intervalFW [,2], col="blue", lty=2)
+lines(newxFW, conf_intervalFW [,3], col="blue", lty=2)
+
+#fill in area between regression line and confidence interval - very pretty but then you have to re-plot the points
+polygon(c(rev(newxFW), newxFW), c(rev(conf_intervalFW [ ,3]), conf_intervalFW[ ,2]),density = 25, col = 'grey', border = NA)
+
+#replotting points and prediction intervals
+points(data=data_plot, fM.L ~ fCr.Ca,
+     pch=19, col=colours); abline(modelFLW, col="black" )
+lines(newxFW, conf_intervalFW [,2], col="blue", lty=2)
+lines(newxFW, conf_intervalFW [,3], col="blue", lty=2)
+
+```
+
+
+```{r plotting circumference}
+#getting a model for predicting CIs
+modelCirc<- lm(fCIRC ~ tbCIRC, data=data_plot)
+summary(modelCirc)
+
+#For the interval estimate to work, we need to find the smallest and largest values of x. All this is in https://stackoverflow.com/questions/46459620/plotting-a-95-confidence-interval-for-a-lm-object
+
+#But X in this case has NAs so we're here finding the lowest non-NA value by sorting from smallest to largest and taking the first value
+min_xCIRC <- sort(data_plot$tbCIRC)[1]
+max_xCIRC <- sort(data_plot$tbCIRC, decreasing = TRUE)[1]
+
+#make dummy sequence of x for intervals. 
+newxCIRC <- seq(min_xCIRC-1,max_xCIRC+1,by = 0.05 )
+
+#plot confidence intervals
+
+#This only works if the data are already logged. Not my preference but hey.
+conf_intervalCIRC <- predict(modelCirc, newdata=data.frame(tbCIRC = newxCIRC), interval="prediction", level = 0.95)
+
+plot(data=data_plot, fCIRC ~ tbCIRC, 
+     pch=19, col=colours); abline(modelCirc, col="black" )
+
+lines(newxCIRC, conf_intervalCIRC [,2], col="blue", lty=2)
+lines(newxCIRC, conf_intervalCIRC [,3], col="blue", lty=2)
+
+#fill in area between regression line and confidence interval - very pretty but then you have to re-plot the points
+polygon(c(rev(newxCIRC), newxCIRC), c(rev(conf_intervalCIRC [ ,3]), conf_intervalCIRC[ ,2]),density = 25, col = 'grey', border = NA)
+
+points(data=data_plot, fCIRC ~ tbCIRC, 
+     pch=19, col=colours); abline(modelCirc, col="black" )
+
+lines(newxCIRC, conf_intervalCIRC [,2], col="blue", lty=2)
+lines(newxCIRC, conf_intervalCIRC [,3], col="blue", lty=2)
+
+#add row names to your plot
+#text(data=data_plot, fCIRC ~ tbCIRC, labels=data$species )
+
+```
+
+
+```{r femoral splay}
+
+
+
+
+
+```
+
 
 ```{r seperate data set with just the large flightless birds}
 
+
 #make a data set with extant ratites
-ratite <- data2[c(5:25),]
+ratite <- data[c(5:25),]
 
 #make a data set with extinct large birds (ratites + dromorntithids)
-extinct <- data2[c(78:132),]
+extinct <- data[c(78:132),]
 
 #combine the 2 datasets
 largebirds_data <- rbind(ratite, extinct)
 
+#making sure the linear measurements are log transformed
 largebirds_plot <- cbind (largebirds_data[,1:3], log (largebirds_data[,4:16]))
+
+
+
+#make a data set without dromornithids
+extinct_noD <- data[c(78:124),]
+
+#combined the 2 datasets
+lb_noD <-largebirds_data <- rbind(ratite, extinct_noD)
+
+#making sure the linear measurements are log transformed
+lb_noD_plot <- cbind (largebirds_data[,1:3], log (largebirds_data[,4:16]))
+
 ```
 
 
@@ -381,15 +460,15 @@ colours[which(largebirds_plot$order == "Struthioniformes")] <- "#3333cc"
 colours[which(largebirds_plot$order == "Dinornithiformes")] <- "#b34700"
 colours[which(largebirds_plot$order == "Aepyornithiformes")] <- "#cc0000"
 
+
 #linear model of the femur width vs tibia width in large flightless birds
-model3 <- lm(fM.L ~ tbM.L, data=largebirds_plot)
+model3 <- lm(fM.L ~ tbM.L, data=lb_noD_plot)
 
 #summary output of the linear model
 summary (model3)
 
-
-min_xB <- sort(largebirds_plot$tbM.L)[1]
-max_xB <- sort(largebirds_plot$tbM.L, decreasing = TRUE)[1]
+min_xB <- sort(lb_noD_plot$tbM.L)[1]
+max_xB <- sort(lb_noD_plot$tbM.L, decreasing = TRUE)[1]
 
 #make dummy sequence of x for intervals. 
 newxB <- seq(min_xB-1,max_xB+1,by = 0.05)
@@ -401,7 +480,7 @@ conf_intervalB <- predict(model3, newdata=data.frame(tbM.L = newxB), interval="p
 
 
 plot (largebirds_plot$fM.L ~ largebirds_plot$tbM.L, 
-     pch=19, col=colours); abline(model3, col="black" )
+     pch=19, col=colours, ylab = "Mediolateral width of the femur", xlab = "Mediolateral width of the tibiotarsus",axes = TRUE, frame.plot = TRUE ); abline(model3, col="black" )
 
 
 lines(newxB, conf_intervalB[,2], col="blue", lty=2)
@@ -421,254 +500,6 @@ lines(newxB, conf_intervalB[,3], col="blue", lty=2)
   
 ```
 
-
-```{r length vs width f}
-
-#Also here setting up a vector of colours you can use to highlight _Genyornis_
-#make a vector of just pink
-colours <- rep("hotpink",nrow(data_plot2))
-#make a vector where any species name that has Genyornis is assigned purple
-colours[which(data_plot2$species == "Genyornis newtoni")] <- "#33cc33"
-colours[which(data_plot2$species == "Illbandornis lawsoni")] <- "#196619"
-colours[which(data_plot2$species == "Illbandornis woodburnei")] <- "green"
-colours[which(data_plot2$order == "Anseriformes")] <- "#ff0055"
-colours[which(data_plot2$order == "Galliformes")] <- "#800080"
-colours[which(data_plot2$order == "Casuariiformes")] <- "#3333cc"
-colours[which(data_plot2$order == "Struthioniformes")] <- "#3333cc"
-colours[which(data_plot2$order == "Dinornithiformes")] <- "#b34700"
-colours[which(data_plot2$order == "Aepyornithiformes")] <- "#cc0000"
-
-
-
-#getting a model for predicting CIs
-modelFLW <- lm(fM.L ~ fL, data=data_plot)
-summary(modelFLW)
-
-#For the interval estimate to work, we need to find the smallest and largest values of x. All this is in https://stackoverflow.com/questions/46459620/plotting-a-95-confidence-interval-for-a-lm-object
-
-#But X in this case has NAs so we're here finding the lowest non-NA value by sorting from smallest to largest and taking the first value
-min_xW <- sort(data_plot$fL)[1]
-max_xW <- sort(data_plot$fL, decreasing = TRUE)[1]
-
-#make dummy sequence of x for intervals. 
-newxW <- seq(min_xW-1,max_xW+1,by = 0.05 )
-
-#plot confidence intervals
-
-#This only works if the data are already logged. Not my preference but hey.
-conf_intervalW <- predict(modelFLW, newdata=data.frame(fL = newxW), interval="prediction", level = 0.95)
-
-
-
-plot(data_plot$fM.L ~ data_plot$fL, 
-     pch=19, col=colours); abline(modelFLW, col="black" )
-
-lines(newxW, conf_intervalW [,2], col="blue", lty=2)
-lines(newxW, conf_intervalW [,3], col="blue", lty=2)
-
-#fill in area between regression line and confidence interval - very pretty but then you have to re-plot the points
-polygon(c(rev(newxW), newxW), c(rev(conf_intervalW [ ,3]), conf_intervalW[ ,2]),density = 25, col = 'grey', border = NA)
-
-
-
-points(data_plot$fM.L ~ data_plot$fL, 
-     
-     pch=19, col=colours); abline(modelFLW, col="black" )
-lines(newxW, conf_intervalW [,2], col="blue", lty=2)
-lines(newxW, conf_intervalW [,3], col="blue", lty=2)
-
-
-
-#text to data points
-#text(log(data$fL) ~ log(data$fM.L), label=data$species)
-
-```
-
-
-```{r plotting the femur and tibia length}
-#Also here setting up a vector of colours you can use to highlight _Genyornis_
-#make a vector of just pink
-colours <- rep("hotpink",nrow(data_plot2))
-#make a vector where any species name that has Genyornis is assigned purple
-colours[which(data_plot2$species == "Genyornis newtoni")] <- "#33cc33"
-colours[which(data_plot2$species == "Illbandornis lawsoni")] <- "#196619"
-colours[which(data_plot2$species == "Illbandornis woodburnei")] <- "green"
-colours[which(data_plot2$order == "Anseriformes")] <- "#ff0055"
-colours[which(data_plot2$order == "Galliformes")] <- "#800080"
-colours[which(data_plot2$order == "Casuariiformes")] <- "#3333cc"
-colours[which(data_plot2$order == "Struthioniformes")] <- "#3333cc"
-colours[which(data_plot2$order == "Dinornithiformes")] <- "#b34700"
-colours[which(data_plot2$order == "Aepyornithiformes")] <- "#cc0000"
-
-
-#getting a model for predicting CIs
-modelFTL <- lm(fL ~ tbL, data=data_plot)
-summary(modelFTL)
-
-#For the interval estimate to work, we need to find the smallest and largest values of x. All this is in https://stackoverflow.com/questions/46459620/plotting-a-95-confidence-interval-for-a-lm-object
-
-#But X in this case has NAs so we're here finding the lowest non-NA value by sorting from smallest to largest and taking the first value
-min_xL <- sort(data_plot$tbL)[1]
-max_xL <- sort(data_plot$tbL, decreasing = TRUE)[1]
-
-#make dummy sequence of x for intervals. 
-newxL <- seq(min_xL-1,max_xL+1,by = 0.05 )
-
-#plot confidence intervals
-
-#This only works if the data are already logged. Not my preference but hey.
-conf_intervalL <- predict(modelFTL, newdata=data.frame(tbL = newxL), interval="prediction",    level = 0.95)
-
-
-
-plot(data_plot$fL ~ data_plot$tbL, 
-     pch=19, col=colours); abline(modelFTL, col="black" )
-
-lines(newxL, conf_intervalL [,2], col="blue", lty=2)
-lines(newxL, conf_intervalL [,3], col="blue", lty=2)
-
-#text((data_plot$fL ~ data_plot$tbL), label=data$species)
-
-
-#fill in area between regression line and confidence interval - very pretty but then you have to re-plot the points
-polygon(c(rev(newxL), newxL), c(rev(conf_intervalL [ ,3]), conf_intervalL[ ,2]), density = 25, col = 'grey', border = NA)
-
-
-
-points(data_plot$fL ~ data_plot$tbL, 
-     
-     pch=19, col=colours); abline(modelFTL, col="black" )
-lines(newxL, conf_intervalL [,2], col="blue", lty=2)
-lines(newxL, conf_intervalL [,3], col="blue", lty=2)
-
-
-```
-
-
-```{r plotting femur widths against each other}
-
-#Also here setting up a vector of colours you can use to highlight _Genyornis_
-#make a vector of just pink
-colours <- rep("hotpink",nrow(data_plot2))
-#make a vector where any species name that has Genyornis is assigned purple
-colours[which(data_plot2$species == "Genyornis newtoni")] <- "#33cc33"
-colours[which(data_plot2$species == "Illbandornis lawsoni")] <- "#196619"
-colours[which(data_plot2$species == "Illbandornis woodburnei")] <- "green"
-colours[which(data_plot2$order == "Anseriformes")] <- "#ff0055"
-colours[which(data_plot2$order == "Galliformes")] <- "#800080"
-colours[which(data_plot2$order == "Casuariiformes")] <- "#3333cc"
-colours[which(data_plot2$order == "Struthioniformes")] <- "#3333cc"
-colours[which(data_plot2$order == "Dinornithiformes")] <- "#b34700"
-colours[which(data_plot2$order == "Aepyornithiformes")] <- "#cc0000"
-
-
-
-#getting a model for predicting CIs
-modelFW <- lm(fM.L ~ fCr.Ca, data=data_plot)
-summary(modelFW)
-
-#For the interval estimate to work, we need to find the smallest and largest values of x. All this is in https://stackoverflow.com/questions/46459620/plotting-a-95-confidence-interval-for-a-lm-object
-
-#But X in this case has NAs so we're here finding the lowest non-NA value by sorting from smallest to largest and taking the first value
-min_xFW <- sort(data_plot$fCr.Ca)[1]
-max_xFW <- sort(data_plot$fCr.Ca, decreasing = TRUE)[1]
-
-#make dummy sequence of x for intervals. 
-newxFW <- seq(min_xFW-1,max_xFW+1,by = 0.05 )
-
-#plot confidence intervals
-
-#This only works if the data are already logged. Not my preference but hey.
-conf_intervalFW <- predict(modelFW, newdata=data.frame(fCr.Ca = newxW), interval="prediction", level = 0.95)
-
-plot(data=data_plot, fM.L ~ fCr.Ca,
-     pch=19, col=colours); abline(modelFW, col="black" )
-
-#for some reason the newxFW has returned a large value than confidence interval
-lines(newxFW, conf_intervalFW [,2], col="blue", lty=2)
-lines(newxFW, conf_intervalFW [,3], col="blue", lty=2)
-
-#fill in area between regression line and confidence interval - very pretty but then you have to re-plot the points
-polygon(c(rev(newxFW), newxFW), c(rev(conf_intervalFW [ ,3]), conf_intervalFW[ ,2]),density = 25, col = 'grey', border = NA)
-
-
-
-points(data=data_plot, fM.L ~ fCr.Ca,
-     
-     pch=19, col=colours); abline(modelFLW, col="black" )
-lines(newxFW, conf_intervalFW [,2], col="blue", lty=2)
-lines(newxFW, conf_intervalFW [,3], col="blue", lty=2)
-
-
-
-
-```
-
-
-
-```{r plotting circumference}
-circ <- read.csv (file = "../Data/Raw/hindlimb_circumference.csv")
-
-cbind (data2[,1:3], log (data2[,4:16]))
-
-circ_plot <- cbind (circ[,1:3], log (circ[,4:9]))
-
-
-#make a vector of just pink
-colours <- rep("hotpink", nrow(circ_plot))
-#make a vector where any species name that has Genyornis is assigned purple
-colours[which(circ_plot$species == "Genyornis newtoni")] <- "#33cc33"
-colours[which(circ_plot$order == "Anseriformes")] <- "#ff0055"
-colours[which(circ_plot$order == "Galliformes")] <- "#800080"
-colours[which(circ_plot$order == "Casuariiformes")] <- "#3333cc"
-colours[which(circ_plot$order == "Struthioniformes")] <- "#3333cc"
-
-#getting a model for predicting CIs
-modelCirc<- lm(fCIRC ~ tbCIRC, data=circ_plot)
-summary(modelCirc)
-
-#For the interval estimate to work, we need to find the smallest and largest values of x. All this is in https://stackoverflow.com/questions/46459620/plotting-a-95-confidence-interval-for-a-lm-object
-
-#But X in this case has NAs so we're here finding the lowest non-NA value by sorting from smallest to largest and taking the first value
-min_xCIRC <- sort(circ_plot$tbCIRC)[1]
-max_xCIRC <- sort(circ_plot$tbCIRC, decreasing = TRUE)[1]
-
-#make dummy sequence of x for intervals. 
-newxCIRC <- seq(min_xCIRC-1,max_xCIRC+1,by = 0.05 )
-
-#plot confidence intervals
-
-#This only works if the data are already logged. Not my preference but hey.
-conf_intervalCIRC <- predict(modelCirc, newdata=data.frame(tbCIRC = newxCIRC), interval="prediction", level = 0.95)
-
-plot(circ_plot$fCIRC ~ circ_plot$tbCIRC, 
-     pch=19, col=colours); abline(modelCirc, col="black" )
-
-lines(newxCIRC, conf_intervalCIRC [,2], col="blue", lty=2)
-lines(newxCIRC, conf_intervalCIRC [,3], col="blue", lty=2)
-
-#fill in area between regression line and confidence interval - very pretty but then you have to re-plot the points
-polygon(c(rev(newxCIRC), newxCIRC), c(rev(conf_intervalCIRC [ ,3]), conf_intervalCIRC[ ,2]),density = 25, col = 'grey', border = NA)
-
-plot(circ_plot$fCIRC ~ circ_plot$tbCIRC, 
-     pch=19, col=colours); abline(modelCirc, col="black" )
-
-lines(newxCIRC, conf_intervalCIRC [,2], col="blue", lty=2)
-lines(newxCIRC, conf_intervalCIRC [,3], col="blue", lty=2)
-
-
-```
-
-```{r femoral splay}
-
-ang <- read.csv (file = "../Data/Raw/articulated_hindlimb_v2.csv")
-
-
-
-
-```
-
-
 #REDUCED MAJOR AXIS REGRESSIONS
 
 ```{r rma femur mediolateral vs tibia mediolateral}
@@ -687,7 +518,6 @@ plot(data2_rma, "RMA")
 
 
 ```
-
 
 #LIMB PROPORTIONS
 
@@ -725,7 +555,7 @@ mean_lengths$species <- factor (mean_lengths$species, levels = c("Struthio camel
 #code for the bar plot
 ggplot(mean_lengths, aes(fill = bone, y = mean_length, x = species)) + 
     geom_bar(position="fill", stat="identity") +
-  geom_abline(slope=0, intercept=0.30, col = "black", lty =2)
+  geom_abline(slope=0, intercept=0.30, col = "black", lty =2)+
   #labels for the x, y axis, plot title, and legend
   labs(title = "Mean Lengths of Bones by Species",
        x = "Species",
@@ -742,6 +572,7 @@ ggplot(mean_lengths, aes(fill = bone, y = mean_length, x = species)) +
 
 ```
 
+
 ```{r graph of proportion of hindlimbs in birds excl. moas}
 
 #making a seperate dataset w/o moas
@@ -757,6 +588,7 @@ meanL_noM$species <- factor (meanL_noM$species, levels = c("Struthio camelus", "
 #code for the bar plot
 ggplot(meanL_noM, aes(fill = bone, y = mean_length, x = species)) + 
     geom_bar(position="fill", stat="identity") +
+  geom_abline(slope=0, intercept=0.30, col = "black", lty =2)+
   #labels for the x, y axis, plot title, and legend
   labs(title = "Mean Lengths of Bones by Species",
        x = "Species",
@@ -782,9 +614,40 @@ library("ggtern")
 ggtern(data=longbone_length, aes (x = fL, y = tbL, z = tmtL)) +
   geom_point()
 
+#trying a different method with the package Ternary
+par(mar=c(0,0,0,0))
+
+#make the legnths a matrix
+#make sure na.omit is used otherwise it does not work
+Ternary_matrix <- na.omit (as.matrix (data_plot[,c ("fL", "tbL", "tmtL")]))
+
+#creates the base for the plot
+TernaryPlot(point = "up",
+            alab = "Femur", blab = "Tibiotarsus", clab = "Tarsometatarsus",
+            region = Ternary_matrix)
+
+#adding points
+TernaryPoints(Ternary_matrix,
+              pch = 19,
+              cex = 1)
+
+#OMG this has to be a matrix
+#Ternary_matrix <- as.matrix(plotData[,c("Canine", "Pinch", "Height")])
+
+#TernaryPlot(point = "up", 
+            #alab = "Canine width", blab = "Pinch width", clab = "Rostrum height",
+           # region = Ternary_matrix)
+                        
+
+#A list, matrix, data.frame or vector in which each element (or row) specifies the three coordinates of a point in ternary space.
+#TernaryPoints(Ternary_matrix, 
+          #    pch = plotData$PtSet,
+             # bg = plotData$PtCol,
+            #  cex = 1)
+ 
+#it seems to summarise to me that it there is only one species where height dominates rostral dimensions; in addition, it shares an extremely narrow pinch with Andrewsarchus; as a result, it also has a fairly wide canine width relative to its rostrum height. I do feel that it summarises our conclusion quite well that we've got a uniquely tip-heavy animal here. 
 
 
-             
 ```
 
 
