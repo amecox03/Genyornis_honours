@@ -194,7 +194,7 @@ colours[which(data_plot$order == "Aepyornithiformes")] <- "#cc0000"
 
 #getting a model for predicting CIs
 model1 <- lm(fM.L ~ tbM.L, data=datanoD_plot)
-summary(model2)
+summary(model1)
 
 #For the interval estimate to work, we need to find the smallest and largest values of x. All this is in https://stackoverflow.com/questions/46459620/plotting-a-95-confidence-interval-for-a-lm-object
 
@@ -208,7 +208,7 @@ newx <- seq(min_x-1,max_x+1,by = 0.05 )
 #plot confidence intervals
 
 #This only works if the data are already logged. Not my preference but hey.
-conf_interval <- predict(model2, newdata=data.frame(tbM.L = newx), interval="prediction",    level = 0.95)
+conf_interval <- predict(model1, newdata=data.frame(tbM.L = newx), interval="prediction",    level = 0.95)
 
 plot(data = data_plot, fM.L ~ tbM.L, 
      xlim=c(1.6,4.5), 
@@ -238,7 +238,6 @@ lines(newx, conf_interval[,3], col="blue", lty=2)
 
 
 ```{r length vs width f}
-
 
 #getting a model for predicting CIs
 modelFLW <- lm(fM.L ~ fL, data=datanoD_plot)
@@ -320,7 +319,7 @@ polygon(c(rev(newxL), newxL), c(rev(conf_intervalL [ ,3]), conf_intervalL[ ,2]),
 
 
 #replotting points and prediction intervals
-points(dadata = data_plot, fM.L ~ fL, 
+points(data = data_plot, fL ~ tbL, 
      pch=19, col=colours); abline(modelFTL, col="black" )
 lines(newxL, conf_intervalL [,2], col="blue", lty=2)
 lines(newxL, conf_intervalL [,3], col="blue", lty=2)
@@ -345,10 +344,10 @@ max_xFW <- sort(datanoD_plot$fCr.Ca, decreasing = TRUE)[1]
 newxFW <- seq(min_xFW-1,max_xFW+1,by = 0.05 )
 
 #plot confidence intervals
-
 #This only works if the data are already logged. Not my preference but hey.
-conf_intervalFW <- predict(modelFW, newdata=data.frame(fCr.Ca = newxW), interval="prediction", level = 0.95)
+conf_intervalFW <- predict(modelFW, newdata=data.frame(fCr.Ca = newxFW), interval="prediction", level = 0.95)
 
+#plotting the femur widths
 plot(data=data_plot, fM.L ~ fCr.Ca,
      pch=19, col=colours, ylab = "Mediolateral width", xlab = "Craniocaudal width",axes = TRUE, frame.plot = TRUE); abline(modelFW, col="black" )
 
@@ -361,7 +360,7 @@ polygon(c(rev(newxFW), newxFW), c(rev(conf_intervalFW [ ,3]), conf_intervalFW[ ,
 
 #replotting points and prediction intervals
 points(data=data_plot, fM.L ~ fCr.Ca,
-     pch=19, col=colours); abline(modelFLW, col="black" )
+     pch=19, col=colours); abline(modelFW, col="black" )
 lines(newxFW, conf_intervalFW [,2], col="blue", lty=2)
 lines(newxFW, conf_intervalFW [,3], col="blue", lty=2)
 
@@ -396,9 +395,9 @@ lines(newxCIRC, conf_intervalCIRC [,3], col="blue", lty=2)
 #fill in area between regression line and confidence interval - very pretty but then you have to re-plot the points
 polygon(c(rev(newxCIRC), newxCIRC), c(rev(conf_intervalCIRC [ ,3]), conf_intervalCIRC[ ,2]),density = 25, col = 'grey', border = NA)
 
+#replotting points and prediction intervals
 points(data=data_plot, fCIRC ~ tbCIRC, 
      pch=19, col=colours); abline(modelCirc, col="black" )
-
 lines(newxCIRC, conf_intervalCIRC [,2], col="blue", lty=2)
 lines(newxCIRC, conf_intervalCIRC [,3], col="blue", lty=2)
 
@@ -418,7 +417,6 @@ lines(newxCIRC, conf_intervalCIRC [,3], col="blue", lty=2)
 
 
 ```{r seperate data set with just the large flightless birds}
-
 
 #make a data set with extant ratites
 ratite <- data[c(5:25),]
