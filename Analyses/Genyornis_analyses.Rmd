@@ -172,7 +172,7 @@ lines(newx, preds[ ,2], lty = 'dashed', col = 'blue')
 #make a vector of just pink
 colours <- rep("#33cc33",nrow(data_plot))
 #make a vector where any species name that has Genyornis is assigned purple
-colours[which(data_plot$species == "Genyornis newtoni")] <- "#33cc33"
+#colours[which(data_plot$species == "Genyornis newtoni")] <- "#33cc33"
 colours[which(data_plot$species == "Illbandornis lawsoni")] <- "#196619"
 colours[which(data_plot$species == "Illbandornis woodburnei")] <- "green"
 colours[which(data_plot$species == "Dromornis stirtoni")] <- "#454B1B"
@@ -183,8 +183,11 @@ colours[which(data_plot$order == "Struthioniformes")] <- "#3333cc"
 colours[which(data_plot$order == "Dinornithiformes")] <- "#b34700"
 colours[which(data_plot$order == "Aepyornithiformes")] <- "#cc0000"
 
-#data_plot$species <- 19
-#data_plot$species[which (data_plot$species == "Genyornis newtoni")] <- 0
+#assigning each species a different symbol
+pch_values <- c("Genyornis newtoni" = 19,"Illbandornis lawsoni" = 19, "Illbandornis woodburnei" = 19, "Dromornis stirtoni" = 19, "Anhima cornuta" = 17, "Anseranas semipalmata" = 17, "Cereopsis novaehollandiae" = 17, "Leipoa ocellata" = 15, "Alectura lathami" = 15, "Casuarius casuarius" = 18, "Dromaius novaehollandiae" = 18, "Struthio camelus" = 18, "Dinornis robustus" = 18, "Dinornis novaezealandiae" = 18, "Pachyornis elephantopus" = 18, "Aepyornis hildebrandti" = 18, "Aepyornis maximus" = 18, "Mullerornis modestus" = 18)
+
+#creating a vector of pch values based on species
+pch_vector <- pch_values[data_plot$species]
 
 
 ```
@@ -367,6 +370,91 @@ lines(newxFW, conf_intervalFW [,3], col="blue", lty=2)
 ```
 
 
+```{r plotting the tibiotarsus widths against each other}
+
+#getting a model for predicting CIs
+modelTW <- lm(tbM.L ~ tbCr.Ca, data=datanoD_plot)
+summary(modelTW)
+
+#For the interval estimate to work, we need to find the smallest and largest values of x. All this is in https://stackoverflow.com/questions/46459620/plotting-a-95-confidence-interval-for-a-lm-object
+
+#But X in this case has NAs so we're here finding the lowest non-NA value by sorting from smallest to largest and taking the first value
+min_xTW <- sort(datanoD_plot$tbCr.Ca)[1]
+max_xTW <- sort(datanoD_plot$tbCr.Ca, decreasing = TRUE)[1]
+
+#make dummy sequence of x for intervals. 
+newxTW <- seq(min_xTW-1,max_xTW+1,by = 0.05 )
+
+#plot confidence intervals
+#This only works if the data are already logged. Not my preference but hey.
+conf_intervalTW <- predict(modelTW, newdata=data.frame(tbCr.Ca = newxTW), interval="prediction", level = 0.95)
+
+#plotting the femur widths
+plot(data=data_plot, tbM.L ~ tbCr.Ca,
+     pch=pch_vector, col=colours, ylab = "Tibiotarsus mediolateral width", xlab = "Tibiotarsus craniocaudal width",axes = TRUE, frame.plot = TRUE); abline(modelTW, col="black" )
+
+#for some reason the newxFW has returned a large value than confidence interval
+lines(newxTW, conf_intervalTW [,2], col="blue", lty=2)
+lines(newxTW, conf_intervalTW [,3], col="blue", lty=2)
+
+#fill in area between regression line and confidence interval - very pretty but then you have to re-plot the points
+polygon(c(rev(newxTW), newxTW), c(rev(conf_intervalTW [ ,3]), conf_intervalTW[ ,2]),density = 25, col = 'grey', border = NA)
+
+#replotting points and prediction intervals
+points(data=data_plot, tbM.L ~ tbCr.Ca,
+     pch=pch_vector, col=colours); abline(modelTW, col="black" )
+lines(newxTW, conf_intervalTW [,2], col="blue", lty=2)
+lines(newxTW, conf_intervalTW [,3], col="blue", lty=2)
+
+
+```
+
+
+```{r plotting tarsometatarsus widths against each other}
+
+#getting a model for predicting CIs
+modelTMTW <- lm(tmtM.L ~ tmtD.P, data=datanoD_plot)
+summary(modelTMTW)
+
+#For the interval estimate to work, we need to find the smallest and largest values of x. All this is in https://stackoverflow.com/questions/46459620/plotting-a-95-confidence-interval-for-a-lm-object
+
+#But X in this case has NAs so we're here finding the lowest non-NA value by sorting from smallest to largest and taking the first value
+min_xTMTW <- sort(datanoD_plot$tmtD.P)[1]
+max_xTMTW <- sort(datanoD_plot$tmtD.P, decreasing = TRUE)[1]
+
+#make dummy sequence of x for intervals. 
+newxTMTW <- seq(min_xTW-1,max_xTW+1,by = 0.05 )
+
+#plot confidence intervals
+#This only works if the data are already logged. Not my preference but hey.
+conf_intervalTMTW <- predict(modelTMTW, newdata=data.frame(tmtD.P = newxTMTW), interval="prediction", level = 0.95)
+
+#plotting the femur widths
+plot(data=data_plot, tmtM.L ~ tmtD.P,
+     pch=pch_vector, col=colours, ylab = "Tarsometatarsus mediolateral width", xlab = "Tarsometatarsus craniocaudal width",axes = TRUE, frame.plot = TRUE); abline(modelTMTW, col="black" )
+
+#for some reason the newxFW has returned a large value than confidence interval
+lines(newxTMTW, conf_intervalTMTW [,2], col="blue", lty=2)
+lines(newxTMTW, conf_intervalTMTW [,3], col="blue", lty=2)
+
+#fill in area between regression line and confidence interval - very pretty but then you have to re-plot the points
+polygon(c(rev(newxTMTW), newxTMTW), c(rev(conf_intervalTMTW [ ,3]), conf_intervalTMTW[ ,2]),density = 25, col = 'grey', border = NA)
+
+#replotting points and prediction intervals
+points(data=data_plot, tmtM.L ~ tmtD.P,
+     pch=pch_vector, col=colours); abline(modelTMTW, col="black" )
+lines(newxTMTW, conf_intervalTMTW [,2], col="blue", lty=2)
+lines(newxTMTW, conf_intervalTMTW [,3], col="blue", lty=2)
+
+
+
+#text to data points
+#text(data=data_plot, tmtM.L ~ tmtD.P, label=data$specimen.no)
+
+
+```
+
+
 ```{r plotting circumference}
 #getting a model for predicting CIs
 modelCirc<- lm(fCIRC ~ tbCIRC, data=data_plot)
@@ -408,6 +496,8 @@ lines(newxCIRC, conf_intervalCIRC [,3], col="blue", lty=2)
 
 
 ```{r femoral splay}
+#making a subset dataset that includes just the femoral dorsal view angluar measurements aka the femoral splay
+fem_splay <- na.omit(cbind(data_plot [,1:3], data_plot[,25:27]))
 
 
 
