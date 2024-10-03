@@ -19,7 +19,8 @@ setwd(dirname(getActiveDocumentContext()$path))
 
 library(Ternary)
 library(tidyverse)
-
+library(RColorBrewer)
+library(xtable)
 
 ```
 
@@ -34,6 +35,16 @@ data_plot <- cbind (data[,1:3], log (data[,4:18]), data[,19:39])
 data_noD <- data[-c(125:135),]
 
 datanoD_plot <- cbind (data_noD[,1:3], log (data_noD[,4:16]))
+
+```
+
+
+```{r geomean}
+
+#code from Keirnan et al. 2022
+#geomean <- apply(Size_containing_data[,c(4,8:14)], 1, prod)^(1/ncol(Size_containing_data[,c(4,8:14)]))
+
+
 
 ```
 
@@ -125,11 +136,27 @@ print(mul.mode)
 
 ```
 
+
+#SUMMARY STATISTICS
+
+```{r summary stats}
+sum <- data %>%
+  group_by(species)  %>%
+  summarise_all(mean, sd, na.rm = TRUE)
+  
+write.csv(sum, file = 'honours_summary_stats.csv')
+
+sum <- data %>%
+  group_by(species)
+
+```
+
+
+
 #LEAST SQUARE REGRESSIONS
 #Titles also often go here - up to you :-)
 #Read up on Reduced Major Axis (RMA) regression which allows for both variable being responses (rather than y being response, x being predictor - but don't get too hung up about this now :-))
 
-#Here is the fixed Prediction interval code. You need to run this on the dataset without Genyornis - use the above. I jsut ran out of time but I think YOU CAN DO IT :-)
 #The default is 95% confidence interval. These intervals seem very narrow! But the below runs an example that shows the same. But we are interested in the prediction intervals, anyway.
 
 ```{r 95% confidence interval basic script}
@@ -153,14 +180,14 @@ preds <- predict(model, newdata = data.frame(x=newx), interval = 'confidence')
 plot(y ~ x, data = df)
 
 #fill in area between regression line and confidence interval
-polygon(c(rev(newx), newx), c(rev(preds[ ,3]), preds[ ,2]), col = 'grey', border = NA)
+polygon(c(rev(newx), newx), c(rev(preds[ ,3]), preds[ ,2]), col = 'grey90', border = NA)
 
 #add fitted regression line
 abline(model)
 
 #add dashed lines for confidence bands
-lines(newx, preds[ ,3], lty = 'dashed', col = 'blue')
-lines(newx, preds[ ,2], lty = 'dashed', col = 'blue')
+lines(newx, preds[ ,3], lty = 'dashed', col = 'black')
+lines(newx, preds[ ,2], lty = 'dashed', col = 'black')
 
 
 ```
@@ -172,23 +199,25 @@ lines(newx, preds[ ,2], lty = 'dashed', col = 'blue')
 #make a vector of just pink
 colours <- rep("#33cc33",nrow(data_plot))
 #make a vector where any species name that has Genyornis is assigned purple
-#colours[which(data_plot$species == "Genyornis newtoni")] <- "#33cc33"
-colours[which(data_plot$species == "Illbandornis lawsoni")] <- "#196619"
-colours[which(data_plot$species == "Illbandornis woodburnei")] <- "green"
-colours[which(data_plot$species == "Dromornis stirtoni")] <- "#454B1B"
+colours[which(data_plot$species == "Genyornis newtoni")] <- "#33cc33"
+colours[which(data_plot$species == "Illbandornis lawsoni")] <- "#33cc33"
+colours[which(data_plot$species == "Illbandornis woodburnei")] <- "#33cc33"
+colours[which(data_plot$species == "Dromornis stirtoni")] <- "#33cc33"
 colours[which(data_plot$order == "Anseriformes")] <- "#ff0055"
 colours[which(data_plot$order == "Galliformes")] <- "#800080"
 colours[which(data_plot$order == "Casuariiformes")] <- "#3333cc"
 colours[which(data_plot$order == "Struthioniformes")] <- "#3333cc"
-colours[which(data_plot$order == "Dinornithiformes")] <- "#b34700"
+colours[which(data_plot$order == "Dinornithiformes")] <- "#F77F00"
 colours[which(data_plot$order == "Aepyornithiformes")] <- "#cc0000"
 
-#assigning each species a different symbol
-pch_values <- c("Genyornis newtoni" = 19,"Illbandornis lawsoni" = 19, "Illbandornis woodburnei" = 19, "Dromornis stirtoni" = 19, "Anhima cornuta" = 17, "Anseranas semipalmata" = 17, "Cereopsis novaehollandiae" = 17, "Leipoa ocellata" = 15, "Alectura lathami" = 15, "Casuarius casuarius" = 18, "Dromaius novaehollandiae" = 18, "Struthio camelus" = 18, "Dinornis robustus" = 18, "Dinornis novaezealandiae" = 18, "Pachyornis elephantopus" = 18, "Aepyornis hildebrandti" = 18, "Aepyornis maximus" = 18, "Mullerornis modestus" = 18)
+col_values <- c("Genyornis newtoni" = "#33cc33","Illbandornis lawsoni" = "#33cc33", "Illbandornis woodburnei" = "#33cc33", "Dromornis stirtoni" = "#33cc33", "Anhima cornuta" = "#ff0055", "Anseranas semipalmata" = "#ff0055", "Cereopsis novaehollandiae" = "#ff0055", "Leipoa ocellata" = "#800080", "Alectura lathami" = "#800080", "Casuarius casuarius" = "#3333cc", "Dromaius novaehollandiae" = "#3333cc", "Struthio camelus" = "#3333cc", "Dinornis robustus" = "#F77F00", "Dinornis novaezealandiae" = "#F77F00", "Pachyornis elephantopus" = "#F77F00", "Aepyornis hildebrandti" = "#cc0000", "Aepyornis maximus" = "#cc0000", "Mullerornis modestus" = "#cc0000")
+
+col_vector <- col_values [data_plot$species]
+
+pch_values <- c("Genyornis newtoni" = 19,"Illbandornis lawsoni" = 10, "Illbandornis woodburnei" = 13, "Dromornis stirtoni" = 8, "Anhima cornuta" = 17, "Anseranas semipalmata" = 17, "Cereopsis novaehollandiae" = 17, "Leipoa ocellata" = 15, "Alectura lathami" = 15, "Casuarius casuarius" = 18, "Dromaius novaehollandiae" = 18, "Struthio camelus" = 18, "Dinornis robustus" = 18, "Dinornis novaezealandiae" = 18, "Pachyornis elephantopus" = 18, "Aepyornis hildebrandti" = 18, "Aepyornis maximus" = 18, "Mullerornis modestus" = 18)
 
 #creating a vector of pch values based on species
 pch_vector <- pch_values[data_plot$species]
-
 
 ```
 
@@ -218,23 +247,99 @@ plot(data = data_plot, fM.L ~ tbM.L,
      ylim=c(1.7,4.5), 
      pch=19, col=colours, ylab = "Mediolateral width of the femur", xlab = "Mediolateral width of the tibiotarsus",axes = TRUE, frame.plot = TRUE); abline(model1, col="black" )
 
-lines(newx, conf_interval[,2], col="blue", lty=2)
+lines(newx, conf_interval[,2], col="black", lty=3)
 
-lines(newx, conf_interval[,3], col="blue", lty=2)
+lines(newx, conf_interval[,3], col="black", lty=3)
 
 #fill in area between regression line and confidence interval - very pretty but then you have to re-plot the points
-polygon(c(rev(newx), newx), c(rev(conf_interval[ ,3]), conf_interval[ ,2]), density = 25, col = 'grey', border = NA)
+polygon(c(rev(newx), newx), c(rev(conf_interval[ ,3]), conf_interval[ ,2]), density = 25, col = 'grey90', border = NA)
 
 
 #replotting points and prediction intervals
 points(data = data_plot, fM.L ~ tbM.L, 
      pch=19, col=colours); abline(model1, col="black" )
-lines(newx, conf_interval[,2], col="blue", lty=2)
-lines(newx, conf_interval[,3], col="blue", lty=2)
+lines(newx, conf_interval[,2], col="black", lty=3)
+lines(newx, conf_interval[,3], col="black", lty=3)
 
 
-#add row names to your plot
-#text(log(data$fM.L) ~ log(data$tbM.L), labels=data$species )
+#adding legend
+legend("bottomright",
+       legend = c("Galliformes", "Anseriformes", "Extant Palaeognathae",  "Dinornithiformes", "Aepyornithiformes", substitute(paste(italic("Illbandornis lawsoni"))), substitute(paste(italic("Illbandornos woodburnei"))), substitute(paste(italic("Genyornis newtoni")))), #substitute(paste(italic("name"))) makes the names appear italiseced
+       pch = c(15, 17, 18, 18, 18, 10, 13, 19),
+       col = c("#800080", "#ff0055", "#3333cc", "#F77F00", "#cc0000", "#33cc33", "#33cc33", "#33cc33"),
+       pt.bg = c("#800080", "#ff0055", "#3333cc", "#F77F00", "#cc0000", "#33cc33", "#33cc33", "#33cc33"),
+       bty = "n",
+       pt.cex = 1.5,
+       cex = 1,
+       text.col = "black",
+       horiz = F ,
+       inset = c(0.01, 0.0), 
+       ncol=2, 
+       x.intersp=2,
+       y.intersp=1.2)
+box(col = "#000000")
+
+
+```
+
+
+```{r femur width vs tibiotarsus width craniocaudal}
+
+#getting a model for predicting CIs
+modelCW <- lm(fCr.Ca ~ tbCr.Ca, data=datanoD_plot)
+summary(modelCW)
+
+#For the interval estimate to work, we need to find the smallest and largest values of x. All this is in https://stackoverflow.com/questions/46459620/plotting-a-95-confidence-interval-for-a-lm-object
+
+#But X in this case has NAs so we're here finding the lowest non-NA value by sorting from smallest to largest and taking the first value
+min_xCW <- sort(datanoD_plot$tbCr.Ca)[1]
+max_xCW <- sort(datanoD_plot$tbCr.Ca, decreasing = TRUE)[1]
+
+#make dummy sequence of x for intervals. 
+newxCW <- seq(min_xCW-1,max_xCW+1,by = 0.05 )
+
+#plot confidence intervals
+
+#This only works if the data are already logged. Not my preference but hey.
+conf_intervalCW <- predict(modelCW, newdata=data.frame(tbCr.Ca = newxCW), interval="prediction",    level = 0.95)
+
+
+plot(data = data_plot, fCr.Ca ~ tbCr.Ca, 
+     xlim=c(1.6,4.5), 
+     ylim=c(1.7,4.5), 
+     pch=pch_vector, col=colours, ylab = "Craniocaudal width of the femur", xlab = "Craniocaudal width of the tibiotarsus",axes = TRUE, frame.plot = TRUE); abline(modelCW, col="black" )
+
+lines(newxCW, conf_intervalCW[,2], col="black", lty=3)
+lines(newxCW, conf_intervalCW[,3], col="black", lty=3)
+
+ #fill in area between regression line and confidence interval - very pretty but then you have to re-plot the points
+polygon(c(rev(newxCW), newxCW), c(rev(conf_intervalCW[ ,3]), conf_intervalCW[ ,2]), density = 25, col = 'grey90', border = NA)
+
+
+
+points(data = data_plot, fCr.Ca ~ tbCr.Ca, 
+     pch=pch_vector, col=colours); abline(modelCW, col="black" )
+
+lines(newxCW, conf_intervalCW[,2], col="black", lty=3)
+lines(newxCW, conf_intervalCW[,3], col="black", lty=3)
+
+
+#adding legend
+legend("bottomright",
+       legend = c("Galliformes", "Anseriformes", "Extant Palaeognathae",  "Aepyornithiformes",  substitute(paste(italic("Genyornis newtoni")))),
+       pch = c(15, 17, 18, 18, 19),
+       col = c("#800080", "#ff0055", "#3333cc",  "#cc0000",  "#33cc33"),
+       pt.bg = c("#800080", "#ff0055", "#3333cc",  "#cc0000", "#33cc33"),
+       bty = "n",
+       pt.cex = 1.5,
+       cex = 1,
+       text.col = "black",
+       horiz = F ,
+       inset = c(0.01, 0.0), 
+       ncol=2, 
+       x.intersp=2,
+       y.intersp=1.2)
+box(col = "#000000")
 
 
 ```
@@ -265,23 +370,93 @@ conf_intervalW <- predict(modelFLW, newdata=data.frame(fL = newxW), interval="pr
 plot(data = data_plot, fM.L ~ fL, 
      pch=19, col=colours, ylab = "Mediolateral width of the femur", xlab = "Femur length", axes = TRUE, frame.plot = TRUE); abline(modelFLW, col="black" )
 
-lines(newxW, conf_intervalW [,2], col="blue", lty=2)
-lines(newxW, conf_intervalW [,3], col="blue", lty=2)
+lines(newxW, conf_intervalW [,2], col="black", lty=3)
+lines(newxW, conf_intervalW [,3], col="black", lty=3)
 
 #fill in area between regression line and confidence interval - very pretty but then you have to re-plot the points
-polygon(c(rev(newxW), newxW), c(rev(conf_intervalW [ ,3]), conf_intervalW[ ,2]),density = 25, col = 'grey', border = NA)
+polygon(c(rev(newxW), newxW), c(rev(conf_intervalW [ ,3]), conf_intervalW[ ,2]),density = 25, col = 'grey90', border = NA)
 
 
 #replotting points and prediction intervals
 points(data = data_plot, fM.L ~ fL,
      pch=19, col=colours); abline(modelFLW, col="black" )
-lines(newxW, conf_intervalW [,2], col="blue", lty=2)
-lines(newxW, conf_intervalW [,3], col="blue", lty=2)
+lines(newxW, conf_intervalW [,2], col="black", lty=3)
+lines(newxW, conf_intervalW [,3], col="black", lty=3)
+
+#adding legend
+legend("bottomright",
+       legend = c("Galliformes", "Anseriformes", "Extant Palaeognathae",  "Dinornithiformes", "Aepyornithiformes", substitute(paste(italic("Illbandornis lawsoni"))), substitute(paste(italic("Illbandornos woodburnei"))), substitute(paste(italic("Genyornis newtoni")))),
+       pch = c(15, 17, 18, 18, 18, 10, 13, 19),
+       col = c("#800080", "#ff0055", "#3333cc", "#F77F00", "#cc0000", "#33cc33", "#33cc33", "#33cc33"),
+       pt.bg = c("#800080", "#ff0055", "#3333cc", "#F77F00", "#cc0000", "#33cc33", "#33cc33", "#33cc33"),
+       bty = "n",
+       pt.cex = 1.5,
+       cex = 1,
+       text.col = "black",
+       horiz = F ,
+       inset = c(0.01, 0.0), 
+       ncol=2, 
+       x.intersp=2,
+       y.intersp=1.2)
+box(col = "#000000")
+
+```
+
+```{r plotting craniocaudal width against length}
+
+#getting a model for predicting CIs
+modelFLW2 <- lm(fCr.Ca ~ fL, data=datanoD_plot)
+summary(modelFLW2)
+
+#For the interval estimate to work, we need to find the smallest and largest values of x. All this is in https://stackoverflow.com/questions/46459620/plotting-a-95-confidence-interval-for-a-lm-object
+
+#But X in this case has NAs so we're here finding the lowest non-NA value by sorting from smallest to largest and taking the first value
+min_xW2 <- sort(datanoD_plot$fL)[1]
+max_xW2 <- sort(datanoD_plot$fL, decreasing = TRUE)[1]
+
+#make dummy sequence of x for intervals. 
+newxW2 <- seq(min_xW-1,max_xW+1,by = 0.05 )
+
+#plot confidence intervals
+
+#This only works if the data are already logged. Not my preference but hey.
+conf_intervalW2 <- predict(modelFLW2, newdata=data.frame(fL = newxW2), interval="prediction", level = 0.95)
 
 
 
-#text to data points
-#text(log(data$fL) ~ log(data$fM.L), label=data$species)
+plot(data = data_plot, fCr.Ca ~ fL, 
+     pch=pch_vector, col=colours, ylab = "Craniocaudal width of the femur", xlab = "Femur length", axes = TRUE, frame.plot = TRUE); abline(modelFLW, col="black" )
+
+lines(newxW2, conf_intervalW2 [,2], col="black", lty=3)
+lines(newxW2, conf_intervalW2 [,3], col="black", lty=3)
+
+#fill in area between regression line and confidence interval - very pretty but then you have to re-plot the points
+polygon(c(rev(newxW2), newxW2), c(rev(conf_intervalW2 [ ,3]), conf_intervalW2[ ,2]),density = 25, col = 'grey90', border = NA)
+
+
+#replotting points
+points(data = data_plot, fCr.Ca ~ fL, 
+     pch=pch_vector, col=colours); abline(modelFLW, col="black" )
+lines(newxW2, conf_intervalW2 [,2], col="black", lty=3)
+lines(newxW2, conf_intervalW2 [,3], col="black", lty=3)
+
+#adding legend
+legend("bottomright",
+       legend = c("Galliformes", "Anseriformes", "Extant Palaeognathae",  "Aepyornithiformes", substitute(paste(italic("Genyornis newtoni")))),
+       pch = c(15, 17, 18, 18, 19),
+       col = c("#800080", "#ff0055", "#3333cc", "#cc0000", "#33cc33"),
+       pt.bg = c("#800080", "#ff0055", "#3333cc","#cc0000",  "#33cc33"),
+       bty = "n",
+       pt.cex = 1.5,
+       cex = 1,
+       text.col = "black",
+       horiz = F ,
+       inset = c(0.01, 0.0), 
+       ncol=2, 
+       x.intersp=2,
+       y.intersp=1.2)
+box(col = "#000000")
+
 
 ```
 
@@ -311,22 +486,35 @@ conf_intervalL <- predict(modelFTL, newdata=data.frame(tbL = newxL), interval="p
 plot(data = data_plot, fL ~ tbL,
      pch=19, col=colours, ylab = "Femur length", xlab = "Tibiotarsus", axes = TRUE, frame.plot = TRUE); abline(modelFTL, col="black" )
 
-lines(newxL, conf_intervalL [,2], col="blue", lty=2)
-lines(newxL, conf_intervalL [,3], col="blue", lty=2)
-
-#text((data_plot$fL ~ data_plot$tbL), label=data$species)
-
+lines(newxL, conf_intervalL [,2], col="black", lty=3)
+lines(newxL, conf_intervalL [,3], col="black", lty=3)
 
 #fill in area between regression line and confidence interval - very pretty but then you have to re-plot the points
-polygon(c(rev(newxL), newxL), c(rev(conf_intervalL [ ,3]), conf_intervalL[ ,2]), density = 25, col = 'grey', border = NA)
+polygon(c(rev(newxL), newxL), c(rev(conf_intervalL [ ,3]), conf_intervalL[ ,2]), density = 25, col = 'grey90', border = NA)
 
 
 #replotting points and prediction intervals
 points(data = data_plot, fL ~ tbL, 
      pch=19, col=colours); abline(modelFTL, col="black" )
-lines(newxL, conf_intervalL [,2], col="blue", lty=2)
-lines(newxL, conf_intervalL [,3], col="blue", lty=2)
+lines(newxL, conf_intervalL [,2], col="black", lty=3)
+lines(newxL, conf_intervalL [,3], col="black", lty=3)
 
+#adding legend
+legend("bottomright",
+       legend = c("Galliformes", "Anseriformes", "Extant Palaeognathae",  "Dinornithiformes", "Aepyornithiformes", substitute(paste(italic("Illbandornis lawsoni"))), substitute(paste(italic("Illbandornos woodburnei"))), substitute(paste(italic("Dromornis stirtoni"))), substitute(paste(italic("Genyornis newtoni")))),
+       pch = c(15, 17, 18, 18, 18, 10, 13, 8, 19),
+       col = c("#800080", "#ff0055", "#3333cc", "#F77F00", "#cc0000", "#33cc33", "#33cc33", "#33cc33","#33cc33"),
+       pt.bg = c("#800080", "#ff0055", "#3333cc", "#F77F00", "#cc0000", "#33cc33", "#33cc33", "#33cc33","#33cc33"),
+       bty = "n",
+       pt.cex = 1.5,
+       cex = 1,
+       text.col = "black",
+       horiz = F ,
+       inset = c(0.01, 0.0), 
+       ncol=2, 
+       x.intersp=2,
+       y.intersp=1.2)
+box(col = "#000000")
 
 ```
 
@@ -355,17 +543,34 @@ plot(data=data_plot, fM.L ~ fCr.Ca,
      pch=19, col=colours, ylab = "Mediolateral width", xlab = "Craniocaudal width",axes = TRUE, frame.plot = TRUE); abline(modelFW, col="black" )
 
 #for some reason the newxFW has returned a large value than confidence interval
-lines(newxFW, conf_intervalFW [,2], col="blue", lty=2)
-lines(newxFW, conf_intervalFW [,3], col="blue", lty=2)
+lines(newxFW, conf_intervalFW [,2], col="black", lty=3)
+lines(newxFW, conf_intervalFW [,3], col="black", lty=3)
 
 #fill in area between regression line and confidence interval - very pretty but then you have to re-plot the points
-polygon(c(rev(newxFW), newxFW), c(rev(conf_intervalFW [ ,3]), conf_intervalFW[ ,2]),density = 25, col = 'grey', border = NA)
+polygon(c(rev(newxFW), newxFW), c(rev(conf_intervalFW [ ,3]), conf_intervalFW[ ,2]),density = 25, col = 'grey90', border = NA)
 
 #replotting points and prediction intervals
 points(data=data_plot, fM.L ~ fCr.Ca,
      pch=19, col=colours); abline(modelFW, col="black" )
-lines(newxFW, conf_intervalFW [,2], col="blue", lty=2)
-lines(newxFW, conf_intervalFW [,3], col="blue", lty=2)
+lines(newxFW, conf_intervalFW [,2], col="black", lty=3)
+lines(newxFW, conf_intervalFW [,3], col="black", lty=3)
+
+
+legend("bottomright",
+       legend = c("Galliformes", "Anseriformes", "Extant Palaeognathae",  "Aepyornithiformes", substitute(paste(italic("Genyornis newtoni")))),
+       pch = c(15, 17, 18,  18,  19),
+       col = c("#800080", "#ff0055", "#3333cc",  "#cc0000", "#33cc33"),
+       pt.bg = c("#800080", "#ff0055", "#3333cc", "#cc0000", "#33cc33"),
+       bty = "n",
+       pt.cex = 1.5,
+       cex = 1,
+       text.col = "black",
+       horiz = F ,
+       inset = c(0.01, 0.0), 
+       ncol=2, 
+       x.intersp=2,
+       y.intersp=1.2)
+box(col = "#000000")
 
 ```
 
@@ -394,18 +599,33 @@ plot(data=data_plot, tbM.L ~ tbCr.Ca,
      pch=pch_vector, col=colours, ylab = "Tibiotarsus mediolateral width", xlab = "Tibiotarsus craniocaudal width",axes = TRUE, frame.plot = TRUE); abline(modelTW, col="black" )
 
 #for some reason the newxFW has returned a large value than confidence interval
-lines(newxTW, conf_intervalTW [,2], col="blue", lty=2)
-lines(newxTW, conf_intervalTW [,3], col="blue", lty=2)
+lines(newxTW, conf_intervalTW [,2], col="black", lty=3)
+lines(newxTW, conf_intervalTW [,3], col="black", lty=3)
 
 #fill in area between regression line and confidence interval - very pretty but then you have to re-plot the points
-polygon(c(rev(newxTW), newxTW), c(rev(conf_intervalTW [ ,3]), conf_intervalTW[ ,2]),density = 25, col = 'grey', border = NA)
+polygon(c(rev(newxTW), newxTW), c(rev(conf_intervalTW [ ,3]), conf_intervalTW[ ,2]),density = 25, col = 'grey90', border = NA)
 
 #replotting points and prediction intervals
 points(data=data_plot, tbM.L ~ tbCr.Ca,
      pch=pch_vector, col=colours); abline(modelTW, col="black" )
-lines(newxTW, conf_intervalTW [,2], col="blue", lty=2)
-lines(newxTW, conf_intervalTW [,3], col="blue", lty=2)
+lines(newxTW, conf_intervalTW [,2], col="black", lty=3)
+lines(newxTW, conf_intervalTW [,3], col="black", lty=3)
 
+legend("bottomright",
+       legend = c("Galliformes", "Anseriformes", "Extant Palaeognathae",  "Aepyornithiformes", substitute(paste(italic("Genyornis newtoni")))),
+       pch = c(15, 17, 18,  18,  19),
+       col = c("#800080", "#ff0055", "#3333cc",  "#cc0000", "#33cc33"),
+       pt.bg = c("#800080", "#ff0055", "#3333cc", "#cc0000", "#33cc33"),
+       bty = "n",
+       pt.cex = 1.5,
+       cex = 1,
+       text.col = "black",
+       horiz = F ,
+       inset = c(0.01, 0.0), 
+       ncol=2, 
+       x.intersp=2,
+       y.intersp=1.2)
+box(col = "#000000")
 
 ```
 
@@ -434,22 +654,34 @@ plot(data=data_plot, tmtM.L ~ tmtD.P,
      pch=pch_vector, col=colours, ylab = "Tarsometatarsus mediolateral width", xlab = "Tarsometatarsus craniocaudal width",axes = TRUE, frame.plot = TRUE); abline(modelTMTW, col="black" )
 
 #for some reason the newxFW has returned a large value than confidence interval
-lines(newxTMTW, conf_intervalTMTW [,2], col="blue", lty=2)
-lines(newxTMTW, conf_intervalTMTW [,3], col="blue", lty=2)
+lines(newxTMTW, conf_intervalTMTW [,2], col="black", lty=3)
+lines(newxTMTW, conf_intervalTMTW [,3], col="black", lty=3)
 
 #fill in area between regression line and confidence interval - very pretty but then you have to re-plot the points
-polygon(c(rev(newxTMTW), newxTMTW), c(rev(conf_intervalTMTW [ ,3]), conf_intervalTMTW[ ,2]),density = 25, col = 'grey', border = NA)
+polygon(c(rev(newxTMTW), newxTMTW), c(rev(conf_intervalTMTW [ ,3]), conf_intervalTMTW[ ,2]),density = 25, col = 'grey90', border = NA)
 
 #replotting points and prediction intervals
 points(data=data_plot, tmtM.L ~ tmtD.P,
      pch=pch_vector, col=colours); abline(modelTMTW, col="black" )
-lines(newxTMTW, conf_intervalTMTW [,2], col="blue", lty=2)
-lines(newxTMTW, conf_intervalTMTW [,3], col="blue", lty=2)
+lines(newxTMTW, conf_intervalTMTW [,2], col="black", lty=3)
+lines(newxTMTW, conf_intervalTMTW [,3], col="black", lty=3)
 
 
-
-#text to data points
-#text(data=data_plot, tmtM.L ~ tmtD.P, label=data$specimen.no)
+legend("bottomright",
+       legend = c("Galliformes", "Anseriformes", "Extant Palaeognathae",  "Aepyornithiformes", substitute(paste(italic("Genyornis newtoni")))),
+       pch = c(15, 17, 18,  18,  19),
+       col = c("#800080", "#ff0055", "#3333cc",  "#cc0000", "#33cc33"),
+       pt.bg = c("#800080", "#ff0055", "#3333cc", "#cc0000", "#33cc33"),
+       bty = "n",
+       pt.cex = 1.5,
+       cex = 1,
+       text.col = "black",
+       horiz = F ,
+       inset = c(0.01, 0.0), 
+       ncol=2, 
+       x.intersp=2,
+       y.intersp=1.2)
+box(col = "#000000")
 
 
 ```
@@ -457,14 +689,14 @@ lines(newxTMTW, conf_intervalTMTW [,3], col="blue", lty=2)
 
 ```{r plotting circumference}
 #getting a model for predicting CIs
-modelCirc<- lm(fCIRC ~ tbCIRC, data=data_plot)
+modelCirc<- lm(fCIRC ~ tbCIRC, data=datanoD_plot)
 summary(modelCirc)
 
 #For the interval estimate to work, we need to find the smallest and largest values of x. All this is in https://stackoverflow.com/questions/46459620/plotting-a-95-confidence-interval-for-a-lm-object
 
 #But X in this case has NAs so we're here finding the lowest non-NA value by sorting from smallest to largest and taking the first value
-min_xCIRC <- sort(data_plot$tbCIRC)[1]
-max_xCIRC <- sort(data_plot$tbCIRC, decreasing = TRUE)[1]
+min_xCIRC <- sort(datanoD_plot$tbCIRC)[1]
+max_xCIRC <- sort(datanoD_plot$tbCIRC, decreasing = TRUE)[1]
 
 #make dummy sequence of x for intervals. 
 newxCIRC <- seq(min_xCIRC-1,max_xCIRC+1,by = 0.05 )
@@ -475,33 +707,35 @@ newxCIRC <- seq(min_xCIRC-1,max_xCIRC+1,by = 0.05 )
 conf_intervalCIRC <- predict(modelCirc, newdata=data.frame(tbCIRC = newxCIRC), interval="prediction", level = 0.95)
 
 plot(data=data_plot, fCIRC ~ tbCIRC, 
-     pch=19, col=colours); abline(modelCirc, col="black" )
+     pch=pch_vector, col=colours, ylab = "Femur circumference", xlab = "Tibiotarsus circumference",axes = TRUE, frame.plot = TRUE); abline(modelCirc, col="black" )
 
-lines(newxCIRC, conf_intervalCIRC [,2], col="blue", lty=2)
-lines(newxCIRC, conf_intervalCIRC [,3], col="blue", lty=2)
+lines(newxCIRC, conf_intervalCIRC [,2], col="black", lty=3)
+lines(newxCIRC, conf_intervalCIRC [,3], col="black", lty=3)
 
 #fill in area between regression line and confidence interval - very pretty but then you have to re-plot the points
-polygon(c(rev(newxCIRC), newxCIRC), c(rev(conf_intervalCIRC [ ,3]), conf_intervalCIRC[ ,2]),density = 25, col = 'grey', border = NA)
+polygon(c(rev(newxCIRC), newxCIRC), c(rev(conf_intervalCIRC [ ,3]), conf_intervalCIRC[ ,2]),density = 25, col = 'grey90', border = NA)
 
 #replotting points and prediction intervals
 points(data=data_plot, fCIRC ~ tbCIRC, 
      pch=19, col=colours); abline(modelCirc, col="black" )
-lines(newxCIRC, conf_intervalCIRC [,2], col="blue", lty=2)
-lines(newxCIRC, conf_intervalCIRC [,3], col="blue", lty=2)
+lines(newxCIRC, conf_intervalCIRC [,2], col="black", lty=3)
+lines(newxCIRC, conf_intervalCIRC [,3], col="black", lty=3)
 
-#add row names to your plot
-#text(data=data_plot, fCIRC ~ tbCIRC, labels=data$species )
-
-```
-
-
-```{r femoral splay}
-#making a subset dataset that includes just the femoral dorsal view angluar measurements aka the femoral splay
-fem_splay <- na.omit(cbind(data_plot [,1:3], data_plot[,25:27]))
-
-
-
-
+legend("bottomright",
+       legend = c("Galliformes", "Anseriformes", "Extant Palaeognathae", substitute(paste(italic("Dromornis stirtoni"))), substitute(paste(italic("Genyornis newtoni")))),
+       pch = c(15, 17, 18, 8, 19),
+       col = c("#800080", "#ff0055", "#3333cc", "#33cc33",  "#33cc33"),
+       pt.bg = c("#800080", "#ff0055", "#3333cc", "#33cc33", "#33cc33"),
+       bty = "n",
+       pt.cex = 1.5,
+       cex = 1,
+       text.col = "black",
+       horiz = F ,
+       inset = c(0.01, 0.0), 
+       ncol=2, 
+       x.intersp=2,
+       y.intersp=1.2)
+box(col = "#000000")
 
 ```
 
@@ -534,21 +768,33 @@ lb_noD_plot <- cbind (largebirds_data[,1:3], log (largebirds_data[,4:16]))
 ```
 
 
-```{r large bird regression for femur width and tibiotarsus width}
+```{r large bird colours and symbols}
 
 #Also here setting up a vector of colours you can use to highlight _Genyornis_
 #make a vector of just pink
-colours <- rep("hotpink", nrow(largebirds_plot))
+colours <- rep("#33cc33",nrow(largebirds_plot))
 #make a vector where any species name that has Genyornis is assigned purple
 colours[which(largebirds_plot$species == "Genyornis newtoni")] <- "#33cc33"
-colours[which(largebirds_plot$species == "Illbandornis lawsoni")] <- "#196619"
-colours[which(largebirds_plot$species == "Illbandornis woodburnei")] <- "green"
+colours[which(largebirds_plot$species == "Illbandornis lawsoni")] <- "#33cc33"
+colours[which(largebirds_plot$species == "Illbandornis woodburnei")] <- "#33cc33"
+colours[which(largebirds_plot$species == "Dromornis stirtoni")] <- "#33cc33"
 colours[which(largebirds_plot$order == "Casuariiformes")] <- "#3333cc"
 colours[which(largebirds_plot$order == "Struthioniformes")] <- "#3333cc"
-colours[which(largebirds_plot$order == "Dinornithiformes")] <- "#b34700"
+colours[which(largebirds_plot$order == "Dinornithiformes")] <- "#F77F00"
 colours[which(largebirds_plot$order == "Aepyornithiformes")] <- "#cc0000"
 
+col_values2 <- c("Genyornis newtoni" = "#33cc33","Illbandornis lawsoni" = "#33cc33", "Illbandornis woodburnei" = "#33cc33", "Dromornis stirtoni" = "#33cc33",  "Casuarius casuarius" = "#3333cc", "Dromaius novaehollandiae" = "#3333cc", "Struthio camelus" = "#3333cc", "Dinornis robustus" = "#F77F00", "Dinornis novaezealandiae" = "#F77F00", "Pachyornis elephantopus" = "#F77F00", "Aepyornis hildebrandti" = "#cc0000", "Aepyornis maximus" = "#cc0000", "Mullerornis modestus" = "#cc0000")
 
+col_vector2 <- col_values [largebirds_plot$species]
+
+pch_values2 <- c("Genyornis newtoni" = 19,"Illbandornis lawsoni" = 10, "Illbandornis woodburnei" = 13, "Dromornis stirtoni" = 8,  "Casuarius casuarius" = 18, "Dromaius novaehollandiae" = 18, "Struthio camelus" = 18, "Dinornis robustus" = 18, "Dinornis novaezealandiae" = 18, "Pachyornis elephantopus" = 18, "Aepyornis hildebrandti" = 18, "Aepyornis maximus" = 18, "Mullerornis modestus" = 18)
+
+pch_vector2 <- pch_values2[largebirds_plot$species]
+
+```
+
+
+```{r large bird regression for femur width and tibiotarsus width}
 #linear model of the femur width vs tibia width in large flightless birds
 model3 <- lm(fM.L ~ tbM.L, data=lb_noD_plot)
 
@@ -567,26 +813,240 @@ newxB <- seq(min_xB-1,max_xB+1,by = 0.05)
 conf_intervalB <- predict(model3, newdata=data.frame(tbM.L = newxB), interval="prediction", level = 0.95)
 
 
-plot (largebirds_plot$fM.L ~ largebirds_plot$tbM.L, 
+plot (data=largebirds_plot, fM.L ~ tbM.L,
      pch=19, col=colours, ylab = "Mediolateral width of the femur", xlab = "Mediolateral width of the tibiotarsus",axes = TRUE, frame.plot = TRUE ); abline(model3, col="black" )
 
 
-lines(newxB, conf_intervalB[,2], col="blue", lty=2)
-lines(newxB, conf_intervalB[,3], col="blue", lty=2)
+lines(newxB, conf_intervalB[,2], col="black", lty=3)
+lines(newxB, conf_intervalB[,3], col="black", lty=3)
 
 #fill in area between regression line and confidence interval - very pretty but then you have to re-plot the points
-polygon(c(rev(newxB), newxB), c(rev(conf_intervalB[ ,3]), conf_intervalB[ ,2]), density = 25, col = 'grey', border = NA)
+polygon(c(rev(newxB), newxB), c(rev(conf_intervalB[ ,3]), conf_intervalB[ ,2]), density = 25, col = 'grey90', border = NA)
 
 
 
-points(largebirds_plot$fM.L ~ largebirds_plot$tbM.L, 
+points(data=largebirds_plot, fM.L ~ tbM.L,
      pch=19, col=colours); abline(model3, col="black" )
 
-lines(newxB, conf_intervalB[,2], col="blue", lty=2)
-lines(newxB, conf_intervalB[,3], col="blue", lty=2)
+lines(newxB, conf_intervalB[,2], col="black", lty=3)
+lines(newxB, conf_intervalB[,3], col="black", lty=3)
+
+legend("bottomright",
+       legend = c("Extant Palaeognathae",  "Dinornithiformes", "Aepyornithiformes", substitute(paste(italic("Illbandornis lawsoni"))), substitute(paste(italic("Illbandornos woodburnei"))), substitute(paste(italic("Genyornis newtoni")))),
+       pch = c(18, 18, 18, 10, 13, 19),
+       col = c( "#3333cc", "#F77F00", "#cc0000", "#33cc33", "#33cc33","#33cc33"),
+       pt.bg = c( "#3333cc", "#F77F00", "#cc0000", "#33cc33", "#33cc33", "#33cc33"),
+       bty = "n",
+       pt.cex = 1.5,
+       cex = 1,
+       text.col = "black",
+       horiz = F ,
+       inset = c(0.01, 0.0), 
+       ncol=2, 
+       x.intersp=2,
+       y.intersp=1.2)
+box(col = "#000000")
 
   
 ```
+
+
+```{r plotting circumference just large birds}
+
+pch_values3 <- c("Genyornis newtoni" = 19,"Dromornis stirtoni" = 8,  "Casuarius casuarius" = 15, "Dromaius novaehollandiae" = 17, "Struthio camelus" = 18)
+
+pch_vector3 <- pch_values3[largebirds_plot$species]
+
+
+
+#getting a model for predicting CIs
+modelCircLB<- lm(fCIRC ~ tbCIRC, data=lb_noD_plot)
+summary(modelCircLB)
+
+#For the interval estimate to work, we need to find the smallest and largest values of x. All this is in https://stackoverflow.com/questions/46459620/plotting-a-95-confidence-interval-for-a-lm-object
+
+#But X in this case has NAs so we're here finding the lowest non-NA value by sorting from smallest to largest and taking the first value
+min_xCIRCLB <- sort(lb_noD_plot$tbCIRC)[1]
+max_xCIRCLB <- sort(lb_noD_plot$tbCIRC, decreasing = TRUE)[1]
+
+#make dummy sequence of x for intervals. 
+newxCIRCLB <- seq(min_xCIRCLB-1,max_xCIRCLB+1,by = 0.05 )
+
+#plot confidence intervals
+
+#This only works if the data are already logged. Not my preference but hey.
+conf_intervalCIRCLB <- predict(modelCircLB, newdata=data.frame(tbCIRC = newxCIRCLB), interval="prediction", level = 0.95)
+
+plot(data=largebirds_plot, fCIRC ~ tbCIRC, 
+     pch=pch_vector3, col=colours, ylab = "Femur circumference", xlab = "Tibiotarsus circumference",axes = TRUE, frame.plot = TRUE); abline(modelCircLB, col="black" )
+
+lines(newxCIRCLB, conf_intervalCIRCLB [,2], col="black", lty=2)
+lines(newxCIRCLB, conf_intervalCIRCLB [,3], col="black", lty=2)
+
+#fill in area between regression line and confidence interval - very pretty but then you have to re-plot the points
+polygon(c(rev(newxCIRCLB), newxCIRCLB), c(rev(conf_intervalCIRCLB [ ,3]), conf_intervalCIRCLB[ ,2]),density = 25, col = 'grey90', border = NA)
+
+points(data=largebirds_plot, fCIRC ~ tbCIRC, 
+     pch=pch_vector3, col=colours); abline(modelCircLB, col="black" )
+
+lines(newxCIRCLB, conf_intervalCIRCLB [,2], col="black", lty=2)
+lines(newxCIRCLB, conf_intervalCIRCLB [,3], col="black", lty=2)
+
+legend("bottomright",
+       legend = c(substitute(paste(italic("Struthio camelus"))), substitute(paste(italic("Dromaius novaehollandiae"))), substitute(paste(italic("Casuarius casuarius"))), substitute(paste(italic("Dromornis stirtoni"))), substitute(paste(italic("Genyornis newtoni")))),
+       pch = c(18, 17, 15, 8, 19),
+       col = c( "#3333cc", "#3333cc", "#3333cc", "#33cc33",  "#33cc33"),
+       pt.bg = c( "#3333cc","#3333cc", "#3333cc", "#33cc33", "#33cc33"),
+       bty = "n",
+       pt.cex = 1.5,
+       cex = 1,
+       text.col = "black",
+       horiz = F ,
+       inset = c(0.01, 0.0), 
+       ncol=2, 
+       x.intersp=2,
+       y.intersp=1.2)
+box(col = "#000000")
+
+
+
+```
+
+
+
+#RANGE OF MOTION
+
+
+```{r range plot base code}
+
+data %>%
+  ggplot(aes(x = Education)) +
+  geom_linerange(aes(ymin = Women, ymax = Men, x = Education),
+                 size = 1.5, alpha = 0.25) +
+  geom_point(aes(y = Women), colour = "#CB5416") +
+  geom_point(aes(y = Men), colour = "#267266") +
+  coord_flip() +
+  scale_y_continuous(labels = scales::dollar_format()) +
+  ylab("Income") +
+  theme_bw(base_size = 16) +
+  theme(axis.title.y = element_blank())
+
+#website
+#https://stackoverflow.com/questions/66879914/how-to-make-range-plot-in-r
+
+
+```
+
+
+```{r femoral splay}
+
+#making a subset dataset that includes just the femoral dorsal view angluar measurements aka the femoral splay
+fem_splay <- na.omit(cbind(data_plot [,1:3], data_plot[,25:27]))
+
+#this makes the species labels along the y axis run in this order
+fem_splay$species <- factor (fem_splay$species, levels = c("Struthio camelus", "Casuarius casuarius",	"Dromaius novaehollandiae",	"Alectura lathami",	"Leipoa ocellata",	"Cereopsis novaehollandiae","Anseranas semipalmata",		"Anhima cornuta", "Genyornis newtoni"))
+
+#code for range plot
+ggplot (fem_splay, aes (x = species)) +
+  geom_linerange(aes(ymin = hdp, ymax = hdr, x = species)) +
+  geom_point (aes (y = hdp), color = "#CB5416") +
+  geom_point(aes(y = hdr), color =  "#267266") +
+  geom_point(aes(y = hds), color = "black")+
+  coord_flip() +
+  ylab("Femoral splay") +
+  xlab ("Species") +
+  scale_y_continuous(limits = c(10, 50), breaks = seq (10, 50, by = 10)) +
+  theme_light(base_size = 12) +
+  theme(axis.text.y = element_text(face = 'italic'),
+    panel.grid.major = element_blank(),
+        panel.grid.minor.x = element_blank(),
+        panel.grid.minor.y = element_blank())
+
+
+```
+
+
+```{r hip range of motion}
+#making a subset dataset that includes just the femoral lateral view angluar measurements aka the hip ROM
+hip_rom <- na.omit(cbind(data_plot [,1:3], data_plot[,19:21]))
+
+#this makes the species labels along the y axis run in this order
+hip_rom$species <- factor (hip_rom$species, levels = c("Struthio camelus", "Casuarius casuarius",	"Dromaius novaehollandiae",	"Alectura lathami",	"Leipoa ocellata",	"Cereopsis novaehollandiae","Anseranas semipalmata",		"Anhima cornuta", "Genyornis newtoni"))
+
+ggplot (hip_rom, aes (x = species)) +
+  geom_linerange(aes(ymin = hlp, ymax = hlr, x = species)) +
+  geom_point (aes (y = hlp), colour= "#CB5416") +
+  geom_point(aes(y = hlr), colour = "#267266") +
+  geom_point(aes(y = hls), color = "black")+
+  coord_flip() +
+  ylab("Hip ROM") +
+   xlab ("Species") +
+  scale_y_continuous(limits = c(20, 80), breaks = seq (20,80, by = 10)) +
+  theme_light(base_size = 12) +
+  theme(axis.text.y = element_text(face = 'italic'),
+    panel.grid.major = element_blank(),
+   panel.grid.minor.x = element_blank(),
+        panel.grid.minor.y = element_blank())
+
+
+```
+
+
+```{r knee range of motion}
+#making a subset dataset that includes just the femoral lateral view angluar measurements aka the hip ROM
+knee_rom <- na.omit(cbind(data_plot [,1:3], data_plot[,28:30]))
+
+#this makes the species labels along the y axis run in this order
+knee_rom$species <- factor (knee_rom$species, levels = c("Struthio camelus", "Casuarius casuarius",	"Dromaius novaehollandiae",	"Alectura lathami",	"Leipoa ocellata",	"Cereopsis novaehollandiae","Anseranas semipalmata",		"Anhima cornuta", "Genyornis newtoni"))
+
+
+ggplot (knee_rom, aes (x = species)) +
+  geom_linerange(aes(ymin = klf, ymax = kle, x = species)) +
+  geom_point (aes (y = klf), colour= "#CB5416") +
+  geom_point(aes(y = kle), colour = "#267266") +
+  geom_point(aes(y = kls), color = "black")+
+  coord_flip() +
+  ylab("Knee ROM") +
+  xlab ("Species") +
+  scale_y_continuous(limits = c(30, 160), breaks = seq (30, 160, by = 10)) +
+  theme_light(base_size = 12) +
+  theme(axis.text.y = element_text(face = 'italic'),
+    panel.grid.major = element_blank(),
+   panel.grid.minor.x = element_blank(),
+        panel.grid.minor.y = element_blank())
+
+
+```
+
+
+```{r intermetatarsal range of motion}
+
+#making a subset dataset that includes just the femoral lateral view angluar measurements aka the hip ROM
+int_rom <- na.omit(cbind(data_plot [,1:3], data_plot[,34:36]))
+
+#this makes the species labels along the y axis run in this order
+int_rom$species <- factor (int_rom$species, levels = c("Struthio camelus", "Casuarius casuarius",	"Dromaius novaehollandiae",	"Alectura lathami",	"Leipoa ocellata",	"Cereopsis novaehollandiae","Anseranas semipalmata",		"Anhima cornuta", "Genyornis newtoni"))
+
+
+ggplot (int_rom, aes (x = species)) +
+  geom_linerange(aes(ymin = ilf, ymax = ile, x = species)) +
+  geom_point (aes (y = ilf), colour= "#CB5416") +
+  geom_point(aes(y = ile), colour = "#267266") +
+  geom_point(aes(y = ils), color = "black")+
+  coord_flip() +
+  ylab("Intermetatarsal ROM") +
+  xlab ("Species") + 
+  scale_y_continuous(limits = c(0,180), breaks = seq (0,180, by = 10)) +
+  theme_light(base_size = 12) +
+  theme(axis.text.y = element_text(face = 'italic'),
+    panel.grid.major = element_blank(),
+   panel.grid.minor.x = element_blank(),
+        panel.grid.minor.y = element_blank())
+
+
+
+```
+
 
 #REDUCED MAJOR AXIS REGRESSIONS
 
@@ -641,7 +1101,7 @@ mean_lengths$bone <- factor(mean_lengths$bone, levels = c("Femur", "Tibiotarsus"
 mean_lengths$species <- factor (mean_lengths$species, levels = c("Struthio camelus", "Casuarius casuarius",	"Dromaius novaehollandiae",	"Pachyornis elephantopus",	"Dinornis novaezealandiae",	"Dinornis robustus",	"Mullerornis modestus",	"Aepyornis maximus",	"Alectura lathami",	"Leipoa ocellata",	"Anseranas semipalmata",	"Cereopsis novaehollandiae",	"Anhima cornuta", "Dinornis stirtoni", "Illbandornis woodburnei",	"Illbandornis lawsoni",	"Genyornis newtoni"))
 
 #code for the bar plot
-ggplot(mean_lengths, aes(fill = bone, y = mean_length, x = species)) + 
+ggplot(mean_lengths, aes(fill = bone, y = mean_length, x = species)) +
     geom_bar(position="fill", stat="identity") +
   geom_abline(slope=0, intercept=0.30, col = "black", lty =2)+
   #labels for the x, y axis, plot title, and legend
@@ -654,8 +1114,13 @@ ggplot(mean_lengths, aes(fill = bone, y = mean_length, x = species)) +
   #y axis should be in 10% increments instead of the standaard 25%
   scale_y_continuous(breaks = seq(0, 1, by = 0.1),
                        labels = function(x) paste0(x * 100, "%")) +
+  theme_light(base_size = 12) +
   #tilts the x axis labels vertical
-  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1))
+  theme(axis.text.x = element_text(angle = 90, face = 'italic', vjust = 0.5, hjust = 1),
+        panel.grid.major = element_blank(),
+        panel.grid.minor.x = element_blank(),
+        panel.grid.minor.y = element_blank())
+  
   
 
 ```
@@ -687,27 +1152,35 @@ ggplot(meanL_noM, aes(fill = bone, y = mean_length, x = species)) +
   #y axis should be in 10% increments instead of the standaard 25%
   scale_y_continuous(breaks = seq(0, 1, by = 0.1),
                        labels = function(x) paste0(x * 100, "%")) +
+  theme_light(base_size = 12) +
   #tilts the x axis labels vertical
-  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1))
+  theme(axis.text.x = element_text(angle = 90,face = 'italic',  vjust = 0.5, hjust = 1),
+        panel.grid.major = element_blank(),
+        panel.grid.minor.x = element_blank(),
+        panel.grid.minor.y = element_blank())
   
 ```
 
 
 ```{r ternary plot for hindlimb proportions}
 
-longbone_length <- read.csv (file = "../Data/Raw/longbone_lengths.csv")
+longbone_length <- na.omit(cbind(data [,1:3], data[4],data[9], data [14]))
 
-library("ggtern")
+col_values4 <- c("Genyornis newtoni" = "#33cc33","Illbandornis lawsoni" = "#33cc33", "Illbandornis woodburnei" = "#33cc33", "Dromornis stirtoni" = "#33cc33", "Anhima cornuta" = "#ff0055", "Anseranas semipalmata" = "#ff0055", "Cereopsis novaehollandiae" = "#ff0055", "Leipoa ocellata" = "#800080", "Alectura lathami" = "#800080", "Casuarius casuarius" = "#3333cc", "Dromaius novaehollandiae" = "#3333cc", "Struthio camelus" = "#3333cc", "Dinornis robustus" = "#F77F00", "Dinornis novaezealandiae" = "#F77F00", "Pachyornis elephantopus" = "#F77F00", "Aepyornis hildebrandti" = "#cc0000", "Aepyornis maximus" = "#cc0000", "Mullerornis modestus" = "#cc0000")
 
-ggtern(data=longbone_length, aes (x = fL, y = tbL, z = tmtL)) +
-  geom_point()
+col_vector4 <- col_values4 [longbone_length$species]
+
+pch_values4 <- c("Genyornis newtoni" = 19,"Illbandornis lawsoni" = 10, "Illbandornis woodburnei" = 13, "Dromornis stirtoni" = 8, "Anhima cornuta" = 17, "Anseranas semipalmata" = 17, "Cereopsis novaehollandiae" = 17, "Leipoa ocellata" = 15, "Alectura lathami" = 15, "Casuarius casuarius" = 18, "Dromaius novaehollandiae" = 18, "Struthio camelus" = 18, "Dinornis robustus" = 18, "Dinornis novaezealandiae" = 18, "Pachyornis elephantopus" = 18, "Aepyornis hildebrandti" = 18, "Aepyornis maximus" = 18, "Mullerornis modestus" = 18)
+
+pch_vector4 <- pch_values4[longbone_length$species]
+
 
 #trying a different method with the package Ternary
 par(mar=c(0,0,0,0))
 
 #make the legnths a matrix
 #make sure na.omit is used otherwise it does not work
-Ternary_matrix <- na.omit (as.matrix (data_plot[,c ("fL", "tbL", "tmtL")]))
+Ternary_matrix <- as.matrix (longbone_length[,c ("fL", "tbL", "tmtL")])
 
 #creates the base for the plot
 TernaryPlot(point = "up",
@@ -716,25 +1189,9 @@ TernaryPlot(point = "up",
 
 #adding points
 TernaryPoints(Ternary_matrix,
-              pch = 19,
-              cex = 1)
-
-#OMG this has to be a matrix
-#Ternary_matrix <- as.matrix(plotData[,c("Canine", "Pinch", "Height")])
-
-#TernaryPlot(point = "up", 
-            #alab = "Canine width", blab = "Pinch width", clab = "Rostrum height",
-           # region = Ternary_matrix)
-                        
-
-#A list, matrix, data.frame or vector in which each element (or row) specifies the three coordinates of a point in ternary space.
-#TernaryPoints(Ternary_matrix, 
-          #    pch = plotData$PtSet,
-             # bg = plotData$PtCol,
-            #  cex = 1)
- 
-#it seems to summarise to me that it there is only one species where height dominates rostral dimensions; in addition, it shares an extremely narrow pinch with Andrewsarchus; as a result, it also has a fairly wide canine width relative to its rostrum height. I do feel that it summarises our conclusion quite well that we've got a uniquely tip-heavy animal here. 
-
+              pch = pch_vector4,
+              cex = 1.5,
+              col = col_vector4)
 
 ```
 
@@ -759,8 +1216,37 @@ ggplot(
   geom_vline(xintercept = 12) +
   labs(
     x = "Tarsometatarsus length/medial-lateral width (mm)", y = "Tarsometatarsus medial-lateral width (mm)",
-    color = "Species", shape = "Species"
-  )
+    color = "Species", shape = "Species" ) +
+  scale_y_continuous(limits = c(0, 100), breaks = seq (0, 100, by = 20)) +
+  scale_x_continuous(limits = c(0, 30), breaks = seq (0, 30, by = 5)) +
+  theme_minimal() +
+  theme (axis.line = element_line(colour = "grey50"), 
+         panel.grid = element_blank())
+
+#code for plotting
+ggplot(
+  data = tmt_data,
+  mapping = aes(x = tmtL/tmtM.L, y = tmtM.L, color = order)
+) +
+  geom_point() +
+  geom_vline(xintercept = 12, lty = 2) +
+  labs(
+    x = "Tarsometatarsus length/medial-lateral width (mm)", y = "Tarsometatarsus medial-lateral width (mm)",
+    color = "Order", shape = "Order") +
+  scale_y_continuous(limits = c(0, 100), breaks = seq (0, 100, by = 20)) +
+  scale_x_continuous(limits = c(0, 30), breaks = seq (0, 30, by = 5)) +
+  theme_minimal() +
+  theme (axis.line = element_line(colour = "grey50"), 
+         panel.grid = element_blank())
+
+
+
+
+
+#library("RColorBrewer") # pkg for nice colours
+#palette = brewer.pal(17, "Set3") 
+
+#display.brewer.all()
 
 #here is the link that I was using https://r4ds.hadley.nz/data-visualize
 #geom_point removes rows containing missing values or values outside the scale range
@@ -791,37 +1277,48 @@ largebirds_tmt$species <- factor (largebirds_tmt$species, levels = c("Struthio c
 #often will be followed by a '+' sign
 #here i am plotting the ratio of the tarsometatarsus length and medial-lateral width against the medial lateral wdith
 #running this on just that dataset containing large flightless birds
-ggplot(
-  data = largebirds_tmt,
+ggplot( data = largebirds_tmt,
   mapping = aes(x = tmtL/tmtM.L, y = tmtM.L, color = species)
 ) +
   geom_point() +
-  geom_vline(xintercept = 12) +
+  scale_colour_manual(name = "Species", values = c("#3333cc", "#3333cc", "#3333cc", "#b34700", "#b34700","#b34700","#cc0000", "#cc0000", "#cc0000", "#33cc33", "#33cc33","#33cc33"), labels = c("Struthio camelus", "Casuarius casuarius",	"Dromaius novaehollandiae",	"Pachyornis elephantopus",	"Dinornis novaezealandiae",	"Dinornis robustus",	"Mullerornis modestus",	"Aepyornis hildebrandti", "Aepyornis maximus",	"Illbandornis woodburnei",	"Illbandornis lawsoni",	"Genyornis newtoni"))+
+  geom_vline(xintercept = 12, lty = 2) +
   labs(
-    x = "Tarsometatarsus length/medial-lateral width (mm)", y = "Tarsometatarsus medial-lateral width (mm)",
-    color = "Species", shape = "Species"
-  )
+    x = "Tarsometatarsus length/medial-lateral width (mm)", y = "Tarsometatarsus medial-lateral width (mm)") + #color = "Species", shape = "Species") +
+  scale_y_continuous(limits = c(10, 100), breaks = seq (20, 100, by = 20)) +
+  scale_x_continuous(limits = c(0, 30), breaks = seq (0, 30, by = 5)) +
+  theme_minimal() +
+  theme (axis.line = element_line(colour = "grey50"), 
+         panel.grid = element_blank())
+
+ggplot( data = largebirds_tmt,
+  mapping = aes(x = tmtL/tmtM.L, y = tmtM.L, color = order)) +
+  geom_point() +
+  #scale_colour_manual(name = "Order", values = c("#3333cc", "#3333cc", "#3333cc", "#b34700", "#b34700","#b34700","#cc0000", "#cc0000", "#cc0000", "#33cc33", "#33cc33","#33cc33"), labels = c("Struthio camelus", "Casuarius casuarius",	"Dromaius novaehollandiae",	"Pachyornis elephantopus",	"Dinornis novaezealandiae",	"Dinornis robustus",	"Mullerornis modestus",	"Aepyornis hildebrandti", "Aepyornis maximus",	"Illbandornis woodburnei",	"Illbandornis lawsoni",	"Genyornis newtoni"))+
+  geom_vline(xintercept = 12, lty = 2) +
+  labs( x = "Tarsometatarsus length/medial-lateral width (mm)", y = "Tarsometatarsus medial-lateral width (mm)", color = "Order", shape = "Order") +
+  scale_y_continuous(limits = c(10, 100), breaks = seq (20, 100, by = 20)) +
+  scale_x_continuous(limits = c(0, 30), breaks = seq (0, 30, by = 5)) +
+  theme_minimal() +
+  theme (axis.line = element_line(colour = "grey50"), 
+         panel.grid = element_blank())
+
+
+
+#palette = brewer.pal(12, "Set3") 
+
+#display.brewer.all()
+
+#scale_colour_manual(name = "Species", values = c("#800080", "#ff0055", "#3333cc", "#b34700", "#cc0000", "#33cc33", "green", "#454B1B","#33cc33"), labels = c("Galliformes", "Anseriformes", "Extant Palaeognathae",  "Dinornithiformes", "Aepyornithiformes", "Illbandornis lawsoni", "Illbandornos woodburnei", "Dromornis stirtoni", "Genyornis newtoni"))+
+
 
 #if I add the colours to the species, the legend than assigns the species as hex values
 #geom_point removes rows containing missing values or values outside the scale range
 
 
+#https://viz-ggplot2.rsquaredacademy.com/ggplot2-modify-legend
+#https://www.jumpingrivers.com/blog/intro-to-theme-ggplot2-r/
+
 ```
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
