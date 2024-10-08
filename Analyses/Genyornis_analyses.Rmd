@@ -44,9 +44,27 @@ datanoD_plot <- cbind (data_noD[,1:3], log (data_noD[,4:16]))
 #code from Keirnan et al. 2022
 #geomean <- apply(Size_containing_data[,c(4,8:14)], 1, prod)^(1/ncol(Size_containing_data[,c(4,8:14)]))
 
+#from Claude 2013
+#computing the geometric mean for obtaining size
+#size <- apply(dat[,5:9], 1, prod)^(1/5) 
 
+#computing the log shape ratios
+#LSR <- log(dat[,5:9]/ size)
+
+#formula for computing the geometric mean
+#na.omit as a lot of individuals are missing measurements
+geomean <- na.omit(apply(data[,c(4:20)], 1, prod)^(1/ncol(data[,c(4:20)])))
+
+#this creating the log shape ratio
+#this will be useful for removing the effects of isometry
+LSR <- cbind (data[,1:3], log(data[,4:20]/ geomean))
+
+#export the log-shape ratio as a seperate data set
+#export as a .csv file
+write.csv(LSR, "log-shape_ratio.csv", row.names = FALSE)
 
 ```
+
 
 
 ```{r making a subset dataframe and calculating means base script}
@@ -140,14 +158,17 @@ print(mul.mode)
 #SUMMARY STATISTICS
 
 ```{r summary stats}
-sum <- data %>%
-  group_by(species)  %>%
-  summarise_all(mean, sd, na.rm = TRUE)
-  
-write.csv(sum, file = 'honours_summary_stats.csv')
+#calculating the means and SD of measurements
+summary_stats <- data %>%
+  group_by(species) %>% #groups by species
+  summarise(across(everything(), 
+                   list(mean = ~ mean(.x, na.rm = TRUE), 
+                        sd = ~ sd(.x, na.rm = TRUE), 
+                        n = ~ sum(!is.na(.x))),  # Count non-NA values
+                   .names = "{col}_{fn}"))
 
-sum <- data %>%
-  group_by(species)
+#export as a .csv file
+write.csv(summary_stats, "honours_summary_stats.csv", row.names = FALSE)
 
 ```
 
@@ -260,6 +281,65 @@ points(data = data_plot, fM.L ~ tbM.L,
      pch=19, col=colours); abline(model1, col="black" )
 lines(newx, conf_interval[,2], col="black", lty=3)
 lines(newx, conf_interval[,3], col="black", lty=3)
+
+
+#adding legend
+legend("bottomright",
+       legend = c("Galliformes", "Anseriformes", "Extant Palaeognathae",  "Dinornithiformes", "Aepyornithiformes", substitute(paste(italic("Illbandornis lawsoni"))), substitute(paste(italic("Illbandornos woodburnei"))), substitute(paste(italic("Genyornis newtoni")))), #substitute(paste(italic("name"))) makes the names appear italiseced
+       pch = c(15, 17, 18, 18, 18, 10, 13, 19),
+       col = c("#800080", "#ff0055", "#3333cc", "#F77F00", "#cc0000", "#33cc33", "#33cc33", "#33cc33"),
+       pt.bg = c("#800080", "#ff0055", "#3333cc", "#F77F00", "#cc0000", "#33cc33", "#33cc33", "#33cc33"),
+       bty = "n",
+       pt.cex = 1.5,
+       cex = 1,
+       text.col = "black",
+       horiz = F ,
+       inset = c(0.01, 0.0), 
+       ncol=2, 
+       x.intersp=2,
+       y.intersp=1.2)
+box(col = "#000000")
+
+
+```
+
+
+```{r femur width vs tibiotarsus width mediolateral using log shape ratio}
+
+#getting a model for predicting CIs
+modelLSR <- lm(fM.L ~ tbM.L, data=LSR)
+summary(modelLSR)
+
+#For the interval estimate to work, we need to find the smallest and largest values of x. All this is in https://stackoverflow.com/questions/46459620/plotting-a-95-confidence-interval-for-a-lm-object
+
+#But X in this case has NAs so we're here finding the lowest non-NA value by sorting from smallest to largest and taking the first value
+min_xLSR <- sort(datanoD_plot$tbM.L)[1]
+max_xLSR <- sort(datanoD_plot$tbM.L, decreasing = TRUE)[1]
+
+#make dummy sequence of x for intervals. 
+newxLSR <- seq(min_xLSR-1,max_xLSR+1,by = 0.05 )
+
+#plot confidence intervals
+
+#This only works if the data are already logged. Not my preference but hey.
+conf_intervalLSR <- predict(modelLSR, newdata=data.frame(tbM.L = newxLSR), interval="prediction",    level = 0.95)
+
+
+plot(data = LSR, fM.L ~ tbM.L, 
+     pch=pch_vector, col=colours, ylab = "Mediolateral width of the femur", xlab = "Mediolateral width of the tibiotarsus",axes = TRUE, frame.plot = TRUE); abline(modelLSR, col="black" )
+
+lines(newxLSR, conf_intervalLSR[,2], col="black", lty=3)
+lines(newxLSR, conf_intervalLSR[,3], col="black", lty=3)
+
+#fill in area between regression line and confidence interval - very pretty but then you have to re-plot the points
+polygon(c(rev(newxLSR), newxLSR), c(rev(conf_intervalLSR[ ,3]), conf_intervalLSR[ ,2]), density = 25, col = 'grey90', border = NA)
+
+
+#replotting points and prediction intervals
+points(data = LSR, fM.L ~ tbM.L, 
+     pch=pch_vector, col=colours); abline(modelLSR, col="black" )
+lines(newxLSR, conf_intervalLSR[,2], col="black", lty=3)
+lines(newxLSR, conf_intervalLSR[,3], col="black", lty=3)
 
 
 #adding legend
@@ -519,6 +599,125 @@ box(col = "#000000")
 ```
 
 
+```{r femur length against proximal width}
+
+#getting a model for predicting CIs
+modelFPW <- lm(fPW ~ fL, data=datanoD_plot)
+summary(modelFPW)
+
+#For the interval estimate to work, we need to find the smallest and largest values of x. All this is in https://stackoverflow.com/questions/46459620/plotting-a-95-confidence-interval-for-a-lm-object
+
+#But X in this case has NAs so we're here finding the lowest non-NA value by sorting from smallest to largest and taking the first value
+min_xFPW <- sort(datanoD_plot$tbL)[1]
+max_xFPW <- sort(datanoD_plot$tbL, decreasing = TRUE)[1]
+
+#make dummy sequence of x for intervals. 
+newxFPW <- seq(min_xFPW-1,max_xFPW+1,by = 0.05 )
+
+#plot confidence intervals
+
+#This only works if the data are already logged. Not my preference but hey.
+conf_intervalFPW <- predict(modelFPW, newdata=data.frame(fL = newxFPW), interval="prediction",    level = 0.95)
+
+
+
+plot(data = data_plot, fPW ~ fL,
+     pch=pch_vector, col=colours, ylab = "Femur proximal width", xlab = "Femur length", axes = TRUE, frame.plot = TRUE); abline(modelFPW, col="black" )
+
+lines(newxFPW, conf_intervalFPW [,2], col="black", lty=3)
+lines(newxFPW, conf_intervalFPW [,3], col="black", lty=3)
+
+#fill in area between regression line and confidence interval - very pretty but then you have to re-plot the points
+polygon(c(rev(newxFPW), newxFPW), c(rev(conf_intervalFPW [ ,3]), conf_intervalFPW[ ,2]), density = 25, col = 'grey90', border = NA)
+
+#replotting points and prediction intervals
+points(data = data_plot, fPW ~ fL,
+     pch=pch_vector, col=colours); abline(modelFPW, col="black" )
+lines(newxFPW, conf_intervalFPW [,2], col="black", lty=3)
+lines(newxFPW, conf_intervalFPW [,3], col="black", lty=3)
+
+legend("bottomright",
+       legend = c("Galliformes", "Anseriformes", "Extant Palaeognathae",  "Dinornithiformes", "Aepyornithiformes", substitute(paste(italic("Illbandornis lawsoni"))), substitute(paste(italic("Illbandornos woodburnei"))), substitute(paste(italic("Dromornis stirtoni"))), substitute(paste(italic("Genyornis newtoni")))),
+       pch = c(15, 17, 18, 18, 18, 10, 13, 8, 19),
+       col = c("#800080", "#ff0055", "#3333cc", "#F77F00", "#cc0000", "#33cc33", "#33cc33", "#33cc33","#33cc33"),
+       pt.bg = c("#800080", "#ff0055", "#3333cc", "#F77F00", "#cc0000", "#33cc33", "#33cc33", "#33cc33","#33cc33"),
+       bty = "n",
+       pt.cex = 1.5,
+       cex = 1,
+       text.col = "black",
+       horiz = F ,
+       inset = c(0.01, 0.0), 
+       ncol=2, 
+       x.intersp=2,
+       y.intersp=1.2)
+box(col = "#000000")
+
+
+
+
+```
+
+
+```{r femur length against proximal width}
+
+#getting a model for predicting CIs
+modelFDW <- lm(fDW ~ fL, data=datanoD_plot)
+summary(modelFDW)
+
+#For the interval estimate to work, we need to find the smallest and largest values of x. All this is in https://stackoverflow.com/questions/46459620/plotting-a-95-confidence-interval-for-a-lm-object
+
+#But X in this case has NAs so we're here finding the lowest non-NA value by sorting from smallest to largest and taking the first value
+min_xFDW <- sort(datanoD_plot$tbL)[1]
+max_xFDW <- sort(datanoD_plot$tbL, decreasing = TRUE)[1]
+
+#make dummy sequence of x for intervals. 
+newxFDW <- seq(min_xFDW-1,max_xFDW+1,by = 0.05 )
+
+#plot confidence intervals
+
+#This only works if the data are already logged. Not my preference but hey.
+conf_intervalFDW <- predict(modelFDW, newdata=data.frame(fL = newxFDW), interval="prediction",    level = 0.95)
+
+
+
+plot(data = data_plot, fDW ~ fL,
+     pch=pch_vector, col=colours, ylab = "Femur proximal width", xlab = "Femur length", axes = TRUE, frame.plot = TRUE); abline(modelFDW, col="black" )
+
+lines(newxFDW, conf_intervalFDW [,2], col="black", lty=3)
+lines(newxFDW, conf_intervalFDW [,3], col="black", lty=3)
+
+#fill in area between regression line and confidence interval - very pretty but then you have to re-plot the points
+polygon(c(rev(newxFDW), newxFDW), c(rev(conf_intervalFDW [ ,3]), conf_intervalFDW[ ,2]), density = 25, col = 'grey90', border = NA)
+
+#replotting points and prediction intervals
+points(data = data_plot, fDW ~ fL,
+     pch=pch_vector, col=colours); abline(modelFDW, col="black" )
+lines(newxFDW, conf_intervalFDW [,2], col="black", lty=3)
+lines(newxFDW, conf_intervalFDW [,3], col="black", lty=3)
+
+legend("bottomright",
+       legend = c("Galliformes", "Anseriformes", "Extant Palaeognathae",  "Dinornithiformes", "Aepyornithiformes", substitute(paste(italic("Illbandornis lawsoni"))), substitute(paste(italic("Illbandornos woodburnei"))), substitute(paste(italic("Dromornis stirtoni"))), substitute(paste(italic("Genyornis newtoni")))),
+       pch = c(15, 17, 18, 18, 18, 10, 13, 8, 19),
+       col = c("#800080", "#ff0055", "#3333cc", "#F77F00", "#cc0000", "#33cc33", "#33cc33", "#33cc33","#33cc33"),
+       pt.bg = c("#800080", "#ff0055", "#3333cc", "#F77F00", "#cc0000", "#33cc33", "#33cc33", "#33cc33","#33cc33"),
+       bty = "n",
+       pt.cex = 1.5,
+       cex = 1,
+       text.col = "black",
+       horiz = F ,
+       inset = c(0.01, 0.0), 
+       ncol=2, 
+       x.intersp=2,
+       y.intersp=1.2)
+box(col = "#000000")
+
+
+
+```
+
+
+
+
 ```{r plotting femur widths against each other}
 
 #getting a model for predicting CIs
@@ -626,6 +825,238 @@ legend("bottomright",
        x.intersp=2,
        y.intersp=1.2)
 box(col = "#000000")
+
+```
+
+
+```{r length vs mediolateral width tibia}
+
+#getting a model for predicting CIs
+modelTBWL <- lm(tbM.L ~ tbL, data=datanoD_plot)
+summary(modelTBWL)
+
+#For the interval estimate to work, we need to find the smallest and largest values of x. All this is in https://stackoverflow.com/questions/46459620/plotting-a-95-confidence-interval-for-a-lm-object
+
+#But X in this case has NAs so we're here finding the lowest non-NA value by sorting from smallest to largest and taking the first value
+min_xTBWL <- sort(datanoD_plot$tbL)[1]
+max_xTBWL <- sort(datanoD_plot$tbL, decreasing = TRUE)[1]
+
+#make dummy sequence of x for intervals. 
+newxTBWL <- seq(min_xTBWL-1,max_xTBWL+1,by = 0.05 )
+
+#plot confidence intervals
+
+#This only works if the data are already logged. Not my preference but hey.
+conf_intervalTBWL <- predict(modelTBWL, newdata=data.frame(tbL = newxTBWL), interval="prediction", level = 0.95)
+
+
+
+plot(data = data_plot, tbM.L ~ tbL, 
+     pch=pch_vector, col=colours, ylab = "Mediolateral width of the tibiotarsus", xlab = "Tibiotarsus length", axes = TRUE, frame.plot = TRUE); abline(modelTBWL, col="black" )
+
+lines(newxTBWL, conf_intervalTBWL [,2], col="black", lty=3)
+lines(newxTBWL, conf_intervalTBWL [,3], col="black", lty=3)
+
+#fill in area between regression line and confidence interval - very pretty but then you have to re-plot the points
+polygon(c(rev(newxTBWL), newxTBWL), c(rev(conf_intervalTBWL [ ,3]), conf_intervalTBWL[ ,2]),density = 25, col = 'grey90', border = NA)
+
+#replotting the points
+points(data = data_plot, tbM.L ~ tbL, 
+     pch=pch_vector, col=colours); abline(modelTBWL, col="black" )
+lines(newxTBWL, conf_intervalTBWL [,2], col="black", lty=3)
+lines(newxTBWL, conf_intervalTBWL [,3], col="black", lty=3)
+
+#adding legend
+legend("bottomright",
+       legend = c("Galliformes", "Anseriformes", "Extant Palaeognathae",  "Dinornithiformes", "Aepyornithiformes", substitute(paste(italic("Illbandornis lawsoni"))), substitute(paste(italic("Illbandornos woodburnei"))), substitute(paste(italic("Genyornis newtoni")))),
+       pch = c(15, 17, 18, 18, 18, 10, 13, 19),
+       col = c("#800080", "#ff0055", "#3333cc", "#F77F00", "#cc0000", "#33cc33", "#33cc33", "#33cc33"),
+       pt.bg = c("#800080", "#ff0055", "#3333cc", "#F77F00", "#cc0000", "#33cc33", "#33cc33", "#33cc33"),
+       bty = "n",
+       pt.cex = 1.5,
+       cex = 1,
+       text.col = "black",
+       horiz = F ,
+       inset = c(0.01, 0.0), 
+       ncol=2, 
+       x.intersp=2,
+       y.intersp=1.2)
+box(col = "#000000")
+
+
+```
+
+
+```{r length vs craniocaudal width tibia}
+
+#getting a model for predicting CIs
+modelTBWL2 <- lm(tbCr.Ca ~ tbL, data=datanoD_plot)
+summary(modelTBWL2)
+
+#For the interval estimate to work, we need to find the smallest and largest values of x. All this is in https://stackoverflow.com/questions/46459620/plotting-a-95-confidence-interval-for-a-lm-object
+
+#But X in this case has NAs so we're here finding the lowest non-NA value by sorting from smallest to largest and taking the first value
+min_xTBWL2 <- sort(datanoD_plot$tbL)[1]
+max_xTBWL2 <- sort(datanoD_plot$tbL, decreasing = TRUE)[1]
+
+#make dummy sequence of x for intervals. 
+newxTBWL2 <- seq(min_xTBWL2-1,max_xTBWL2+1,by = 0.05 )
+
+#plot confidence intervals
+
+#This only works if the data are already logged. Not my preference but hey.
+conf_intervalTBWL2 <- predict(modelTBWL2, newdata=data.frame(tbL = newxTBWL2), interval="prediction", level = 0.95)
+
+
+
+plot(data = data_plot, tbCr.Ca ~ tbL, 
+     pch=pch_vector, col=colours, ylab = "Craniocaudal width of the tibiotarsus", xlab = "Tibiotarsus length", axes = TRUE, frame.plot = TRUE); abline(modelTBWL2, col="black" )
+
+lines(newxTBWL2, conf_intervalTBWL2 [,2], col="black", lty=3)
+lines(newxTBWL2, conf_intervalTBWL2 [,3], col="black", lty=3)
+
+#fill in area between regression line and confidence interval - very pretty but then you have to re-plot the points
+polygon(c(rev(newxTBWL2), newxTBWL2), c(rev(conf_intervalTBWL2 [ ,3]), conf_intervalTBWL2[ ,2]),density = 25, col = 'grey90', border = NA)
+
+#replotting the points
+points(data = data_plot, tbCr.Ca ~ tbL, 
+     pch=pch_vector, col=colours); abline(modelTBWL2, col="black" )
+lines(newxTBWL2, conf_intervalTBWL2 [,2], col="black", lty=3)
+lines(newxTBWL2, conf_intervalTBWL2 [,3], col="black", lty=3)
+
+#adding legend
+legend("bottomright",
+       legend = c("Galliformes", "Anseriformes", "Extant Palaeognathae",  "Aepyornithiformes", substitute(paste(italic("Genyornis newtoni")))),
+       pch = c(15, 17, 18, 18,  19),
+       col = c("#800080", "#ff0055", "#3333cc", "#cc0000",  "#33cc33"),
+       pt.bg = c("#800080", "#ff0055", "#3333cc",  "#cc0000", "#33cc33"),
+       bty = "n",
+       pt.cex = 1.5,
+       cex = 1,
+       text.col = "black",
+       horiz = F ,
+       inset = c(0.01, 0.0), 
+       ncol=2, 
+       x.intersp=2,
+       y.intersp=1.2)
+box(col = "#000000")
+
+
+```
+
+
+```{r length vs proximal width tibia}
+
+#getting a model for predicting CIs
+modelTBPW<- lm(tbPW ~ tbL, data=datanoD_plot)
+summary(modelTBPW)
+
+#For the interval estimate to work, we need to find the smallest and largest values of x. All this is in https://stackoverflow.com/questions/46459620/plotting-a-95-confidence-interval-for-a-lm-object
+
+#But X in this case has NAs so we're here finding the lowest non-NA value by sorting from smallest to largest and taking the first value
+min_xTBPW <- sort(datanoD_plot$tbL)[1]
+max_xTBPW <- sort(datanoD_plot$tbL, decreasing = TRUE)[1]
+
+#make dummy sequence of x for intervals. 
+newxTBPW <- seq(min_xTBPW-1,max_xTBPW+1,by = 0.05 )
+
+#plot confidence intervals
+
+#This only works if the data are already logged. Not my preference but hey.
+conf_intervalTBPW <- predict(modelTBPW, newdata=data.frame(tbL = newxTBPW), interval="prediction", level = 0.95)
+
+
+#Dinornis robustus Hodge Ck specimen has a negative proximal width, row 98
+plot(data = data_plot, tbPW ~ tbL, 
+     pch=pch_vector, col=colours, ylab = "Proximal width of the tibiotarsus", xlab = "Tibiotarsus length", axes = TRUE, frame.plot = TRUE); abline(modelTBPW, col="black" )
+
+lines(newxTBPW, conf_intervalTBPW [,2], col="black", lty=3)
+lines(newxTBPW, conf_intervalTBPW [,3], col="black", lty=3)
+
+#fill in area between regression line and confidence interval - very pretty but then you have to re-plot the points
+polygon(c(rev(newxTBPW), newxTBPW), c(rev(conf_intervalTBPW [ ,3]), conf_intervalTBPW[ ,2]),density = 25, col = 'grey90', border = NA)
+
+#replotting the points
+points(data = data_plot, tbPW ~ tbL, 
+     pch=pch_vector, col=colours); abline(modelTBPW, col="black" )
+lines(newxTBPW, conf_intervalTBPW [,2], col="black", lty=3)
+lines(newxTBPW, conf_intervalTBPW [,3], col="black", lty=3)
+
+#adding legend
+legend("bottomright",
+       legend = c("Galliformes", "Anseriformes", "Extant Palaeognathae",  "Dinornithiformes", "Aepyornithiformes", substitute(paste(italic("Illbandornis lawsoni"))), substitute(paste(italic("Illbandornos woodburnei"))), substitute(paste(italic("Genyornis newtoni")))),
+       pch = c(15, 17, 18, 18, 18, 10, 13, 19),
+       col = c("#800080", "#ff0055", "#3333cc", "#F77F00", "#cc0000", "#33cc33", "#33cc33", "#33cc33"),
+       pt.bg = c("#800080", "#ff0055", "#3333cc", "#F77F00", "#cc0000", "#33cc33", "#33cc33", "#33cc33"),
+       bty = "n",
+       pt.cex = 1.5,
+       cex = 1,
+       text.col = "black",
+       horiz = F ,
+       inset = c(0.01, 0.0), 
+       ncol=2, 
+       x.intersp=2,
+       y.intersp=1.2)
+box(col = "#000000")
+
+
+```
+
+
+```{r length vs distal width tibia}
+
+#getting a model for predicting CIs
+modelTBDW<- lm(tbDW ~ tbL, data=datanoD_plot)
+summary(modelTBDW)
+
+#For the interval estimate to work, we need to find the smallest and largest values of x. All this is in https://stackoverflow.com/questions/46459620/plotting-a-95-confidence-interval-for-a-lm-object
+
+#But X in this case has NAs so we're here finding the lowest non-NA value by sorting from smallest to largest and taking the first value
+min_xTBDW <- sort(datanoD_plot$tbL)[1]
+max_xTBDW <- sort(datanoD_plot$tbL, decreasing = TRUE)[1]
+
+#make dummy sequence of x for intervals. 
+newxTBDW <- seq(min_xTBDW-1,max_xTBDW+1,by = 0.05 )
+
+#plot confidence intervals
+
+#This only works if the data are already logged. Not my preference but hey.
+conf_intervalTBDW <- predict(modelTBDW, newdata=data.frame(tbL = newxTBDW), interval="prediction", level = 0.95)
+
+
+#Dinornis robustus Hodge Ck specimen has a negative proximal width, row 98
+plot(data = data_plot, tbDW ~ tbL, 
+     pch=pch_vector, col=colours, ylab = "Proximal width of the tibiotarsus", xlab = "Tibiotarsus length", axes = TRUE, frame.plot = TRUE); abline(modelTBDW, col="black" )
+
+lines(newxTBDW, conf_intervalTBDW [,2], col="black", lty=3)
+lines(newxTBDW, conf_intervalTBDW [,3], col="black", lty=3)
+
+#fill in area between regression line and confidence interval - very pretty but then you have to re-plot the points
+polygon(c(rev(newxTBDW), newxTBDW), c(rev(conf_intervalTBDW [ ,3]), conf_intervalTBDW[ ,2]),density = 25, col = 'grey90', border = NA)
+
+#replotting the points
+points(data = data_plot, tbDW ~ tbL, 
+     pch=pch_vector, col=colours); abline(modelTBDW, col="black" )
+lines(newxTBDW, conf_intervalTBDW [,2], col="black", lty=3)
+lines(newxTBDW, conf_intervalTBDW [,3], col="black", lty=3)
+
+#adding legend
+legend("bottomright",
+       legend = c("Galliformes", "Anseriformes", "Extant Palaeognathae",  "Dinornithiformes", "Aepyornithiformes", substitute(paste(italic("Illbandornis lawsoni"))), substitute(paste(italic("Illbandornos woodburnei"))), substitute(paste(italic("Genyornis newtoni")))),
+       pch = c(15, 17, 18, 18, 18, 10, 13, 19),
+       col = c("#800080", "#ff0055", "#3333cc", "#F77F00", "#cc0000", "#33cc33", "#33cc33", "#33cc33"),
+       pt.bg = c("#800080", "#ff0055", "#3333cc", "#F77F00", "#cc0000", "#33cc33", "#33cc33", "#33cc33"),
+       bty = "n",
+       pt.cex = 1.5,
+       cex = 1,
+       text.col = "black",
+       horiz = F ,
+       inset = c(0.01, 0.0), 
+       ncol=2, 
+       x.intersp=2,
+       y.intersp=1.2)
+box(col = "#000000")
+
 
 ```
 
@@ -738,6 +1169,390 @@ legend("bottomright",
 box(col = "#000000")
 
 ```
+
+
+```{r plotting circumference vs femur mediolateral width}
+
+#getting a model for predicting CIs
+modelCircM.L<- lm(fM.L ~ fCIRC, data=datanoD_plot)
+summary(modelCircM.L)
+
+#For the interval estimate to work, we need to find the smallest and largest values of x. All this is in https://stackoverflow.com/questions/46459620/plotting-a-95-confidence-interval-for-a-lm-object
+
+#But X in this case has NAs so we're here finding the lowest non-NA value by sorting from smallest to largest and taking the first value
+min_xCIRCML <- sort(datanoD_plot$fCIRC)[1]
+max_xCIRCML <- sort(datanoD_plot$fCIRC, decreasing = TRUE)[1]
+
+#make dummy sequence of x for intervals. 
+newxCIRCML <- seq(min_xCIRCML-1,max_xCIRCML+1,by = 0.05 )
+
+#plot confidence intervals
+
+#This only works if the data are already logged. Not my preference but hey.
+conf_intervalCIRCML <- predict(modelCircM.L, newdata=data.frame(fCIRC = newxCIRCML), interval="prediction", level = 0.95)
+
+plot(data=data_plot, fM.L ~ fCIRC, 
+     pch=pch_vector, col=colours, ylab = "Femur mediolateral width", xlab = "Femur circumference",axes = TRUE, frame.plot = TRUE); abline(modelCircM.L, col="black" )
+
+lines(newxCIRCML, conf_intervalCIRCML [,2], col="black", lty=3)
+lines(newxCIRCML, conf_intervalCIRCML [,3], col="black", lty=3)
+
+#fill in area between regression line and confidence interval - very pretty but then you have to re-plot the points
+polygon(c(rev(newxCIRCML), newxCIRCML), c(rev(conf_intervalCIRCML [ ,3]), conf_intervalCIRCML[ ,2]),density = 25, col = 'grey90', border = NA)
+
+points(data=data_plot, fM.L ~ fCIRC, 
+     pch=pch_vector, col=colours); abline(modelCircM.L, col="black" )
+
+lines(newxCIRCML, conf_intervalCIRCML [,2], col="black", lty=3)
+lines(newxCIRCML, conf_intervalCIRCML [,3], col="black", lty=3)
+
+legend("bottomright",
+       legend = c("Galliformes", "Anseriformes", "Extant Palaeognathae", substitute(paste(italic("Genyornis newtoni")))),
+       pch = c(15, 17, 18, 19),
+       col = c("#800080", "#ff0055", "#3333cc",  "#33cc33"),
+       pt.bg = c("#800080", "#ff0055", "#3333cc","#33cc33"),
+       bty = "n",
+       pt.cex = 1.5,
+       cex = 1,
+       text.col = "black",
+       horiz = F ,
+       inset = c(0.01, 0.0), 
+       ncol=2, 
+       x.intersp=2,
+       y.intersp=1.2)
+box(col = "#000000")
+
+```
+
+
+```{r plotting circumference vs femur craniocaudal width}
+
+#getting a model for predicting CIs
+modelCircCr.Ca<- lm(fCr.Ca ~ fCIRC, data=datanoD_plot)
+summary(modelCircCr.Ca)
+
+#For the interval estimate to work, we need to find the smallest and largest values of x. All this is in https://stackoverflow.com/questions/46459620/plotting-a-95-confidence-interval-for-a-lm-object
+
+#But X in this case has NAs so we're here finding the lowest non-NA value by sorting from smallest to largest and taking the first value
+min_xCIRCCrCa <- sort(datanoD_plot$fCIRC)[1]
+max_xCIRCCrCa <- sort(datanoD_plot$fCIRC, decreasing = TRUE)[1]
+
+#make dummy sequence of x for intervals. 
+newxCIRCCrCa <- seq(min_xCIRCCrCa-1,max_xCIRCCrCa+1,by = 0.05 )
+
+#plot confidence intervals
+
+#This only works if the data are already logged. Not my preference but hey.
+conf_intervalCIRCCrCa <- predict(modelCircM.L, newdata=data.frame(fCIRC = newxCIRCCrCa), interval="prediction", level = 0.95)
+
+plot(data=data_plot, fCr.Ca ~ fCIRC, 
+     pch=pch_vector, col=colours, ylab = "Femur craniocaudal width", xlab = "Femur circumference",axes = TRUE, frame.plot = TRUE); abline(modelCircCr.Ca, col="black" )
+
+lines(newxCIRCCrCa, conf_intervalCIRCCrCa [,2], col="black", lty=3)
+lines(newxCIRCCrCa, conf_intervalCIRCCrCa [,3], col="black", lty=3)
+
+#fill in area between regression line and confidence interval - very pretty but then you have to re-plot the points
+polygon(c(rev(newxCIRCCrCa), newxCIRCCrCa), c(rev(conf_intervalCIRCCrCa [ ,3]), conf_intervalCIRCCrCa[ ,2]),density = 25, col = 'grey90', border = NA)
+
+points(data=data_plot, fCr.Ca ~ fCIRC, 
+     pch=pch_vector, col=colours); abline(modelCircCr.Ca, col="black" )
+
+lines(newxCIRCCrCa, conf_intervalCIRCCrCa [,2], col="black", lty=3)
+lines(newxCIRCCrCa, conf_intervalCIRCCrCa [,3], col="black", lty=3)
+
+legend("bottomright",
+       legend = c("Galliformes", "Anseriformes", "Extant Palaeognathae", substitute(paste(italic("Genyornis newtoni")))),
+       pch = c(15, 17, 18, 19),
+       col = c("#800080", "#ff0055", "#3333cc",  "#33cc33"),
+       pt.bg = c("#800080", "#ff0055", "#3333cc","#33cc33"),
+       bty = "n",
+       pt.cex = 1.5,
+       cex = 1,
+       text.col = "black",
+       horiz = F ,
+       inset = c(0.01, 0.0), 
+       ncol=2, 
+       x.intersp=2,
+       y.intersp=1.2)
+box(col = "#000000")
+
+```
+
+
+```{r plotting cross sectional area}
+
+#getting a model for predicting CIs
+modelCSA<- lm(fCSA ~ tbCSA, data=datanoD_plot)
+summary(modelCSA)
+
+#For the interval estimate to work, we need to find the smallest and largest values of x. All this is in https://stackoverflow.com/questions/46459620/plotting-a-95-confidence-interval-for-a-lm-object
+
+#But X in this case has NAs so we're here finding the lowest non-NA value by sorting from smallest to largest and taking the first value
+min_xCSA <- sort(datanoD_plot$tbCSA)[1]
+max_xCSA <- sort(datanoD_plot$tbCSA, decreasing = TRUE)[1]
+
+#make dummy sequence of x for intervals. 
+newxCSA <- seq(min_xCSA-1,max_xCSA+1,by = 0.05 )
+
+#plot confidence intervals
+
+#This only works if the data are already logged. Not my preference but hey.
+conf_intervalCSA <- predict(modelCSA, newdata=data.frame(tbCSA = newxCSA), interval="prediction", level = 0.95)
+
+plot(data=data_plot, fCSA ~ tbCSA, 
+     pch=pch_vector, col=colours, ylab = "Femur cross-sectional area", xlab = "Tibiotarsus cross-sectional area",axes = TRUE, frame.plot = TRUE); abline(modelCSA, col="black" )
+
+lines(newxCSA, conf_intervalCSA [,2], col="black", lty=3)
+lines(newxCSA, conf_intervalCSA [,3], col="black", lty=3)
+
+#fill in area between regression line and confidence interval - very pretty but then you have to re-plot the points
+polygon(c(rev(newxCSA), newxCSA), c(rev(conf_intervalCSA [ ,3]), conf_intervalCSA[ ,2]),density = 25, col = 'grey90', border = NA)
+
+points(data=data_plot, fCSA ~ tbCSA, 
+     pch=pch_vector, col=colours); abline(modelCSA, col="black" )
+
+lines(newxCSA, conf_intervalCSA [,2], col="black", lty=3)
+lines(newxCSA, conf_intervalCSA [,3], col="black", lty=3)
+
+legend("bottomright",
+       legend = c("Galliformes", "Anseriformes", "Extant Palaeognathae", substitute(paste(italic("Genyornis newtoni")))),
+       pch = c(15, 17, 18, 19),
+       col = c("#800080", "#ff0055", "#3333cc",  "#33cc33"),
+       pt.bg = c("#800080", "#ff0055", "#3333cc","#33cc33"),
+       bty = "n",
+       pt.cex = 1.5,
+       cex = 1,
+       text.col = "black",
+       horiz = F ,
+       inset = c(0.01, 0.0), 
+       ncol=2, 
+       x.intersp=2,
+       y.intersp=1.2)
+box(col = "#000000")
+
+
+
+
+
+
+
+```
+
+
+```{r femoral splay vs circumference}
+#getting a model for predicting CIs
+modelFS<- lm(hds ~ fCIRC, data=datanoD_plot)
+summary(modelFS)
+
+#For the interval estimate to work, we need to find the smallest and largest values of x. All this is in https://stackoverflow.com/questions/46459620/plotting-a-95-confidence-interval-for-a-lm-object
+
+#But X in this case has NAs so we're here finding the lowest non-NA value by sorting from smallest to largest and taking the first value
+min_xFS <- sort(datanoD_plot$fCIRC)[1]
+max_xFS <- sort(datanoD_plot$fCIRC, decreasing = TRUE)[1]
+
+#make dummy sequence of x for intervals. 
+newxFS <- seq(min_xFS-1,max_xFS+1,by = 0.05 )
+
+#plot confidence intervals
+#This only works if the data are already logged. Not my preference but hey.
+conf_intervalFS <- predict(modelFS, newdata=data.frame(fCIRC = newxFS), interval="prediction", level = 0.95)
+
+plot(data=data_plot, hds ~ fCIRC, 
+     pch=pch_vector, col=colours, ylab = "Femoral splay", xlab = "Femur circumference",axes = TRUE, frame.plot = TRUE); abline(modelFS, col="black" )
+
+lines(newxFS, conf_intervalFS [,2], col="black", lty=3)
+lines(newxFS, conf_intervalFS [,3], col="black", lty=3)
+
+#fill in area between regression line and confidence interval - very pretty but then you have to re-plot the points
+polygon(c(rev(newxFS), newxFS), c(rev(conf_intervalFS [ ,3]), conf_intervalFS[ ,2]),density = 25, col = 'grey90', border = NA)
+
+points(data=data_plot, hds ~ fCIRC, 
+     pch=pch_vector, col=colours); abline(modelFS, col="black" )
+
+lines(newxFS, conf_intervalFS [,2], col="black", lty=3)
+lines(newxFS, conf_intervalFS [,3], col="black", lty=3)
+
+legend("bottomright",
+       legend = c("Galliformes", "Anseriformes", "Extant Palaeognathae", substitute(paste(italic("Genyornis newtoni")))),
+       pch = c(15, 17, 18, 19),
+       col = c("#800080", "#ff0055", "#3333cc",  "#33cc33"),
+       pt.bg = c("#800080", "#ff0055", "#3333cc","#33cc33"),
+       bty = "n",
+       pt.cex = 1.5,
+       cex = 1,
+       text.col = "black",
+       horiz = F ,
+       inset = c(0.01, 0.0), 
+       ncol=2, 
+       x.intersp=2,
+       y.intersp=1.2)
+box(col = "#000000")
+
+
+```
+
+
+```{r femoral splay vs circumference}
+#getting a model for predicting CIs
+modelFS2<- lm(fCIRC ~ hds, data=datanoD_plot)
+summary(modelFS2)
+
+#For the interval estimate to work, we need to find the smallest and largest values of x. All this is in https://stackoverflow.com/questions/46459620/plotting-a-95-confidence-interval-for-a-lm-object
+
+#But X in this case has NAs so we're here finding the lowest non-NA value by sorting from smallest to largest and taking the first value
+min_xFS2 <- sort(datanoD_plot$hds)[1]
+max_xFS2 <- sort(datanoD_plot$hds, decreasing = TRUE)[1]
+
+#make dummy sequence of x for intervals. 
+newxFS2 <- seq(min_xFS2-1,max_xFS2+1,by = 0.05 )
+
+#plot confidence intervals
+
+#This only works if the data are already logged. Not my preference but hey.
+conf_intervalFS2 <- predict(modelFS2, newdata=data.frame(hds = newxFS2), interval="prediction", level = 0.95)
+
+plot(data=data_plot, fCIRC ~ hds, 
+     pch=pch_vector, col=colours, ylab = "Femur circumference", xlab = "Femoral splay",axes = TRUE, frame.plot = TRUE); abline(modelFS2, col="black" )
+
+lines(newxFS2, conf_intervalFS2 [,2], col="black", lty=3)
+lines(newxFS2, conf_intervalFS2 [,3], col="black", lty=3)
+
+#fill in area between regression line and confidence interval - very pretty but then you have to re-plot the points
+polygon(c(rev(newxFS2), newxFS2), c(rev(conf_intervalFS2 [ ,3]), conf_intervalFS2[ ,2]),density = 25, col = 'grey90', border = NA)
+
+points(data=data_plot, fCIRC ~ hds, 
+     pch=pch_vector, col=colours); abline(modelFS2, col="black" )
+
+lines(newxFS2, conf_intervalFS2 [,2], col="black", lty=3)
+lines(newxFS2, conf_intervalFS2 [,3], col="black", lty=3)
+
+legend("bottomright",
+       legend = c("Galliformes", "Anseriformes", "Extant Palaeognathae", substitute(paste(italic("Genyornis newtoni")))),
+       pch = c(15, 17, 18, 19),
+       col = c("#800080", "#ff0055", "#3333cc",  "#33cc33"),
+       pt.bg = c("#800080", "#ff0055", "#3333cc","#33cc33"),
+       bty = "n",
+       pt.cex = 1.5,
+       cex = 1,
+       text.col = "black",
+       horiz = F ,
+       inset = c(0.01, 0.0), 
+       ncol=2, 
+       x.intersp=2,
+       y.intersp=1.2)
+box(col = "#000000")
+
+
+```
+
+
+```{r femoral splay vs m.l width}
+#getting a model for predicting CIs
+modelFS3<- lm(fM.L ~ hds, data=datanoD_plot)
+summary(modelFS3)
+
+#For the interval estimate to work, we need to find the smallest and largest values of x. All this is in https://stackoverflow.com/questions/46459620/plotting-a-95-confidence-interval-for-a-lm-object
+
+#But X in this case has NAs so we're here finding the lowest non-NA value by sorting from smallest to largest and taking the first value
+min_xFS3 <- sort(datanoD_plot$hds)[1]
+max_xFS3 <- sort(datanoD_plot$hds, decreasing = TRUE)[1]
+
+#make dummy sequence of x for intervals. 
+newxFS3 <- seq(min_xFS3-1,max_xFS3+1,by = 0.05 )
+
+#plot confidence intervals
+
+#This only works if the data are already logged. Not my preference but hey.
+conf_intervalFS3 <- predict(modelFS3, newdata=data.frame(hds = newxFS3), interval="prediction", level = 0.95)
+
+plot(data=data_plot, fM.L ~ hds, 
+     pch=pch_vector, col=colours, ylab = "Femur mediolateral width", xlab = "Femoral splay",axes = TRUE, frame.plot = TRUE); abline(modelFS3, col="black" )
+
+lines(newxFS3, conf_intervalFS3 [,2], col="black", lty=3)
+lines(newxFS3, conf_intervalFS3 [,3], col="black", lty=3)
+
+#fill in area between regression line and confidence interval - very pretty but then you have to re-plot the points
+polygon(c(rev(newxFS3), newxFS3), c(rev(conf_intervalFS3 [ ,3]), conf_intervalFS3[ ,2]),density = 25, col = 'grey90', border = NA)
+
+points(data=data_plot, fM.L ~ hds, 
+     pch=pch_vector, col=colours); abline(modelFS3, col="black" )
+
+lines(newxFS3, conf_intervalFS3 [,2], col="black", lty=3)
+lines(newxFS3, conf_intervalFS3 [,3], col="black", lty=3)
+
+legend("bottomright",
+       legend = c("Galliformes", "Anseriformes", "Extant Palaeognathae", substitute(paste(italic("Genyornis newtoni")))),
+       pch = c(15, 17, 18, 19),
+       col = c("#800080", "#ff0055", "#3333cc",  "#33cc33"),
+       pt.bg = c("#800080", "#ff0055", "#3333cc","#33cc33"),
+       bty = "n",
+       pt.cex = 1.5,
+       cex = 1,
+       text.col = "black",
+       horiz = F ,
+       inset = c(0.01, 0.0), 
+       ncol=2, 
+       x.intersp=2,
+       y.intersp=1.2)
+box(col = "#000000")
+
+
+```
+
+
+```{r femoral splay vs circumference}
+#getting a model for predicting CIs
+modelFS4<- lm(fL ~ hds, data=datanoD_plot)
+summary(modelFS4)
+
+#For the interval estimate to work, we need to find the smallest and largest values of x. All this is in https://stackoverflow.com/questions/46459620/plotting-a-95-confidence-interval-for-a-lm-object
+
+#But X in this case has NAs so we're here finding the lowest non-NA value by sorting from smallest to largest and taking the first value
+min_xFS4 <- sort(datanoD_plot$hds)[1]
+max_xFS4 <- sort(datanoD_plot$hds, decreasing = TRUE)[1]
+
+#make dummy sequence of x for intervals. 
+newxFS4 <- seq(min_xFS4-1,max_xFS4+1,by = 0.05 )
+
+#plot confidence intervals
+
+#This only works if the data are already logged. Not my preference but hey.
+conf_intervalFS4 <- predict(modelFS4, newdata=data.frame(hds = newxFS4), interval="prediction", level = 0.95)
+
+plot(data=data_plot, fL ~ hds, 
+     pch=pch_vector, col=colours, ylab = "Femur length", xlab = "Femoral splay",axes = TRUE, frame.plot = TRUE); abline(modelFS4, col="black" )
+
+lines(newxFS4, conf_intervalFS4 [,2], col="black", lty=3)
+lines(newxFS4, conf_intervalFS4 [,3], col="black", lty=3)
+
+#fill in area between regression line and confidence interval - very pretty but then you have to re-plot the points
+polygon(c(rev(newxFS4), newxFS4), c(rev(conf_intervalFS4 [ ,3]), conf_intervalFS4[ ,2]),density = 25, col = 'grey90', border = NA)
+
+points(data=data_plot, fL ~ hds, 
+     pch=pch_vector, col=colours); abline(modelFS4, col="black" )
+
+lines(newxFS4, conf_intervalFS4 [,2], col="black", lty=3)
+lines(newxFS4, conf_intervalFS4 [,3], col="black", lty=3)
+
+legend("bottomright",
+       legend = c("Galliformes", "Anseriformes", "Extant Palaeognathae", substitute(paste(italic("Genyornis newtoni")))),
+       pch = c(15, 17, 18, 19),
+       col = c("#800080", "#ff0055", "#3333cc",  "#33cc33"),
+       pt.bg = c("#800080", "#ff0055", "#3333cc","#33cc33"),
+       bty = "n",
+       pt.cex = 1.5,
+       cex = 1,
+       text.col = "black",
+       horiz = F ,
+       inset = c(0.01, 0.0), 
+       ncol=2, 
+       x.intersp=2,
+       y.intersp=1.2)
+box(col = "#000000")
+
+
+```
+
 
 
 ```{r seperate data set with just the large flightless birds}
